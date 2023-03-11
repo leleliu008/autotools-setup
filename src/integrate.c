@@ -6,7 +6,7 @@
 #include "autotools-setup.h"
 
 int autotools_setup_integrate_zsh_completion(const char * outputDir, bool verbose) {
-    const char * url = "https://raw.githubusercontent.com/leleliu008/autotools-setup/master/autotools-zsh-completion";
+    const char * url = "https://raw.githubusercontent.com/leleliu008/autotools-setup/master/autotools-setup-zsh-completion";
 
     char * userHomeDir = getenv("HOME");
 
@@ -60,8 +60,8 @@ int autotools_setup_integrate_zsh_completion(const char * outputDir, bool verbos
 
     ////////////////////////////////////////////////////////////////
 
-    size_t zshCompletionFilePathLength = zshCompletionDirLength + 18;
-    char   zshCompletionFilePath[zshCompletionFilePathLength];
+    size_t   zshCompletionFilePathLength = zshCompletionDirLength + 18;
+    char     zshCompletionFilePath[zshCompletionFilePathLength];
     snprintf(zshCompletionFilePath, zshCompletionFilePathLength, "%s/_autotools-setup", zshCompletionDir);
 
     int ret = http_fetch_to_file(url, zshCompletionFilePath, verbose, verbose);
