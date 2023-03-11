@@ -1,0 +1,140 @@
+name: CentOS Linux
+
+on:
+  push:
+    branches: [ master, dev ]
+  pull_request:
+    branches: [ master, dev ]
+
+jobs:
+  centos8:
+    runs-on: ubuntu-latest
+
+    container: centos:8
+
+    steps:
+      - run: |
+          sed -i 's|#baseurl=|baseurl=|g'       /etc/yum.repos.d/CentOS-*.repo
+          sed -i 's|mirrorlist=|#mirrorlist=|g' /etc/yum.repos.d/CentOS-*.repo
+          sed -i 's|mirror|vault|g'             /etc/yum.repos.d/CentOS-*.repo
+          sed -i 's|http:|https:|g'             /etc/yum.repos.d/CentOS-*.repo
+
+          dnf -y update
+          dnf -y install curl xz gcc-c++
+
+      - uses: actions/checkout@main
+
+      - name: install ppkg
+        run: |
+          curl -LO https://raw.githubusercontent.com/leleliu008/ppkg/master/ppkg
+          chmod a+x ppkg
+          ./ppkg setup
+
+      - run:  ./ppkg update
+      - run:  ./ppkg install autotools-setup
+
+
+      - run:  echo "SSL_CERT_FILE=$HOME/.ppkg/core/etc/ssl/certs/cacert.pem" >> $GITHUB_ENV
+
+
+      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup
+
+      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup --help
+      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup -h
+
+      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup --version
+      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup -V
+
+      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup sysinfo
+
+      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup env
+
+      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup integrate zsh
+
+      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup setup -v
+
+  centos7:
+    runs-on: ubuntu-latest
+
+    container: centos:7
+
+    steps:
+      - run:  yum -y update
+      - run:  yum -y install curl xz gcc-c++
+
+      - uses: actions/checkout@main
+
+      - name: install ppkg
+        run: |
+          curl -LO https://raw.githubusercontent.com/leleliu008/ppkg/master/ppkg
+          chmod a+x ppkg
+          ./ppkg setup
+
+      - run:  ./ppkg update
+      - run:  ./ppkg install autotools-setup
+
+
+      - run:  echo "SSL_CERT_FILE=$HOME/.ppkg/core/etc/ssl/certs/cacert.pem" >> $GITHUB_ENV
+
+
+      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup
+
+      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup --help
+      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup -h
+
+      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup --version
+      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup -V
+
+      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup sysinfo
+
+      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup env
+
+      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup integrate zsh
+
+      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup setup -v
+
+  centos_6_10:
+    if: ${{ false }}
+
+    runs-on: ubuntu-latest
+
+    container: centos:6.10
+
+    steps:
+      - run: |
+          sed -i 's|#baseurl=|baseurl=|g'       /etc/yum.repos.d/CentOS-Base.repo
+          sed -i 's|mirrorlist=|#mirrorlist=|g' /etc/yum.repos.d/CentOS-Base.repo
+          sed -i 's|mirror|vault|g'             /etc/yum.repos.d/CentOS-Base.repo
+          sed -i 's|http:|https:|g'             /etc/yum.repos.d/CentOS-Base.repo
+
+          yum -y update
+          yum -y install curl xz gcc-c++
+
+      - name: install ppkg
+        run: |
+          curl -LO https://raw.githubusercontent.com/leleliu008/ppkg/master/ppkg
+          chmod a+x ppkg
+          ./ppkg setup
+
+      - run:  ./ppkg update
+      - run:  ./ppkg install autotools-setup
+
+
+      - run:  echo "SSL_CERT_FILE=$HOME/.ppkg/core/etc/ssl/certs/cacert.pem" >> $GITHUB_ENV
+
+
+      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup
+
+      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup --help
+      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup -h
+
+      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup --version
+      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup -V
+
+      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup sysinfo
+
+      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup env
+
+      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup integrate zsh
+
+      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup setup -v

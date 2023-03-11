@@ -1,0 +1,54 @@
+name: Rocky Linux
+
+on:
+  push:
+    branches: [ master, dev ]
+  pull_request:
+    branches: [ master, dev ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        tag: ['8', '9']
+
+    container: rockylinux:${{ matrix.tag }}
+
+    steps:
+      - run:  dnf -y update
+      - run:  dnf -y install xz gcc-c++
+      - run:  |
+          command -v curl > /dev/null || dnf -y install curl
+
+      - uses: actions/checkout@main
+
+      - name: install ppkg
+        run: |
+          curl -LO https://raw.githubusercontent.com/leleliu008/ppkg/master/ppkg
+          chmod a+x ppkg
+          ./ppkg setup
+
+      - run:  ./ppkg update
+      - run:  ./ppkg install autotools-setup
+
+
+      - run:  echo "SSL_CERT_FILE=$HOME/.ppkg/core/etc/ssl/certs/cacert.pem" >> $GITHUB_ENV
+
+      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup
+
+      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup --help
+      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup -h
+
+      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup --version
+      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup -V
+
+      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup sysinfo
+
+      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup env
+
+      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup integrate zsh
+
+      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup setup -v
