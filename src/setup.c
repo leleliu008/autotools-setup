@@ -456,7 +456,7 @@ static int autotools_setup_setup_internal(const char * configFilePath, const cha
     } else if (strcmp(sysinfo.kind, "freebsd") == 0) {
         if (strcmp(sysinfo.arch, "amd64") == 0) {
             binUrlGmake = "https://github.com/leleliu008/gmake-build/releases/download/4.3/gmake-4.3-freebsd-amd64.tar.xz";
-            binShaGmake = "93f621f402eb852e51cdd5b3f7e738fdb0299031cd0423e61cb65f4523dfc54f";
+            binShaGmake = "8bab8e9b83afc8d8e08a4406b2167f8f66efd05fa4d4ba4f8c2b14a543860888";
         }
     } else if (strcmp(sysinfo.kind, "openbsd") == 0) {
         if (strcmp(sysinfo.arch, "amd64") == 0) {
