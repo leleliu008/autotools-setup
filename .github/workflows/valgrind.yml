@@ -1,0 +1,67 @@
+name: valgrind
+
+on:
+  push:
+    branches: [ master, dev ]
+  pull_request:
+    branches: [ master, dev ]
+
+jobs:
+  valgrind:
+
+    runs-on: ubuntu-latest
+
+    container: ubuntu:22.04
+
+    env:
+      VALGRIND: valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose --error-exitcode=1
+
+    steps:
+      - uses: actions/checkout@main
+
+      - run:  apt -y update
+      - run:  apt -y install valgrind cmake ninja-build pkg-config g++ linux-headers-generic  curl zip unzip tar git
+
+      - uses: actions/checkout@v3
+
+      - uses: actions/checkout@v3
+        with:
+          repository: microsoft/vcpkg
+          path: vcpkg
+
+      - run:  cd vcpkg && ./bootstrap-vcpkg.sh
+
+      - run:  cd vcpkg && ./vcpkg install curl openssl libgit2 libarchive libyaml jansson zlib
+
+      - run:  |
+          cmake \
+              -S . \
+              -B build.d \
+              -G Ninja \
+              -DCMAKE_TOOLCHAIN_FILE=$PWD/vcpkg/scripts/buildsystems/vcpkg.cmake \
+              -DCMAKE_INSTALL_PREFIX=./output \
+              -DCMAKE_VERBOSE_MAKEFILE=ON \
+              -DCMAKE_BUILD_TYPE=Debug
+
+      - run:  cmake --build   build.d
+      - run:  cmake --install build.d
+
+
+      - run: $VALGRIND ./output/bin/autotools-setup
+
+      - run: $VALGRIND ./output/bin/autotools-setup --help
+      - run: $VALGRIND ./output/bin/autotools-setup -h
+
+      - run: $VALGRIND ./output/bin/autotools-setup --version
+      - run: $VALGRIND ./output/bin/autotools-setup -V
+
+      - run: $VALGRIND ./output/bin/autotools-setup sysinfo
+
+      - run: $VALGRIND ./output/bin/autotools-setup env
+
+      - run: $VALGRIND ./output/bin/autotools-setup integrate zsh
+      - run: $VALGRIND ./output/bin/autotools-setup integrate zsh -v
+
+      - run: $VALGRIND ./output/bin/autotools-setup setup -v
+
+        #- run: $VALGRIND ./output/bin/autotools-setup upgrade-self

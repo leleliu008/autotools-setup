@@ -1,0 +1,48 @@
+name: openSUSE
+
+on:
+  push:
+    branches: [ master, dev ]
+  pull_request:
+    branches: [ master, dev ]
+
+jobs:
+  opensuse:
+    strategy:
+      fail-fast: false
+      matrix:
+        flavor: ['tumbleweed', 'leap:15.4']
+
+    runs-on: ubuntu-latest
+
+    container: opensuse/${{ matrix.flavor }}
+
+    steps:
+      - run: zypper update  -y
+      - run: zypper install -y git cmake ninja gcc pkg-config libcurl-devel libgit2-devel libarchive-devel libyaml-devel libjansson-devel sqlite3-devel
+
+      - uses: actions/checkout@main
+
+      - run:  cmake -S . -B   build.d -G Ninja -DCMAKE_INSTALL_PREFIX=./output -DCMAKE_VERBOSE_MAKEFILE=ON
+      - run:  cmake --build   build.d
+      - run:  cmake --install build.d
+
+
+      - run: ./output/bin/autotools-setup
+
+      - run: ./output/bin/autotools-setup --help
+      - run: ./output/bin/autotools-setup -h
+
+      - run: ./output/bin/autotools-setup --version
+      - run: ./output/bin/autotools-setup -V
+
+      - run: ./output/bin/autotools-setup sysinfo
+
+      - run: ./output/bin/autotools-setup env
+
+      - run: ./output/bin/autotools-setup integrate zsh
+      - run: ./output/bin/autotools-setup integrate zsh -v
+
+      - run: ./output/bin/autotools-setup setup -v
+
+        #- run: ./output/bin/autotools-setup upgrade-self

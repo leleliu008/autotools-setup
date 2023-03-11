@@ -1,0 +1,25 @@
+name: Debian GNU/Linux
+
+on:
+  push:
+    branches: [ master, dev ]
+  pull_request:
+    branches: [ master, dev ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        tag: ['11.4', '9.13', '10.7']
+
+    container: debian:${{ matrix.tag }}
+
+    steps:
+      - run: apt -y update
+      - run: apt -y install curl xz-utils g++
+
+      - uses: actions/checkout@v3
+
