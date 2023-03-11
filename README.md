@@ -219,6 +219,13 @@ cmake --build   build.d
 cmake --install build.d
 ```
 
+
+## ~/.autotools-setup
+all relevant dirs and files are located in `~/.autotools-setup` directory.
+
+**Note**: Please do NOT place your own files in `~/.autotools-setup` directory, as `autotools-setup` will change files in `~/.autotools-setup` directory without notice.
+
+
 ## autotools-setup command usage
 *   **show help of this command**
         
@@ -255,28 +262,30 @@ cmake --install build.d
         autotools-setup setup --prefix=.autotools --jobs=8
         autotools-setup setup --prefix=.autotools -v
  
+    **Note**: C and C++ compiler should be installed by yourself using your system's default package manager before running this command.
+
 *   **extra common used utilities**
         
-        uppm util zlib-deflate -L 6 < input/file/path
-        uppm util zlib-inflate      < input/file/path
+        autotools-setup util zlib-deflate -L 6 < input/file/path
+        autotools-setup util zlib-inflate      < input/file/path
 
-        uppm util base16-encode "string to be encoded with base16 algorithm"
-        uppm util base16-encode < input/file/path
+        autotools-setup util base16-encode "string to be encoded with base16 algorithm"
+        autotools-setup util base16-encode < input/file/path
 
-        uppm util base16-decode ABCD
-        uppm util base16-decode ABCD > output/file/path
+        autotools-setup util base16-decode ABCD
+        autotools-setup util base16-decode ABCD > output/file/path
 
-        uppm util base64-encode "string to be encoded with base64 algorithm"
-        uppm util base64-encode < input/file/path
+        autotools-setup util base64-encode "string to be encoded with base64 algorithm"
+        autotools-setup util base64-encode < input/file/path
 
-        uppm util base64-decode YQ==
-        uppm util base64-decode YQ== > output/file/path
+        autotools-setup util base64-decode YQ==
+        autotools-setup util base64-decode YQ== > output/file/path
 
-        uppm util sha256sum   input/file/path
-        uppm util sha256sum < input/file/path
+        autotools-setup util sha256sum   input/file/path
+        autotools-setup util sha256sum < input/file/path
 
-        uppm util which tree
-        uppm util which tree -a
+        autotools-setup util which tree
+        autotools-setup util which tree -a
 
 ## environment variables
 

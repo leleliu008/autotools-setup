@@ -54,7 +54,7 @@ static int run_cmd(char * cmd) {
         }
 
         execv(argv[0], argv);
-        perror(NULL);
+        perror(argv[0]);
         return 127;
     } else {
         int childProcessExitStatusCode;
@@ -454,17 +454,17 @@ static int autotools_setup_setup_internal(const char * configFilePath, const cha
             binShaGmake = "071b01f8c8f67e55fac1d163940bf250bf81f07aff4be5716458394edf15886a";
         }
     } else if (strcmp(sysinfo.kind, "freebsd") == 0) {
-        if (strcmp(sysinfo.arch, "x86_64") == 0) {
+        if (strcmp(sysinfo.arch, "amd64") == 0) {
             binUrlGmake = "https://github.com/leleliu008/gmake-build/releases/download/4.3/gmake-4.3-freebsd-amd64.tar.xz";
             binShaGmake = "93f621f402eb852e51cdd5b3f7e738fdb0299031cd0423e61cb65f4523dfc54f";
         }
     } else if (strcmp(sysinfo.kind, "openbsd") == 0) {
-        if (strcmp(sysinfo.arch, "x86_64") == 0) {
+        if (strcmp(sysinfo.arch, "amd64") == 0) {
             binUrlGmake = "https://github.com/leleliu008/gmake-build/releases/download/4.3/gmake-4.3-openbsd-amd64.tar.xz";
             binShaGmake = "a7d61765f08d536942c6894c0d81fb7e7052906aa2590586237ada8d09cbdf45";
         }
     } else if (strcmp(sysinfo.kind, "netbsd") == 0) {
-        if (strcmp(sysinfo.arch, "x86_64") == 0) {
+        if (strcmp(sysinfo.arch, "amd64") == 0) {
             binUrlGmake = "https://github.com/leleliu008/gmake-build/releases/download/4.3/gmake-4.3-netbsd-amd64.tar.xz";
             binShaGmake = "8ba11716b9d473dbc100cd87474d381bd2bcb7822cc029b50e5a8307c6695691";
         }

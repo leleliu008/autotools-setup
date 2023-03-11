@@ -32,7 +32,11 @@ int autotools_setup_help() {
         COLOR_GREEN
         "autotools-setup setup [--prefix=<DIR> --jobs=N -q -v -vv]\n"
         COLOR_OFF
-        "    setup autotools.\n\n"
+        "    build and install GNU Autotools and relevant packages (including automake, autoconf, libtool, pkgconf, perl, gm4, gmake) to the specified directory.\n\n"
+        "    if --prefix=<DIR> option is not given, then these packages will be installed into '~/.autotools-setup/autotools' directory.\n\n"
+        COLOR_RED
+        "    C and C++ compiler should be installed by yourself using your system's default package manager before running this command.\n\n"
+        COLOR_OFF
         COLOR_GREEN
         "autotools-setup util zlib-deflate -L <LEVEL> < input/file/path\n"
         COLOR_OFF
@@ -105,7 +109,9 @@ int autotools_setup_help() {
         "autotools-setup env\n"
         "    show your system's information and other information.\n\n"
         "autotools-setup setup [--prefix=<DIR> --jobs=N -q -v -vv]\n"
-        "    setup autotools.\n\n"
+        "    build and install GNU Autotools and relevant packages (including automake, autoconf, libtool, pkgconf, perl, gm4, gmake) to the specified directory.\n\n"
+        "    if --prefix=<DIR> option is not given, then these packages will be installed into '~/.autotools-setup/autotools' directory.\n\n"
+        "    C and C++ compiler should be installed by yourself using your system's default package manager before running this command.\n\n"
         "autotools-setup util zlib-deflate -L <LEVEL> < input/file/path\n"
         "    compress data using zlib deflate algorithm.\n\n"
         "    LEVEL >= 1 && LEVEL <= 9\n\n"
