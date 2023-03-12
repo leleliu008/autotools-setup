@@ -575,11 +575,7 @@ static int autotools_setup_setup_internal(const char * setupDir, AutotoolsSetupC
         goto finalize;
     }
 
-    if (unlink("gm4") != 0) {
-        perror("gm4");
-        ret = AUTOTOOLS_SETUP_ERROR;
-        goto finalize;
-    }
+    unlink("gm4");
 
     if (symlink("m4", "gm4") != 0) {
         perror("m4");
@@ -587,11 +583,7 @@ static int autotools_setup_setup_internal(const char * setupDir, AutotoolsSetupC
         goto finalize;
     }
 
-    if (unlink("pkg-config") != 0) {
-        perror("pkg-config");
-        ret = AUTOTOOLS_SETUP_ERROR;
-        goto finalize;
-    }
+    unlink("pkg-config");
 
     if (symlink("pkgconf", "pkg-config") != 0) {
         perror("pkgconf");
