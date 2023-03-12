@@ -25,7 +25,7 @@ jobs:
           mem: 2048
           box: generic/openbsd7
           run: |
-            run sudo pkg_add cmake ninja llvm pkgconf curl libgit2 libarchive libyaml jansson sqlite
+            run sudo pkg_add cmake ninja llvm pkgconf curl libarchive libyaml
 
             run cmake -S . -B   build.d -G Ninja -DCMAKE_INSTALL_PREFIX=./output -DCMAKE_VERBOSE_MAKEFILE=ON
             run cmake --build   build.d

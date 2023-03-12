@@ -79,23 +79,25 @@ int autotools_setup_env() {
         free(path);
     }
 
-    printf("default.src-url-autoconf: %s\n",   DEFAULT_SRC_URL_AUTOCONF);
-    printf("default.src-sha-autoconf: %s\n\n", DEFAULT_SRC_SHA_AUTOCONF);
+    printf("default config:\n\n");
 
-    printf("default.src-url-automake: %s\n",   DEFAULT_SRC_URL_AUTOMAKE);
-    printf("default.src-sha-automake: %s\n\n", DEFAULT_SRC_SHA_AUTOMAKE);
+    printf("src-url-autoconf: %s\n",   DEFAULT_SRC_URL_AUTOCONF);
+    printf("src-sha-autoconf: %s\n\n", DEFAULT_SRC_SHA_AUTOCONF);
 
-    printf("default.src-url-libtool:  %s\n",   DEFAULT_SRC_URL_LIBTOOL);
-    printf("default.src-sha-libtool:  %s\n\n", DEFAULT_SRC_SHA_LIBTOOL);
+    printf("src-url-automake: %s\n",   DEFAULT_SRC_URL_AUTOMAKE);
+    printf("src-sha-automake: %s\n\n", DEFAULT_SRC_SHA_AUTOMAKE);
 
-    printf("default.src-url-pkgconf:  %s\n",   DEFAULT_SRC_URL_PKGCONF);
-    printf("default.src-sha-pkgconf:  %s\n\n", DEFAULT_SRC_SHA_PKGCONF);
+    printf("src-url-libtool:  %s\n",   DEFAULT_SRC_URL_LIBTOOL);
+    printf("src-sha-libtool:  %s\n\n", DEFAULT_SRC_SHA_LIBTOOL);
 
-    printf("default.src-url-perl:     %s\n",   DEFAULT_SRC_URL_PERL);
-    printf("default.src-sha-perl:     %s\n\n", DEFAULT_SRC_SHA_PERL);
+    printf("src-url-pkgconf:  %s\n",   DEFAULT_SRC_URL_PKGCONF);
+    printf("src-sha-pkgconf:  %s\n\n", DEFAULT_SRC_SHA_PKGCONF);
 
-    printf("default.src-url-gm4:      %s\n",   DEFAULT_SRC_URL_GM4);
-    printf("default.src-sha-gm4:      %s\n\n", DEFAULT_SRC_SHA_GM4);
+    printf("src-url-perl:     %s\n",   DEFAULT_SRC_URL_PERL);
+    printf("src-sha-perl:     %s\n\n", DEFAULT_SRC_SHA_PERL);
+
+    printf("src-url-gm4:      %s\n",   DEFAULT_SRC_URL_GM4);
+    printf("src-sha-gm4:      %s\n\n", DEFAULT_SRC_SHA_GM4);
 
     return AUTOTOOLS_SETUP_OK;
 }

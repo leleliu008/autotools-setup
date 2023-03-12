@@ -75,11 +75,11 @@ typedef struct {
 
     char * src_url_gm4;
     char * src_sha_gm4;
-} AUTOTOOLSSETUPFormula;
+} AutotoolsSetupConfig;
 
-int  autotools_setup_config_parse(const char * configFilePath, AUTOTOOLSSETUPFormula * * out);
-void autotools_setup_config_free(AUTOTOOLSSETUPFormula * config);
-void autotools_setup_config_dump(AUTOTOOLSSETUPFormula * config);
+int  autotools_setup_config_parse(const char * configFilePath, AutotoolsSetupConfig * * out);
+void autotools_setup_config_free(AutotoolsSetupConfig * config);
+void autotools_setup_config_dump(AutotoolsSetupConfig * config);
 
 ////////////////////////////////////////////////////
 
@@ -91,6 +91,8 @@ int autotools_setup_sysinfo();
 
 int autotools_setup_env();
 
+int autotools_setup_show_default_config();
+
 int autotools_setup_upgrade_self(bool verbose);
 
 int autotools_setup_integrate_zsh_completion (const char * outputDir, bool verbose);
@@ -98,12 +100,12 @@ int autotools_setup_integrate_bash_completion(const char * outputDir, bool verbo
 int autotools_setup_integrate_fish_completion(const char * outputDir, bool verbose);
 
 typedef enum {
-    AUTOTOOLSSETUPLogLevel_silent,
-    AUTOTOOLSSETUPLogLevel_normal,
-    AUTOTOOLSSETUPLogLevel_verbose,
-    AUTOTOOLSSETUPLogLevel_very_verbose
-} AUTOTOOLSSETUPLogLevel;
+    AutotoolsSetupLogLevel_silent,
+    AutotoolsSetupLogLevel_normal,
+    AutotoolsSetupLogLevel_verbose,
+    AutotoolsSetupLogLevel_very_verbose
+} AutotoolsSetupLogLevel;
 
-int autotools_setup_setup(const char * configFilePath, const char * setupDir, AUTOTOOLSSETUPLogLevel logLevel, unsigned int jobs);
+int autotools_setup_setup(const char * configFilePath, const char * setupDir, AutotoolsSetupLogLevel logLevel, unsigned int jobs);
 
 #endif

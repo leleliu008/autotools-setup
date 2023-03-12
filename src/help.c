@@ -30,12 +30,12 @@ int autotools_setup_help() {
         "    download a zsh completion script file to a approprivate location.\n\n"
         "    to apply this feature, you may need to run the command 'autoload -U compinit && compinit' in your terminal (your current running shell must be zsh).\n\n"
         COLOR_GREEN
-        "autotools-setup setup [--prefix=<DIR> --jobs=N -q -v -vv]\n"
+        "autotools-setup setup [--prefix=<DIR> --jobs=N -q -v -vv --config=<FILEPATH>]\n"
         COLOR_OFF
         "    build and install GNU Autotools and relevant packages (including automake, autoconf, libtool, pkgconf, perl, gm4, gmake) to the specified directory.\n\n"
         "    if --prefix=<DIR> option is not given, then these packages will be installed into '~/.autotools-setup/autotools' directory.\n\n"
         COLOR_RED
-        "    C and C++ compiler should be installed by yourself using your system's default package manager before running this command.\n\n"
+        "    C compiler should be installed by yourself using your system's default package manager before running this command.\n\n"
         COLOR_OFF
         COLOR_GREEN
         "autotools-setup util zlib-deflate -L <LEVEL> < input/file/path\n"
@@ -108,10 +108,10 @@ int autotools_setup_help() {
         "    show your system's information.\n\n"
         "autotools-setup env\n"
         "    show your system's information and other information.\n\n"
-        "autotools-setup setup [--prefix=<DIR> --jobs=N -q -v -vv]\n"
+        "autotools-setup setup [--prefix=<DIR> --jobs=N -q -v -vv --config=<FILEPATH>]\n"
         "    build and install GNU Autotools and relevant packages (including automake, autoconf, libtool, pkgconf, perl, gm4, gmake) to the specified directory.\n\n"
         "    if --prefix=<DIR> option is not given, then these packages will be installed into '~/.autotools-setup/autotools' directory.\n\n"
-        "    C and C++ compiler should be installed by yourself using your system's default package manager before running this command.\n\n"
+        "    C compiler should be installed by yourself using your system's default package manager before running this command.\n\n"
         "autotools-setup util zlib-deflate -L <LEVEL> < input/file/path\n"
         "    compress data using zlib deflate algorithm.\n\n"
         "    LEVEL >= 1 && LEVEL <= 9\n\n"

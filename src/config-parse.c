@@ -29,18 +29,18 @@ typedef enum {
 
     FORMULA_KEY_CODE_src_url_gm4,
     FORMULA_KEY_CODE_src_sha_gm4,
-} AUTOTOOLSSETUPFormulaKeyCode;
+} AutotoolsSetupConfigKeyCode;
 
-void autotools_setup_config_dump(AUTOTOOLSSETUPFormula * config) {
+void autotools_setup_config_dump(AutotoolsSetupConfig * config) {
     if (config == NULL) {
         return;
     }
 
-    printf("src-url-autoconf: %s\n", config->src_url_autoconf);
-    printf("src-sha-autoconf: %s\n", config->src_sha_autoconf);
-
     printf("src-url-automake: %s\n", config->src_url_automake);
     printf("src-sha-automake: %s\n", config->src_sha_automake);
+
+    printf("src-url-autoconf: %s\n", config->src_url_autoconf);
+    printf("src-sha-autoconf: %s\n", config->src_sha_autoconf);
 
     printf("src-url-libtool:  %s\n", config->src_url_libtool);
     printf("src-sha-libtool:  %s\n", config->src_sha_libtool);
@@ -55,7 +55,7 @@ void autotools_setup_config_dump(AUTOTOOLSSETUPFormula * config) {
     printf("src-sha-gm4:      %s\n", config->src_sha_gm4);
 }
 
-void autotools_setup_config_free(AUTOTOOLSSETUPFormula * config) {
+void autotools_setup_config_free(AutotoolsSetupConfig * config) {
     if (config == NULL) {
         return;
     }
@@ -135,7 +135,7 @@ void autotools_setup_config_free(AUTOTOOLSSETUPFormula * config) {
     free(config);
 }
 
-static AUTOTOOLSSETUPFormulaKeyCode autotools_setup_config_key_code_from_key_name(char * key) {
+static AutotoolsSetupConfigKeyCode autotools_setup_config_key_code_from_key_name(char * key) {
            if (strcmp(key, "src-url-perl") == 0) {
         return FORMULA_KEY_CODE_src_url_perl;
     } else if (strcmp(key, "src-sha-perl") == 0) {
@@ -165,7 +165,7 @@ static AUTOTOOLSSETUPFormulaKeyCode autotools_setup_config_key_code_from_key_nam
     }
 }
 
-static void autotools_setup_config_set_value(AUTOTOOLSSETUPFormulaKeyCode keyCode, char * value, AUTOTOOLSSETUPFormula * config) {
+static void autotools_setup_config_set_value(AutotoolsSetupConfigKeyCode keyCode, char * value, AutotoolsSetupConfig * config) {
     if (keyCode == FORMULA_KEY_CODE_unknown) {
         return;
     }
@@ -209,151 +209,7 @@ static void autotools_setup_config_set_value(AUTOTOOLSSETUPFormulaKeyCode keyCod
     } 
 }
 
-static int autotools_setup_config_check(AUTOTOOLSSETUPFormula * config) {
-    if (config->src_url_gm4 == NULL) {
-        char * p = strdup(DEFAULT_SRC_URL_GM4);
-
-        if (p == NULL) {
-            autotools_setup_config_free(config);
-            return AUTOTOOLS_SETUP_ERROR_MEMORY_ALLOCATE;
-        }
-
-        config->src_url_gm4 = p;
-    }
-
-    if (config->src_sha_gm4 == NULL) {
-        char * p = strdup(DEFAULT_SRC_SHA_GM4);
-
-        if (p == NULL) {
-            autotools_setup_config_free(config);
-            return AUTOTOOLS_SETUP_ERROR_MEMORY_ALLOCATE;
-        }
-
-        config->src_sha_gm4 = p;
-    }
-
-    ////////////////////////////////////////////////////////
-
-    if (config->src_url_pkgconf == NULL) {
-        char * p = strdup(DEFAULT_SRC_URL_PKGCONF);
-
-        if (p == NULL) {
-            autotools_setup_config_free(config);
-            return AUTOTOOLS_SETUP_ERROR_MEMORY_ALLOCATE;
-        }
-
-        config->src_url_pkgconf = p;
-    }
-
-    if (config->src_sha_pkgconf == NULL) {
-        char * p = strdup(DEFAULT_SRC_SHA_PKGCONF);
-
-        if (p == NULL) {
-            autotools_setup_config_free(config);
-            return AUTOTOOLS_SETUP_ERROR_MEMORY_ALLOCATE;
-        }
-
-        config->src_sha_pkgconf = p;
-    }
-
-    ////////////////////////////////////////////////////////
-
-    if (config->src_url_libtool == NULL) {
-        char * p = strdup(DEFAULT_SRC_URL_LIBTOOL);
-
-        if (p == NULL) {
-            autotools_setup_config_free(config);
-            return AUTOTOOLS_SETUP_ERROR_MEMORY_ALLOCATE;
-        }
-
-        config->src_url_libtool = p;
-    }
-
-    if (config->src_sha_libtool == NULL) {
-        char * p = strdup(DEFAULT_SRC_SHA_LIBTOOL);
-
-        if (p == NULL) {
-            autotools_setup_config_free(config);
-            return AUTOTOOLS_SETUP_ERROR_MEMORY_ALLOCATE;
-        }
-
-        config->src_sha_libtool = p;
-    }
-
-    ////////////////////////////////////////////////////////
-
-    if (config->src_url_automake == NULL) {
-        char * p = strdup(DEFAULT_SRC_URL_AUTOMAKE);
-
-        if (p == NULL) {
-            autotools_setup_config_free(config);
-            return AUTOTOOLS_SETUP_ERROR_MEMORY_ALLOCATE;
-        }
-
-        config->src_url_automake = p;
-    }
-
-    if (config->src_sha_automake == NULL) {
-        char * p = strdup(DEFAULT_SRC_SHA_AUTOMAKE);
-
-        if (p == NULL) {
-            autotools_setup_config_free(config);
-            return AUTOTOOLS_SETUP_ERROR_MEMORY_ALLOCATE;
-        }
-
-        config->src_sha_automake = p;
-    }
-
-    ////////////////////////////////////////////////////////
-
-    if (config->src_url_autoconf == NULL) {
-        char * p = strdup(DEFAULT_SRC_URL_AUTOCONF);
-
-        if (p == NULL) {
-            autotools_setup_config_free(config);
-            return AUTOTOOLS_SETUP_ERROR_MEMORY_ALLOCATE;
-        }
-
-        config->src_url_autoconf = p;
-    }
-
-    if (config->src_sha_autoconf == NULL) {
-        char * p = strdup(DEFAULT_SRC_SHA_AUTOCONF);
-
-        if (p == NULL) {
-            autotools_setup_config_free(config);
-            return AUTOTOOLS_SETUP_ERROR_MEMORY_ALLOCATE;
-        }
-
-        config->src_sha_autoconf = p;
-    }
-
-    ////////////////////////////////////////////////////////
-
-    if (config->src_url_perl == NULL) {
-        char * p = strdup(DEFAULT_SRC_URL_PERL);
-
-        if (p == NULL) {
-            autotools_setup_config_free(config);
-            return AUTOTOOLS_SETUP_ERROR_MEMORY_ALLOCATE;
-        }
-
-        config->src_url_perl = p;
-    }
-
-    if (config->src_sha_perl == NULL) {
-        char * p = strdup(DEFAULT_SRC_SHA_PERL);
-
-        if (p == NULL) {
-            autotools_setup_config_free(config);
-            return AUTOTOOLS_SETUP_ERROR_MEMORY_ALLOCATE;
-        }
-
-        config->src_sha_perl = p;
-    }
-}
-
-int autotools_setup_config_parse(const char * configFilePath, AUTOTOOLSSETUPFormula * * out) {
+int autotools_setup_config_parse(const char * configFilePath, AutotoolsSetupConfig * * out) {
     FILE * file = fopen(configFilePath, "r");
 
     if (file == NULL) {
@@ -372,9 +228,9 @@ int autotools_setup_config_parse(const char * configFilePath, AUTOTOOLSSETUPForm
 
     yaml_parser_set_input_file(&parser, file);
 
-    AUTOTOOLSSETUPFormulaKeyCode configKeyCode = FORMULA_KEY_CODE_unknown;
+    AutotoolsSetupConfigKeyCode configKeyCode = FORMULA_KEY_CODE_unknown;
 
-    AUTOTOOLSSETUPFormula * config = NULL;
+    AutotoolsSetupConfig * config = NULL;
 
     int lastTokenType = 0;
 
@@ -400,7 +256,7 @@ int autotools_setup_config_parse(const char * configFilePath, AUTOTOOLSSETUPForm
                     configKeyCode = autotools_setup_config_key_code_from_key_name((char*)token.data.scalar.value);
                 } else if (lastTokenType == 2) {
                     if (config == NULL) {
-                        config = (AUTOTOOLSSETUPFormula*)calloc(1, sizeof(AUTOTOOLSSETUPFormula));
+                        config = (AutotoolsSetupConfig*)calloc(1, sizeof(AutotoolsSetupConfig));
 
                         if (config == NULL) {
                             ret = AUTOTOOLS_SETUP_ERROR_MEMORY_ALLOCATE;
@@ -429,14 +285,11 @@ finalize:
     fclose(file);
 
     if (ret == AUTOTOOLS_SETUP_OK) {
-        ret = autotools_setup_config_check(config);
-
-        if (ret == AUTOTOOLS_SETUP_OK) {
-            (*out) = config;
-            return AUTOTOOLS_SETUP_OK;
-        }
+        //autotools_setup_config_dump(config);
+        (*out) = config;
+    } else {
+        autotools_setup_config_free(config);
     }
 
-    autotools_setup_config_free(config);
     return ret;
 }

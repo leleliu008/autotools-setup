@@ -37,7 +37,7 @@ jobs:
 
       - run:  cd vcpkg && ./bootstrap-vcpkg.sh
 
-      - run:  cd vcpkg && ./vcpkg install curl openssl libgit2 libarchive libyaml jansson zlib
+      - run:  cd vcpkg && ./vcpkg install curl openssl libarchive libyaml zlib
 
       - run:  |
           cmake \

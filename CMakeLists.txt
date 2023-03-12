@@ -89,11 +89,7 @@ find_package(CURL REQUIRED)
 # https://cmake.org/cmake/help/latest/module/FindLibArchive.html
 find_package(LibArchive REQUIRED)
 
-find_package(LibGit2 REQUIRED)
-
 find_package(LibYAML REQUIRED)
-
-find_package(JANSSON REQUIRED)
 
 find_package(ZLIB REQUIRED)
 
@@ -132,18 +128,14 @@ add_executable(autotools-setup "${CORE_SRCS};${REGEX_SRC};${SRCS}")
 message(STATUS "CURL_LIBRARIES=${CURL_LIBRARIES}")
 message(STATUS "OPENSSL_LIBRARIES=${OPENSSL_LIBRARIES}")
 message(STATUS "LibArchive_LIBRARIES=${LibArchive_LIBRARIES}")
-message(STATUS "LIBGIT2_LIBRARIES=${LIBGIT2_LIBRARIES}")
 message(STATUS "LIBYAML_LIBRARY=${LIBYAML_LIBRARY}")
-message(STATUS "JANSSON_LIBRARY=${JANSSON_LIBRARY}")
 message(STATUS "ZLIB_LIBRARIES=${ZLIB_LIBRARIES}")
 
 target_link_libraries(autotools-setup CURL::libcurl)
 target_link_libraries(autotools-setup OpenSSL::SSL)
 target_link_libraries(autotools-setup OpenSSL::Crypto)
 target_link_libraries(autotools-setup LibArchive::LibArchive)
-target_link_libraries(autotools-setup LIBGIT2::LIBGIT2)
 target_link_libraries(autotools-setup LIBYAML::LIBYAML)
-target_link_libraries(autotools-setup JANSSON::JANSSON)
 target_link_libraries(autotools-setup ZLIB::ZLIB)
 target_link_libraries(autotools-setup "-lm")
 

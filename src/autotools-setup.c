@@ -38,6 +38,10 @@ int autotools_setup_main(int argc, char* argv[]) {
         return autotools_setup_env();
     }
 
+    if (strcmp(argv[1], "show-default-config") == 0) {
+        return autotools_setup_show_default_config();
+    }
+
     if (strcmp(argv[1], "upgrade-self") == 0) {
         bool verbose = false;
 
@@ -89,7 +93,7 @@ int autotools_setup_main(int argc, char* argv[]) {
 
 
     if (strcmp(argv[1], "setup") == 0) {
-        AUTOTOOLSSETUPLogLevel logLevel = AUTOTOOLSSETUPLogLevel_normal;
+        AutotoolsSetupLogLevel logLevel = AutotoolsSetupLogLevel_normal;
 
         const char * configFilePath = NULL;
         const char * setupDir = NULL;
@@ -98,35 +102,35 @@ int autotools_setup_main(int argc, char* argv[]) {
 
         for (int i = 2; i < argc; i++) {
             if (strcmp(argv[i], "-q") == 0) {
-                logLevel = AUTOTOOLSSETUPLogLevel_silent;
+                logLevel = AutotoolsSetupLogLevel_silent;
             } else if (strcmp(argv[i], "-v") == 0) {
-                logLevel = AUTOTOOLSSETUPLogLevel_verbose;
+                logLevel = AutotoolsSetupLogLevel_verbose;
             } else if (strcmp(argv[i], "-vv") == 0) {
-                logLevel = AUTOTOOLSSETUPLogLevel_very_verbose;
+                logLevel = AutotoolsSetupLogLevel_very_verbose;
             } else if (strncmp(argv[i], "--jobs=", 7) == 0) {
                 if (argv[i][7] == '\0') {
-                    fprintf(stderr, "Usage: %s %s [-q | -v | -vv | --prefix=<DIR> --config-file=<FILEPATH> --jobs=<N>], <N> should be a non-empty string.\n", argv[0], argv[1]);
+                    fprintf(stderr, "Usage: %s %s [-q | -v | -vv | --prefix=<DIR> --config=<FILEPATH> --jobs=<N>], <N> should be a non-empty string.\n", argv[0], argv[1]);
                     return AUTOTOOLS_SETUP_ERROR_ARG_IS_NULL;
                 } else {
                     const char * jobsStr = argv[i] + 7;
                     jobs = atoi(jobsStr);
                 }
-            } else if (strncmp(argv[i], "--config-file=", 14) == 0) {
-                if (argv[i][14] == '\0') {
-                    fprintf(stderr, "Usage: %s %s [-q | -v | -vv | --prefix=<DIR> --config-file=<FILEPATH> --jobs=<N>], <FILEPATH> should be a non-empty string.\n", argv[0], argv[1]);
+            } else if (strncmp(argv[i], "--config=", 9) == 0) {
+                if (argv[i][9] == '\0') {
+                    fprintf(stderr, "Usage: %s %s [-q | -v | -vv | --prefix=<DIR> --config=<FILEPATH> --jobs=<N>], <FILEPATH> should be a non-empty string.\n", argv[0], argv[1]);
                     return AUTOTOOLS_SETUP_ERROR_ARG_IS_NULL;
                 } else {
-                    configFilePath = argv[i] + 14;
+                    configFilePath = argv[i] + 9;
                 }
             } else if (strncmp(argv[i], "--prefix=", 9) == 0) {
                 if (argv[i][9] == '\0') {
-                    fprintf(stderr, "Usage: %s %s [-q | -v | -vv | --prefix=<DIR> --config-file=<FILEPATH> --jobs=<N>], <DIR> should be a non-empty string.\n", argv[0], argv[1]);
+                    fprintf(stderr, "Usage: %s %s [-q | -v | -vv | --prefix=<DIR> --config=<FILEPATH> --jobs=<N>], <DIR> should be a non-empty string.\n", argv[0], argv[1]);
                     return AUTOTOOLS_SETUP_ERROR_ARG_IS_NULL;
                 } else {
                     setupDir = argv[i] + 9;
                 }
             } else {
-                fprintf(stderr, "Usage: %s %s [-q | -v | -vv | --prefix <DIR> --config-file=<FILEPATH> --jobs=<N>]\n", argv[0], argv[1]);
+                fprintf(stderr, "Usage: %s %s [-q | -v | -vv | --prefix=<DIR> --config=<FILEPATH> --jobs=<N>]\n", argv[0], argv[1]);
                 return AUTOTOOLS_SETUP_ERROR_ARG_IS_NULL;
             }
         }

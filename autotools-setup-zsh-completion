@@ -10,6 +10,7 @@ _commands=(
     'integrate:integrate zsh completions.'
     'sysinfo:show your system information.'
     'env:show your system information and other information.'
+    'show-default-config:show default config.'
 )
 
 function _autotools_setup_commands() {
@@ -30,6 +31,7 @@ function _autotools_setup() {
                 setup)
                     _arguments \
                         '--prefix=-[set which dir to be installed into]:prefix:_files -/' \
+                        '--config=-[set which config file to be used]:config:{_files -g "*.yml"}' \
                         '--jobs=-[set the number of jobs you can run in parallel]:jobs:(1 2 3 4 5 6 7 8 9)' \
                         + '(verbose_level)' \
                         '-vv[very verbose mode. many many messages will be output to terminal]' \

@@ -17,7 +17,6 @@ following packages will be installed:
 |[ninja](https://ninja-build.org/)|required |for doing jobs that read from `build.ninja`|
 |[pkg-config>=0.18](https://www.freedesktop.org/wiki/Software/pkg-config/)|required|for finding libraries.|
 ||||
-|[jansson](https://github.com/akheron/jansson)|required|for parsing and creating JSON.|
 |[libyaml](https://github.com/yaml/libyaml/)|required|for parsing formulas whose format is YAML.|
 |[libcurl](https://curl.se/)|required|for http requesting support.|
 |[openssl](https://www.openssl.org/)|required|for https requesting support and SHA-256 sum checking support.|
@@ -44,7 +43,7 @@ ppkg install autotools-setup
 git clone https://github.com/microsoft/vcpkg.git
 cd vcpkg
 ./bootstrap-vcpkg.sh
-./vcpkg install curl openssl libgit2 libarchive libyaml jansson
+./vcpkg install curl openssl libarchive libyaml
 
 cd -
 
@@ -62,7 +61,7 @@ cmake --install build.d
 
 ```bash
 apt -y update
-apt -y install git cmake ninja-build pkg-config gcc libcurl4 libcurl4-openssl-dev libgit2-dev libarchive-dev libyaml-dev libjansson-dev
+apt -y install git cmake ninja-build pkg-config gcc libcurl4 libcurl4-openssl-dev libarchive-dev libyaml-dev
 
 git clone https://github.com/leleliu008/autotools-setup
 cd autotools-setup
@@ -76,7 +75,7 @@ cmake --install build.d
 
 ```bash
 dnf -y update
-dnf -y install git cmake ninja-build pkg-config gcc libcurl-devel libgit2-devel libarchive-devel libyaml-devel jansson-devel
+dnf -y install git cmake ninja-build pkg-config gcc libcurl-devel libarchive-devel libyaml-devel
 
 git clone https://github.com/leleliu008/autotools-setup
 cd autotools-setup
@@ -90,7 +89,7 @@ cmake --install build.d
 
 ```bash
 pacman -Syyuu --noconfirm
-pacman -S     --noconfirm git cmake ninja pkg-config gcc curl openssl libgit2 libarchive libyaml jansson
+pacman -S     --noconfirm git cmake ninja pkg-config gcc curl openssl libarchive libyaml
 
 git clone https://github.com/leleliu008/autotools-setup
 cd autotools-setup
@@ -103,7 +102,7 @@ cmake --install build.d
 **[AlpineLinux](https://www.alpinelinux.org/)**
 
 ```bash
-apk add git cmake ninja pkgconf gcc libc-dev curl-dev openssl-dev libgit2-dev libarchive-dev yaml-dev jansson-dev
+apk add git cmake ninja pkgconf gcc libc-dev curl-dev openssl-dev libarchive-dev yaml-dev
 
 git clone https://github.com/leleliu008/autotools-setup
 cd autotools-setup
@@ -117,7 +116,7 @@ cmake --install build.d
 
 ```bash
 xbps-install -Suy xbps
-xbps-install -Suy cmake ninja gcc pkg-config libcurl-devel libgit2-devel libarchive-devel libyaml-devel jansson-devel
+xbps-install -Suy cmake ninja gcc pkg-config libcurl-devel libarchive-devel libyaml-devel
 
 git clone https://github.com/leleliu008/autotools-setup
 cd autotools-setup
@@ -130,7 +129,7 @@ cmake --install build.d
 **[Gentoo Linux](https://www.gentoo.org/)**
 
 ```bash
-emerge dev-vcs/git cmake dev-util/ninja gcc pkg-config net-misc/curl dev-libs/libgit2 libarchive dev-libs/libyaml dev-libs/jansson
+emerge dev-vcs/git cmake dev-util/ninja gcc pkg-config net-misc/curl libarchive dev-libs/libyaml
 
 git clone https://github.com/leleliu008/autotools-setup
 cd autotools-setup
@@ -144,7 +143,7 @@ cmake --install build.d
 
 ```bash
 zypper update  -y  
-zypper install -y git cmake ninja gcc pkg-config libcurl-devel libgit2-devel libarchive-devel libyaml-devel libjansson-devel
+zypper install -y git cmake ninja gcc pkg-config libcurl-devel libarchive-devel libyaml-devel
 
 git clone https://github.com/leleliu008/autotools-setup
 cd autotools-setup
@@ -158,7 +157,7 @@ cmake --install build.d
 
 ```bash
 brew update
-brew install git cmake pkg-config ninja curl jansson libyaml libgit2 libarchive
+brew install git cmake pkg-config ninja curl libyaml libarchive
 
 git clone https://github.com/leleliu008/autotools-setup
 cd autotools-setup
@@ -183,7 +182,7 @@ cmake --install build.d
 **[FreeBSD](https://www.freebsd.org/)**
 
 ```bash
-pkg install -y git cmake ninja pkgconf gcc curl openssl libgit2 libarchive libyaml jansson
+pkg install -y git cmake ninja pkgconf gcc curl openssl libarchive libyaml
 
 git clone https://github.com/leleliu008/autotools-setup
 cd autotools-setup
@@ -196,7 +195,7 @@ cmake --install build.d
 **[OpenBSD](https://www.openbsd.org/)**
 
 ```bash
-pkg_add git cmake ninja pkgconf llvm curl libgit2 libarchive libyaml jansson
+pkg_add git cmake ninja pkgconf llvm curl libarchive libyaml
 
 git clone https://github.com/leleliu008/autotools-setup
 cd autotools-setup
@@ -209,7 +208,7 @@ cmake --install build.d
 **[NetBSD](https://www.netbsd.org/)**
 
 ```bash
-pkgin -y install git mozilla-rootcerts cmake ninja-build pkg-config clang curl openssl libgit2 libarchive libyaml jansson
+pkgin -y install git mozilla-rootcerts cmake ninja-build pkg-config clang curl openssl libarchive libyaml
 
 mozilla-rootcerts install
 
@@ -247,6 +246,11 @@ all relevant dirs and files are located in `~/.autotools-setup` directory.
 
         autotools-setup env
         
+*   **show default config**
+
+        autotools-setup show-default-config
+        autotools-setup show-default-config > config.yml
+        
 *   **integrate `zsh-completion` script**
 
         autotools-setup integrate zsh
@@ -262,9 +266,10 @@ all relevant dirs and files are located in `~/.autotools-setup` directory.
         autotools-setup setup
         autotools-setup setup --prefix=.autotools
         autotools-setup setup --prefix=.autotools --jobs=8
+        autotools-setup setup --prefix=.autotools --config=my-config.yml
         autotools-setup setup --prefix=.autotools -v
  
-    **Note**: C and C++ compiler should be installed by yourself using your system's default package manager before running this command.
+    **Note**: C compiler should be installed by yourself using your system's default package manager before running this command.
 
 *   **extra common used utilities**
         
@@ -307,3 +312,31 @@ all relevant dirs and files are located in `~/.autotools-setup` directory.
     ```
 
     In general, you don't need to set this environment variable, but, if you encounter the reporting `the SSL certificate is invalid`, trying to run above commands in your terminal will do the trick.
+
+## config
+
+If default config dosn't meets your needs, you can specify your config via `--config=your/config/file/path`
+
+config is a [YAML](https://yaml.org/spec/1.2.2/) format file.
+
+**example**:
+
+```yml
+src-url-gm4:      https://ftp.gnu.org/gnu/m4/m4-1.4.19.tar.xz
+src-sha-gm4:      63aede5c6d33b6d9b13511cd0be2cac046f2e70fd0a07aa9573a04a82783af96
+
+src-url-perl:     https://cpan.metacpan.org/authors/id/R/RJ/RJBS/perl-5.36.0.tar.xz
+src-sha-perl:     0f386dccbee8e26286404b2cca144e1005be65477979beb9b1ba272d4819bcf0
+
+src-url-pkgconf:  http://distfiles.dereferenced.org/pkgconf/pkgconf-1.9.4.tar.xz
+src-sha-pkgconf:  daccf1bbe5a30d149b556c7d2ffffeafd76d7b514e249271abdd501533c1d8ae
+
+src-url-libtool:  https://ftp.gnu.org/gnu/libtool/libtool-2.4.7.tar.xz
+src-sha-libtool:  4f7f217f057ce655ff22559ad221a0fd8ef84ad1fc5fcb6990cecc333aa1635d
+
+src-url-automake: https://ftp.gnu.org/gnu/automake/automake-1.16.5.tar.xz
+src-sha-automake: f01d58cd6d9d77fbdca9eb4bbd5ead1988228fdb73d6f7a201f5f8d6b118b469
+
+src-url-autoconf: https://ftp.gnu.org/gnu/autoconf/autoconf-2.71.tar.gz
+src-sha-autoconf: 431075ad0bf529ef13cb41e9042c542381103e80015686222b8a9d4abef42a1c
+```
