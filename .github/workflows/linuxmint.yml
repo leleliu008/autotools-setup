@@ -1,4 +1,4 @@
-name: Debian GNU/Linux
+name: LinuxMint
 
 on:
   push:
@@ -13,14 +13,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        tag: ['9.13', '10.7', '11.5']
+        tag: [19.3, 20.1]
 
-    container: debian:${{ matrix.tag }}
+    container: linuxmintd/mint${{ matrix.tag }}-amd64
 
     steps:
       - run:  id
-      - run:  apt -y update
-      - run:  apt -y install curl g++ xz-utils
+      - run:  sudo apt -y update
+      - run:  sudo apt -y install curl xz-utils g++
 
       - uses: actions/checkout@main
 

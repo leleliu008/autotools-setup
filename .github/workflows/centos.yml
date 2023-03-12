@@ -37,21 +37,57 @@ jobs:
       - run:  echo "SSL_CERT_FILE=$HOME/.ppkg/core/etc/ssl/certs/cacert.pem" >> $GITHUB_ENV
 
 
-      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup
+      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup
 
-      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup --help
-      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup -h
+      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup --help
+      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup -h
 
-      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup --version
-      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup -V
+      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup --version
+      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup -V
 
-      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup sysinfo
+      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup sysinfo
 
-      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup env
+      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup env
 
-      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup integrate zsh
+      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup show-default-config
 
-      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup setup -v
+      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup integrate zsh
+      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup integrate zsh -v
+
+      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup setup -v
+
+      - uses: actions/checkout@v3
+        with:
+          repository: universal-ctags/ctags
+          path: ctags
+
+      - run: |
+          unset IFS
+
+          COLOR_GREEN='\033[0;32m'        # Green
+          COLOR_PURPLE='\033[0;35m'       # Purple
+          COLOR_OFF='\033[0m'             # Reset
+
+          echo() {
+              printf '%b\n' "$*"
+          }
+
+          run() {
+              echo "${COLOR_PURPLE}==>${COLOR_OFF} ${COLOR_GREEN}$@${COLOR_OFF}"
+              eval "$*"
+          }
+
+          run source ~/.autotools-setup/autotools/env.sh
+
+          run cd ctags
+
+          run ./autogen.sh
+          run ./configure --prefix=$PWD/out
+          run gmake
+          run gmake install
+
+       #- run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup upgrade-self
+
 
   centos7:
     runs-on: ubuntu-latest
@@ -77,21 +113,57 @@ jobs:
       - run:  echo "SSL_CERT_FILE=$HOME/.ppkg/core/etc/ssl/certs/cacert.pem" >> $GITHUB_ENV
 
 
-      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup
+      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup
 
-      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup --help
-      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup -h
+      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup --help
+      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup -h
 
-      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup --version
-      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup -V
+      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup --version
+      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup -V
 
-      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup sysinfo
+      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup sysinfo
 
-      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup env
+      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup env
 
-      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup integrate zsh
+      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup show-default-config
 
-      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup setup -v
+      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup integrate zsh
+      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup integrate zsh -v
+
+      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup setup -v
+
+      - uses: actions/checkout@v3
+        with:
+          repository: universal-ctags/ctags
+          path: ctags
+
+      - run: |
+          unset IFS
+
+          COLOR_GREEN='\033[0;32m'        # Green
+          COLOR_PURPLE='\033[0;35m'       # Purple
+          COLOR_OFF='\033[0m'             # Reset
+
+          echo() {
+              printf '%b\n' "$*"
+          }
+
+          run() {
+              echo "${COLOR_PURPLE}==>${COLOR_OFF} ${COLOR_GREEN}$@${COLOR_OFF}"
+              eval "$*"
+          }
+
+          run source ~/.autotools-setup/autotools/env.sh
+
+          run cd ctags
+
+          run ./autogen.sh
+          run ./configure --prefix=$PWD/out
+          run gmake
+          run gmake install
+
+       #- run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup upgrade-self
+
 
   centos_6_10:
     if: ${{ false }}
@@ -123,18 +195,53 @@ jobs:
       - run:  echo "SSL_CERT_FILE=$HOME/.ppkg/core/etc/ssl/certs/cacert.pem" >> $GITHUB_ENV
 
 
-      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup
+      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup
 
-      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup --help
-      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup -h
+      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup --help
+      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup -h
 
-      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup --version
-      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup -V
+      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup --version
+      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup -V
 
-      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup sysinfo
+      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup sysinfo
 
-      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup env
+      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup env
 
-      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup integrate zsh
+      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup show-default-config
 
-      - run:  ~/.ppkg/installed/autotools-setup/bin/autotools-setup setup -v
+      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup integrate zsh
+      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup integrate zsh -v
+
+      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup setup -v
+
+      - uses: actions/checkout@v3
+        with:
+          repository: universal-ctags/ctags
+          path: ctags
+
+      - run: |
+          unset IFS
+
+          COLOR_GREEN='\033[0;32m'        # Green
+          COLOR_PURPLE='\033[0;35m'       # Purple
+          COLOR_OFF='\033[0m'             # Reset
+
+          echo() {
+              printf '%b\n' "$*"
+          }
+
+          run() {
+              echo "${COLOR_PURPLE}==>${COLOR_OFF} ${COLOR_GREEN}$@${COLOR_OFF}"
+              eval "$*"
+          }
+
+          run source ~/.autotools-setup/autotools/env.sh
+
+          run cd ctags
+
+          run ./autogen.sh
+          run ./configure --prefix=$PWD/out
+          run gmake
+          run gmake install
+
+       #- run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup upgrade-self
