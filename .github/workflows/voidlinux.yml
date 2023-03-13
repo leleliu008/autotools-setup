@@ -48,10 +48,6 @@ jobs:
 
       - run: ./output/bin/autotools-setup setup -v
 
-      - uses: actions/checkout@v1
-        with:
-          repository: universal-ctags/ctags
-          path: ctags
 
       - run: |
           unset IFS
@@ -71,7 +67,13 @@ jobs:
 
           run . ~/.autotools-setup/autotools/env.sh
 
-          run cd ctags
+          run mkdir ctags
+          run cd    ctags
+
+          run git -c init.defaultBranch=master init
+          run git remote add origin https://github.com/universal-ctags/ctags
+          run git -c protocol.version=2 fetch --progress --depth=1 origin '+refs/heads/master:refs/remotes/origin/master'
+          run git checkout --progress --force -B master refs/remotes/origin/master
 
           run ./autogen.sh
           run ./configure --prefix=$PWD/out

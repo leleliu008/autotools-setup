@@ -59,6 +59,12 @@ jobs:
 
             run cd ctags
 
+            export CFLAGS='-I/usr/local/include -L/usr/local/lib'
+
+            if [ ! -f /usr/local/lib/libiconv.so ] ; then
+                sudo ln -s /usr/local/lib/libiconv.so.* /usr/local/lib/libiconv.so
+            fi
+
             run ./autogen.sh
             run ./configure --prefix=$PWD/out
             run gmake
