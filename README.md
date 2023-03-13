@@ -261,7 +261,7 @@ all relevant dirs and files are located in `~/.autotools-setup` directory.
 
     **Note**: to apply this feature, you may need to run the command `autoload -U compinit && compinit` in your terminal (your current running shell must be zsh).
 
-*   **setup autotools environment**
+*   **setup GNU Autotools and relevant build environment**
 
         autotools-setup setup
         autotools-setup setup --prefix=.autotools
@@ -270,6 +270,13 @@ all relevant dirs and files are located in `~/.autotools-setup` directory.
         autotools-setup setup --prefix=.autotools -v
  
     **Note**: C compiler should be installed by yourself using your system's default package manager before running this command.
+
+
+    **Tip:** above command do two things:
+
+    1. download `gmake` prebuild binary from https://github.com/leleliu008/gmake-build/releases
+    2. build and install `gm4` `perl` `pkgconf` `libtool` `autoconf` `automake` from source
+
 
 *   **extra common used utilities**
         

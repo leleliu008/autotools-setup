@@ -499,6 +499,12 @@ static int autotools_setup_setup_internal(const char * setupDir, AutotoolsSetupC
         } else if (strcmp(sysinfo.arch, "aarch64") == 0) {
             binUrlGmake = "https://github.com/leleliu008/gmake-build/releases/download/4.3/gmake-4.3-linux-aarch64.tar.xz";
             binShaGmake = "8ba11716b9d473dbc100cd87474d381bd2bcb7822cc029b50e5a8307c6695691";
+        } else if (strcmp(sysinfo.arch, "ppc64le") == 0) {
+            binUrlGmake = "https://github.com/leleliu008/gmake-build/releases/download/4.3/gmake-4.3-linux-ppc64le.tar.xz";
+            binShaGmake = "635c8e41683e318f39a81b964deac2ae1fa736009dc05a04f1110393fa0c9480";
+        } else if (strcmp(sysinfo.arch, "s390x") == 0) {
+            binUrlGmake = "https://github.com/leleliu008/gmake-build/releases/download/4.3/gmake-4.3-linux-s390x.tar.xz";
+            binShaGmake = "4e25857f78bb0a1932cf5e0de1ad7b424a42875775d174753362c3af61ceeb0d";
         }
     } else if (strcmp(sysinfo.kind, "darwin") == 0) {
         if (strcmp(sysinfo.arch, "x86_64") == 0) {
