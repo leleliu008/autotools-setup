@@ -75,7 +75,7 @@ cmake --install build.d
 
 ```bash
 dnf -y update
-dnf -y install git cmake ninja-build pkg-config gcc libcurl-devel libarchive-devel libyaml-devel
+dnf -y install git cmake ninja-build pkg-config gcc libcurl-devel openssl-devel libarchive-devel libyaml-devel zlib-devel
 
 git clone https://github.com/leleliu008/autotools-setup
 cd autotools-setup
@@ -143,7 +143,7 @@ cmake --install build.d
 
 ```bash
 zypper update  -y  
-zypper install -y git cmake ninja gcc pkg-config libcurl-devel libarchive-devel libyaml-devel
+zypper install -y git cmake ninja gcc pkg-config libcurl-devel openssl-devel libarchive-devel libyaml-devel zlib-devel
 
 git clone https://github.com/leleliu008/autotools-setup
 cd autotools-setup

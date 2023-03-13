@@ -258,33 +258,34 @@ finalize:
     ret = self_realpath(&selfRealPath);
 
     if (ret != AUTOTOOLS_SETUP_OK) {
-        fprintf(stderr, "Can't upgrade self. the latest version of executable was downloaded to %s, you can replace the current running program with it.\n", upgradableExecutableFilePath);
-        return ret;
+        goto finally;
     }
 
     if (unlink(selfRealPath) != 0) {
         perror(selfRealPath);
-        free(selfRealPath);
-        fprintf(stderr, "Can't upgrade self. the latest version of executable was downloaded to %s, you can replace the current running program with it.\n", upgradableExecutableFilePath);
-        return AUTOTOOLS_SETUP_ERROR;
+        ret = AUTOTOOLS_SETUP_ERROR;
+        goto finally;
     }
 
     ret = copy_file(upgradableExecutableFilePath, selfRealPath);
 
     if (ret != AUTOTOOLS_SETUP_OK) {
-        free(selfRealPath);
-        fprintf(stderr, "Can't upgrade self. the latest version of executable was downloaded to %s, you can replace the current running program with it.\n", upgradableExecutableFilePath);
-        return AUTOTOOLS_SETUP_ERROR;
+        goto finally;
     }
 
-    if (chmod(selfRealPath, S_IRWXU) == 0) {
-        free(selfRealPath);
-        fprintf(stderr, "autotoolsSetup is up to date with version %s\n", latestVersion);
-        return AUTOTOOLS_SETUP_OK;
-    } else {
+    if (chmod(selfRealPath, S_IRWXU) != 0) {
         perror(selfRealPath);
-        free(selfRealPath);
-        fprintf(stderr, "Can't upgrade self. the latest version of executable was downloaded to %s, you can replace the current running program with it.\n", upgradableExecutableFilePath);
-        return AUTOTOOLS_SETUP_ERROR;
+        ret = AUTOTOOLS_SETUP_ERROR;
     }
+
+finally:
+    free(selfRealPath);
+
+    if (ret == AUTOTOOLS_SETUP_OK) {
+        fprintf(stderr, "autotools-setup is up to date with version %s\n", latestVersion);
+    } else {
+        fprintf(stderr, "Can't upgrade self. the latest version of executable was downloaded to %s, you can manually replace the current running program with it.\n", upgradableExecutableFilePath);
+    }
+
+    return ret;
 }

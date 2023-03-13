@@ -24,17 +24,25 @@
 #include "core/exe.h"
 #include "autotools-setup.h"
 
-#define LOG_STEP(stdout2terminal, logLevel, stepN, msg) \
+#define LOG_STEP(output2Terminal, logLevel, stepN, msg) \
     if (logLevel != AutotoolsSetupLogLevel_silent) { \
-        fprintf(stderr, "%s=>> STEP %d : %s%s\n", COLOR_PURPLE, stepN, msg, COLOR_OFF); \
+        if (output2Terminal) { \
+            fprintf(stderr, "\n%s=>> STEP %d : %s%s\n", COLOR_PURPLE, stepN, msg, COLOR_OFF); \
+        } else { \
+            fprintf(stderr, "\n=>> STEP %d : %s\n", stepN, msg); \
+        } \
     }
 
-#define LOG_RUN_CMD(stdout2terminal, logLevel, cmd) \
+#define LOG_RUN_CMD(output2Terminal, logLevel, cmd) \
     if (logLevel != AutotoolsSetupLogLevel_silent) { \
-        fprintf(stderr, "%s==>%s %s%s%s\n", COLOR_PURPLE, COLOR_OFF, COLOR_GREEN, cmd, COLOR_OFF); \
+        if (output2Terminal) { \
+            fprintf(stderr, "%s==>%s %s%s%s\n", COLOR_PURPLE, COLOR_OFF, COLOR_GREEN, cmd, COLOR_OFF); \
+        } else { \
+            fprintf(stderr, "==> %s\n", cmd); \
+        } \
     }
 
-static int run_cmd(char * cmd) {
+static int run_cmd(char * cmd, int redirectOutput2FD) {
     pid_t pid = fork();
 
     if (pid < 0) {
@@ -43,6 +51,20 @@ static int run_cmd(char * cmd) {
     }
 
     if (pid == 0) {
+        if (redirectOutput2FD > 0) {
+            if (dup2(redirectOutput2FD, STDOUT_FILENO) < 0) {
+                perror(NULL);
+                exit(125);
+            }
+
+            if (dup2(redirectOutput2FD, STDERR_FILENO) < 0) {
+                perror(NULL);
+                exit(126);
+            }
+        }
+
+        ////////////////////////////////////////
+
         size_t argc = 0;
         char* argv[10] = {0};
 
@@ -53,6 +75,8 @@ static int run_cmd(char * cmd) {
             argc++;
             arg = strtok(NULL, " ");
         }
+
+        ////////////////////////////////////////
 
         execv(argv[0], argv);
         perror(argv[0]);
@@ -81,10 +105,19 @@ static int run_cmd(char * cmd) {
     }
 }
 
-static int autotools_setup_download_and_extract(const char * url, const char * sha, const char * downloadsDir, size_t downloadsDirLength, const char * extractDIR, AutotoolsSetupLogLevel logLevel) {
-    size_t  urlCopyLength = strlen(url) + 1;
-    char    urlCopy[urlCopyLength];
-    strncpy(urlCopy, url, urlCopyLength);
+static int autotools_setup_download_and_uncompress(const char * url, const char * sha, const char * downloadsDir, size_t downloadsDirLength, const char * uncompressDir, AutotoolsSetupLogLevel logLevel) {
+    size_t   urlLength = strlen(url);
+
+    size_t   fetchPhaseCmdLength = urlLength + 10;
+    char     fetchPhaseCmd[fetchPhaseCmdLength];
+    snprintf(fetchPhaseCmd, fetchPhaseCmdLength, "Fetching %s", url);
+
+    LOG_RUN_CMD(true, logLevel, fetchPhaseCmd)
+
+    ////////////////////////////////////////////////////////////////////////
+
+    char    urlCopy[urlLength + 1];
+    strncpy(urlCopy, url, urlLength + 1);
 
     char *   fileName = basename(urlCopy);
 
@@ -139,7 +172,13 @@ static int autotools_setup_download_and_extract(const char * url, const char * s
         }
     }
 
-    return tar_extract(extractDIR, filePath, ARCHIVE_EXTRACT_TIME, logLevel >= AutotoolsSetupLogLevel_verbose, 1);
+    size_t   uncompressPhaseCmdLength = filePathLength + 36;
+    char     uncompressPhaseCmd[uncompressPhaseCmdLength];
+    snprintf(uncompressPhaseCmd, uncompressPhaseCmdLength, "Uncompressing %s --strip-components=1", filePath);
+
+    LOG_RUN_CMD(true, logLevel, uncompressPhaseCmd)
+
+    return tar_extract(uncompressDir, filePath, ARCHIVE_EXTRACT_TIME, logLevel >= AutotoolsSetupLogLevel_verbose, 1);
 }
 
 static int autotools_setup_write_env(const char * envFilePath, const char * setupBinDir, const char * setupAclocalDir) {
@@ -210,16 +249,17 @@ typedef struct {
     const char * src_sha;
 } Package;
 
-static int autotools_setup_build_the_given_package(Package package, const char * autotoolsSetupDownloadsDir, size_t autotoolsSetupDownloadsDirLength, const char * autotoolsSetupInstallingRootDir, size_t autotoolsSetupInstallingRootDirLength, const char * setupDir, size_t setupDirLength, AutotoolsSetupLogLevel logLevel, unsigned int jobs, struct stat st, const char * gmakePath, size_t gmakePathLength, bool stdout2terminal) {
+static int autotools_setup_install_the_given_package(Package package, const char * autotoolsSetupDownloadsDir, size_t autotoolsSetupDownloadsDirLength, const char * autotoolsSetupInstallingRootDir, size_t autotoolsSetupInstallingRootDirLength, const char * setupDir, size_t setupDirLength, AutotoolsSetupLogLevel logLevel, unsigned int jobs, struct stat st, const char * gmakePath, size_t gmakePathLength, bool output2Terminal, int redirectOutput2FD) {
     size_t   packageInstallingDirLength = autotoolsSetupInstallingRootDirLength + strlen(package.name);
     char     packageInstallingDir[packageInstallingDirLength];
     snprintf(packageInstallingDir, packageInstallingDirLength, "%s/%s", autotoolsSetupInstallingRootDir, package.name);
 
     if (stat(packageInstallingDir, &st) == 0) {
         if (S_ISDIR(st.st_mode)) {
-            if (rm_r(packageInstallingDir, logLevel >= AutotoolsSetupLogLevel_verbose) != 0) {
-                perror(packageInstallingDir);
-                return AUTOTOOLS_SETUP_ERROR;
+            int ret = rm_r(packageInstallingDir, logLevel >= AutotoolsSetupLogLevel_verbose);
+
+            if (ret != AUTOTOOLS_SETUP_OK) {
+                return ret;
             }
         } else {
             fprintf(stderr, "'%s\n' was expected to be a directory, but it was not.\n", packageInstallingDir);
@@ -234,7 +274,7 @@ static int autotools_setup_build_the_given_package(Package package, const char *
 
     //////////////////////////////////////////////////////////////////////////////
 
-    int ret = autotools_setup_download_and_extract(package.src_url, package.src_sha, autotoolsSetupDownloadsDir, autotoolsSetupDownloadsDirLength, packageInstallingDir, logLevel);
+    int ret = autotools_setup_download_and_uncompress(package.src_url, package.src_sha, autotoolsSetupDownloadsDir, autotoolsSetupDownloadsDirLength, packageInstallingDir, logLevel);
 
     if (ret != AUTOTOOLS_SETUP_OK) {
         return AUTOTOOLS_SETUP_ERROR;
@@ -254,17 +294,17 @@ static int autotools_setup_build_the_given_package(Package package, const char *
         char     configurePhaseCmd[configurePhaseCmdLength];
         snprintf(configurePhaseCmd, configurePhaseCmdLength, "./Configure -Dprefix=%s -des -Dmake=gmake -Duselargefiles -Duseshrplib -Dusethreads -Dusenm=false -Dusedl=true", setupDir);
 
-        LOG_RUN_CMD(stdout2terminal, logLevel, configurePhaseCmd)
+        LOG_RUN_CMD(output2Terminal, logLevel, configurePhaseCmd)
 
-        ret = run_cmd(configurePhaseCmd);
+        ret = run_cmd(configurePhaseCmd, redirectOutput2FD);
     } else {
         size_t   configurePhaseCmdLength = setupDirLength + 32;
         char     configurePhaseCmd[configurePhaseCmdLength];
         snprintf(configurePhaseCmd, configurePhaseCmdLength, "./configure --prefix=%s %s", setupDir, logLevel == AutotoolsSetupLogLevel_silent ? "--silent" : "");
 
-        LOG_RUN_CMD(stdout2terminal, logLevel, configurePhaseCmd)
+        LOG_RUN_CMD(output2Terminal, logLevel, configurePhaseCmd)
 
-        ret = run_cmd(configurePhaseCmd);
+        ret = run_cmd(configurePhaseCmd, redirectOutput2FD);
     }
 
     if (ret != AUTOTOOLS_SETUP_OK) {
@@ -273,13 +313,13 @@ static int autotools_setup_build_the_given_package(Package package, const char *
 
     //////////////////////////////////////////////////////////////////////////////
 
-    size_t   buildPhaseCmdLength = gmakePathLength + 20;
+    size_t   buildPhaseCmdLength = gmakePathLength + 12;
     char     buildPhaseCmd[buildPhaseCmdLength];
-    snprintf(buildPhaseCmd, buildPhaseCmdLength, "%s %s --jobs=%u", gmakePath, logLevel == AutotoolsSetupLogLevel_silent ? "--silent" : "", jobs);
+    snprintf(buildPhaseCmd, buildPhaseCmdLength, "%s --jobs=%u", gmakePath, jobs);
 
-    LOG_RUN_CMD(stdout2terminal, logLevel, buildPhaseCmd)
+    LOG_RUN_CMD(output2Terminal, logLevel, buildPhaseCmd)
 
-    ret = run_cmd(buildPhaseCmd);
+    ret = run_cmd(buildPhaseCmd, redirectOutput2FD);
 
     if (ret != AUTOTOOLS_SETUP_OK) {
         return ret;
@@ -289,15 +329,15 @@ static int autotools_setup_build_the_given_package(Package package, const char *
 
     size_t   installPhaseCmdLength = gmakePathLength + 20;
     char     installPhaseCmd[installPhaseCmdLength];
-    snprintf(installPhaseCmd, installPhaseCmdLength, "%s %s install", gmakePath, logLevel == AutotoolsSetupLogLevel_silent ? "--silent" : "");
+    snprintf(installPhaseCmd, installPhaseCmdLength, "%s install", gmakePath);
 
-    LOG_RUN_CMD(stdout2terminal, logLevel, installPhaseCmd)
+    LOG_RUN_CMD(output2Terminal, logLevel, installPhaseCmd)
 
-    return run_cmd(installPhaseCmd);
+    return run_cmd(installPhaseCmd, redirectOutput2FD);
 }
 
 static int autotools_setup_setup_internal(const char * setupDir, AutotoolsSetupConfig config, AutotoolsSetupLogLevel logLevel, unsigned int jobs, SysInfo sysinfo) {
-    bool stdout2terminal = isatty(STDOUT_FILENO);
+    bool output2Terminal = isatty(STDOUT_FILENO);
 
     char * userHomeDir = getenv("HOME");
 
@@ -354,7 +394,10 @@ static int autotools_setup_setup_internal(const char * setupDir, AutotoolsSetupC
     snprintf(setupAclocalDir, setupAclocalDirLength, "%s/share/aclocal", setupDir);
 
     // https://www.gnu.org/software/automake/manual/html_node/Macro-Search-Path.html
-    setenv("ACLOCAL_PATH", setupAclocalDir, 1);
+    if (setenv("ACLOCAL_PATH", setupAclocalDir, 1) != 0) {
+        perror(NULL);
+        return AUTOTOOLS_SETUP_ERROR;
+    }
 
     //////////////////////////////////////////////////////////////////////////////
 
@@ -368,7 +411,39 @@ static int autotools_setup_setup_internal(const char * setupDir, AutotoolsSetupC
     char     newPATH[newPATHLength];
     snprintf(newPATH, newPATHLength, "%s:%s", setupBinDir, PATH);
 
-    setenv("PATH", newPATH, 1);
+    if (setenv("PATH", newPATH, 1) != 0) {
+        perror(NULL);
+        return AUTOTOOLS_SETUP_ERROR;
+    }
+
+    //////////////////////////////////////////////////////////////////////////////
+
+    if (unsetenv("CPPFLAGS") != 0) {
+        perror(NULL);
+        return AUTOTOOLS_SETUP_ERROR;
+    }
+
+    if (logLevel == AutotoolsSetupLogLevel_very_verbose) {
+        if (setenv("CFLAGS", "-v -fPIC", 1) != 0) {
+            perror(NULL);
+            return AUTOTOOLS_SETUP_ERROR;
+        }
+
+        if (setenv("LDFLAGS", "-Wl,-v", 1) != 0) {
+            perror(NULL);
+            return AUTOTOOLS_SETUP_ERROR;
+        }
+    } else {
+        if (setenv("CFLAGS", "-fPIC", 1) != 0) {
+            perror(NULL);
+            return AUTOTOOLS_SETUP_ERROR;
+        }
+
+        if (unsetenv("LDFLAGS") != 0) {
+            perror(NULL);
+            return AUTOTOOLS_SETUP_ERROR;
+        }
+    }
 
     //////////////////////////////////////////////////////////////////////////////
 
@@ -452,6 +527,23 @@ static int autotools_setup_setup_internal(const char * setupDir, AutotoolsSetupC
 
     //////////////////////////////////////////////////////////////////////////////
 
+    int redirectOutput2FD = -1;
+
+    if (logLevel < AutotoolsSetupLogLevel_verbose) {
+        size_t   logFilePathLength = setupDirLength + 9;
+        char     logFilePath[logFilePathLength];
+        snprintf(logFilePath, logFilePathLength, "%s/log.txt", setupDir);
+
+        redirectOutput2FD = open(logFilePath, O_CREAT | O_TRUNC | O_WRONLY, 0666);
+
+        if (redirectOutput2FD < 0) {
+            perror(NULL);
+            return AUTOTOOLS_SETUP_ERROR;
+        }
+    }
+
+    //////////////////////////////////////////////////////////////////////////////
+
     int STDERR_FILENO2 = STDERR_FILENO;
 
     if (logLevel == AutotoolsSetupLogLevel_silent) {
@@ -459,36 +551,26 @@ static int autotools_setup_setup_internal(const char * setupDir, AutotoolsSetupC
 
         if (STDERR_FILENO2 < 0) {
             perror(NULL);
+            close(redirectOutput2FD);
             return AUTOTOOLS_SETUP_ERROR;
         }
 
-        size_t   logFilePathLength = setupDirLength + 9;
-        char     logFilePath[logFilePathLength];
-        snprintf(logFilePath, logFilePathLength, "%s/log.txt", setupDir);
-
-        int fd = open(logFilePath, O_CREAT | O_TRUNC | O_WRONLY, 0666);
-
-        if (fd < 0) {
+        if (dup2(redirectOutput2FD, STDOUT_FILENO) < 0) {
             perror(NULL);
             close(STDERR_FILENO2);
+            close(redirectOutput2FD);
             return AUTOTOOLS_SETUP_ERROR;
         }
 
-        if (dup2(fd, STDOUT_FILENO) < 0) {
+        if (dup2(redirectOutput2FD, STDERR_FILENO) < 0) {
             perror(NULL);
             close(STDERR_FILENO2);
-            close(fd);
+            close(redirectOutput2FD);
             return AUTOTOOLS_SETUP_ERROR;
         }
 
-        if (dup2(fd, STDERR_FILENO) < 0) {
-            perror(NULL);
-            close(STDERR_FILENO2);
-            close(fd);
-            return AUTOTOOLS_SETUP_ERROR;
-        }
-
-        close(fd);
+        close(redirectOutput2FD);
+        redirectOutput2FD = -1;
     }
 
     //////////////////////////////////////////////////////////////////////////////
@@ -514,7 +596,7 @@ static int autotools_setup_setup_internal(const char * setupDir, AutotoolsSetupC
     if (binUrlGmake == NULL) {
         gmakePathNeedsToBeFreed = true;
 
-        LOG_STEP(stdout2terminal, logLevel, stepN++, "finding gmake")
+        LOG_STEP(output2Terminal, logLevel, stepN++, "finding gmake")
 
         ret = exe_lookup("gmake", &gmakePath, &gmakePathLength);
 
@@ -533,9 +615,9 @@ static int autotools_setup_setup_internal(const char * setupDir, AutotoolsSetupC
         gmakePath =       defaultGmakePath;
         gmakePathLength = defaultGmakePathLength - 1;
 
-        LOG_STEP(stdout2terminal, logLevel, stepN++, "installing gmake")
+        LOG_STEP(output2Terminal, logLevel, stepN++, "installing gmake")
 
-        ret = autotools_setup_download_and_extract(binUrlGmake, binShaGmake, autotoolsSetupDownloadsDir, autotoolsSetupDownloadsDirLength, setupDir, logLevel);
+        ret = autotools_setup_download_and_uncompress(binUrlGmake, binShaGmake, autotoolsSetupDownloadsDir, autotoolsSetupDownloadsDirLength, setupDir, logLevel);
 
         if (ret != AUTOTOOLS_SETUP_OK) {
             return ret;
@@ -560,7 +642,7 @@ static int autotools_setup_setup_internal(const char * setupDir, AutotoolsSetupC
             fprintf(stderr, "\n%s=>> STEP %d : installing %s%s\n", COLOR_PURPLE, stepN++, package.name, COLOR_OFF);
         }
 
-        ret = autotools_setup_build_the_given_package(package, autotoolsSetupDownloadsDir, autotoolsSetupDownloadsDirLength, autotoolsSetupInstallingRootDir, autotoolsSetupInstallingRootDirLength, setupDir, setupDirLength, logLevel, jobs, st, gmakePath, gmakePathLength, stdout2terminal);
+        ret = autotools_setup_install_the_given_package(package, autotoolsSetupDownloadsDir, autotoolsSetupDownloadsDirLength, autotoolsSetupInstallingRootDir, autotoolsSetupInstallingRootDirLength, setupDir, setupDirLength, logLevel, jobs, st, gmakePath, gmakePathLength, output2Terminal, redirectOutput2FD);
 
         if (ret != AUTOTOOLS_SETUP_OK) {
             goto finalize;
@@ -593,7 +675,7 @@ static int autotools_setup_setup_internal(const char * setupDir, AutotoolsSetupC
 
     //////////////////////////////////////////////////////////////////////////////
 
-    LOG_STEP(stdout2terminal, logLevel, stepN++, "generating env.sh")
+    LOG_STEP(output2Terminal, logLevel, stepN++, "generating env.sh")
 
     ret = autotools_setup_write_env(envFilePath, setupBinDir, setupAclocalDir);
 
@@ -603,7 +685,7 @@ static int autotools_setup_setup_internal(const char * setupDir, AutotoolsSetupC
 
     //////////////////////////////////////////////////////////////////////////////
 
-    LOG_STEP(stdout2terminal, logLevel, stepN++, "generating receipt.yml")
+    LOG_STEP(output2Terminal, logLevel, stepN++, "generating receipt.yml")
 
     ret = autotools_setup_write_receipt(setupDir, setupDirLength, binUrlGmake, binShaGmake, config, sysinfo);
 
@@ -613,7 +695,12 @@ static int autotools_setup_setup_internal(const char * setupDir, AutotoolsSetupC
 
     //////////////////////////////////////////////////////////////////////////////
 
-    fprintf(stderr, "\n%sautotools was successfully setup to %s\n\nrun '. %s' in your terminal to use it.%s\n", COLOR_GREEN, setupDir, envFilePath, COLOR_OFF);
+    fprintf(stderr, "\n%s[✔] successfully setup.%s\n", COLOR_GREEN, COLOR_OFF);
+    fprintf(stderr, "\n%s🔔  to use this, run %s'. %s'%s in your terminal.%s\n\n", COLOR_YELLOW, COLOR_OFF, envFilePath, COLOR_YELLOW, COLOR_OFF);
+
+    //////////////////////////////////////////////////////////////////////////////
+
+    ret = rm_r(autotoolsSetupInstallingRootDir, logLevel >= AutotoolsSetupLogLevel_verbose);
 
 finalize:
     if (gmakePathNeedsToBeFreed) {

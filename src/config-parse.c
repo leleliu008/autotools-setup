@@ -10,25 +10,25 @@
 #include "core/regex/regex.h"
 
 typedef enum {
-    FORMULA_KEY_CODE_unknown,
+    AutotoolsSetupConfigKeyCode_unknown,
 
-    FORMULA_KEY_CODE_src_url_autoconf,
-    FORMULA_KEY_CODE_src_sha_autoconf,
+    AutotoolsSetupConfigKeyCode_src_url_automake,
+    AutotoolsSetupConfigKeyCode_src_sha_automake,
 
-    FORMULA_KEY_CODE_src_url_automake,
-    FORMULA_KEY_CODE_src_sha_automake,
+    AutotoolsSetupConfigKeyCode_src_url_autoconf,
+    AutotoolsSetupConfigKeyCode_src_sha_autoconf,
 
-    FORMULA_KEY_CODE_src_url_libtool,
-    FORMULA_KEY_CODE_src_sha_libtool,
+    AutotoolsSetupConfigKeyCode_src_url_libtool,
+    AutotoolsSetupConfigKeyCode_src_sha_libtool,
 
-    FORMULA_KEY_CODE_src_url_pkgconf,
-    FORMULA_KEY_CODE_src_sha_pkgconf,
+    AutotoolsSetupConfigKeyCode_src_url_pkgconf,
+    AutotoolsSetupConfigKeyCode_src_sha_pkgconf,
 
-    FORMULA_KEY_CODE_src_url_perl,
-    FORMULA_KEY_CODE_src_sha_perl,
+    AutotoolsSetupConfigKeyCode_src_url_perl,
+    AutotoolsSetupConfigKeyCode_src_sha_perl,
 
-    FORMULA_KEY_CODE_src_url_gm4,
-    FORMULA_KEY_CODE_src_sha_gm4,
+    AutotoolsSetupConfigKeyCode_src_url_gm4,
+    AutotoolsSetupConfigKeyCode_src_sha_gm4,
 } AutotoolsSetupConfigKeyCode;
 
 void autotools_setup_config_dump(AutotoolsSetupConfig * config) {
@@ -36,11 +36,11 @@ void autotools_setup_config_dump(AutotoolsSetupConfig * config) {
         return;
     }
 
-    printf("src-url-automake: %s\n", config->src_url_automake);
-    printf("src-sha-automake: %s\n", config->src_sha_automake);
-
     printf("src-url-autoconf: %s\n", config->src_url_autoconf);
     printf("src-sha-autoconf: %s\n", config->src_sha_autoconf);
+
+    printf("src-url-automake: %s\n", config->src_url_automake);
+    printf("src-sha-automake: %s\n", config->src_sha_automake);
 
     printf("src-url-libtool:  %s\n", config->src_url_libtool);
     printf("src-sha-libtool:  %s\n", config->src_sha_libtool);
@@ -58,54 +58,6 @@ void autotools_setup_config_dump(AutotoolsSetupConfig * config) {
 void autotools_setup_config_free(AutotoolsSetupConfig * config) {
     if (config == NULL) {
         return;
-    }
-
-    ///////////////////////////////
-
-    if (config->src_url_perl != NULL) {
-        free(config->src_url_perl);
-        config->src_url_perl = NULL;
-    }
-
-    if (config->src_sha_perl != NULL) {
-        free(config->src_sha_perl);
-        config->src_sha_perl = NULL;
-    }
-
-    //////////////////////////////////////
-
-    if (config->src_url_gm4 != NULL) {
-        free(config->src_url_gm4);
-        config->src_url_gm4 = NULL;
-    }
-
-    if (config->src_sha_gm4 != NULL) {
-        free(config->src_sha_gm4);
-        config->src_sha_gm4 = NULL;
-    }
-
-    //////////////////////////////////////
-
-    if (config->src_url_pkgconf != NULL) {
-        free(config->src_url_pkgconf);
-        config->src_url_pkgconf = NULL;
-    }
-
-    if (config->src_sha_pkgconf != NULL) {
-        free(config->src_sha_pkgconf);
-        config->src_sha_pkgconf = NULL;
-    }
-
-    //////////////////////////////////////
-
-    if (config->src_url_libtool != NULL) {
-        free(config->src_url_libtool);
-        config->src_url_libtool = NULL;
-    }
-
-    if (config->src_sha_libtool != NULL) {
-        free(config->src_sha_libtool);
-        config->src_sha_libtool = NULL;
     }
 
     //////////////////////////////////////
@@ -132,41 +84,89 @@ void autotools_setup_config_free(AutotoolsSetupConfig * config) {
         config->src_sha_autoconf = NULL;
     }
 
+    //////////////////////////////////////
+
+    if (config->src_url_libtool != NULL) {
+        free(config->src_url_libtool);
+        config->src_url_libtool = NULL;
+    }
+
+    if (config->src_sha_libtool != NULL) {
+        free(config->src_sha_libtool);
+        config->src_sha_libtool = NULL;
+    }
+
+    //////////////////////////////////////
+
+    if (config->src_url_pkgconf != NULL) {
+        free(config->src_url_pkgconf);
+        config->src_url_pkgconf = NULL;
+    }
+
+    if (config->src_sha_pkgconf != NULL) {
+        free(config->src_sha_pkgconf);
+        config->src_sha_pkgconf = NULL;
+    }
+
+    //////////////////////////////////////
+
+    if (config->src_url_perl != NULL) {
+        free(config->src_url_perl);
+        config->src_url_perl = NULL;
+    }
+
+    if (config->src_sha_perl != NULL) {
+        free(config->src_sha_perl);
+        config->src_sha_perl = NULL;
+    }
+
+    //////////////////////////////////////
+
+    if (config->src_url_gm4 != NULL) {
+        free(config->src_url_gm4);
+        config->src_url_gm4 = NULL;
+    }
+
+    if (config->src_sha_gm4 != NULL) {
+        free(config->src_sha_gm4);
+        config->src_sha_gm4 = NULL;
+    }
+
     free(config);
 }
 
 static AutotoolsSetupConfigKeyCode autotools_setup_config_key_code_from_key_name(char * key) {
            if (strcmp(key, "src-url-perl") == 0) {
-        return FORMULA_KEY_CODE_src_url_perl;
+        return AutotoolsSetupConfigKeyCode_src_url_perl;
     } else if (strcmp(key, "src-sha-perl") == 0) {
-        return FORMULA_KEY_CODE_src_sha_perl;
+        return AutotoolsSetupConfigKeyCode_src_sha_perl;
     } else if (strcmp(key, "src-url-gm4") == 0) {
-        return FORMULA_KEY_CODE_src_url_gm4;
+        return AutotoolsSetupConfigKeyCode_src_url_gm4;
     } else if (strcmp(key, "src-sha-gm4") == 0) {
-        return FORMULA_KEY_CODE_src_sha_gm4;
+        return AutotoolsSetupConfigKeyCode_src_sha_gm4;
     } else if (strcmp(key, "src-url-pkgconf") == 0) {
-        return FORMULA_KEY_CODE_src_url_pkgconf;
+        return AutotoolsSetupConfigKeyCode_src_url_pkgconf;
     } else if (strcmp(key, "src-sha-pkgconf") == 0) {
-        return FORMULA_KEY_CODE_src_sha_pkgconf;
+        return AutotoolsSetupConfigKeyCode_src_sha_pkgconf;
     } else if (strcmp(key, "src-url-libtool") == 0) {
-        return FORMULA_KEY_CODE_src_url_libtool;
+        return AutotoolsSetupConfigKeyCode_src_url_libtool;
     } else if (strcmp(key, "src-sha-libtool") == 0) {
-        return FORMULA_KEY_CODE_src_sha_libtool;
+        return AutotoolsSetupConfigKeyCode_src_sha_libtool;
     } else if (strcmp(key, "src-url-automake") == 0) {
-        return FORMULA_KEY_CODE_src_url_automake;
+        return AutotoolsSetupConfigKeyCode_src_url_automake;
     } else if (strcmp(key, "src-sha-automake") == 0) {
-        return FORMULA_KEY_CODE_src_sha_automake;
+        return AutotoolsSetupConfigKeyCode_src_sha_automake;
     } else if (strcmp(key, "src-url-autoconf") == 0) {
-        return FORMULA_KEY_CODE_src_url_autoconf;
+        return AutotoolsSetupConfigKeyCode_src_url_autoconf;
     } else if (strcmp(key, "src-sha-autoconf") == 0) {
-        return FORMULA_KEY_CODE_src_sha_autoconf;
+        return AutotoolsSetupConfigKeyCode_src_sha_autoconf;
     } else {
-        return FORMULA_KEY_CODE_unknown;
+        return AutotoolsSetupConfigKeyCode_unknown;
     }
 }
 
 static void autotools_setup_config_set_value(AutotoolsSetupConfigKeyCode keyCode, char * value, AutotoolsSetupConfig * config) {
-    if (keyCode == FORMULA_KEY_CODE_unknown) {
+    if (keyCode == AutotoolsSetupConfigKeyCode_unknown) {
         return;
     }
 
@@ -188,24 +188,24 @@ static void autotools_setup_config_set_value(AutotoolsSetupConfigKeyCode keyCode
     }
 
     switch (keyCode) {
-        case FORMULA_KEY_CODE_src_url_perl: if (config->src_url_perl != NULL) free(config->src_url_perl); config->src_url_perl = strdup(value); break;
-        case FORMULA_KEY_CODE_src_sha_perl: if (config->src_sha_perl != NULL) free(config->src_sha_perl); config->src_sha_perl = strdup(value); break;
+        case AutotoolsSetupConfigKeyCode_src_url_perl: if (config->src_url_perl != NULL) free(config->src_url_perl); config->src_url_perl = strdup(value); break;
+        case AutotoolsSetupConfigKeyCode_src_sha_perl: if (config->src_sha_perl != NULL) free(config->src_sha_perl); config->src_sha_perl = strdup(value); break;
 
-        case FORMULA_KEY_CODE_src_url_gm4: if (config->src_url_gm4 != NULL) free(config->src_url_gm4); config->src_url_gm4 = strdup(value); break;
-        case FORMULA_KEY_CODE_src_sha_gm4: if (config->src_sha_gm4 != NULL) free(config->src_sha_gm4); config->src_sha_gm4 = strdup(value); break;
+        case AutotoolsSetupConfigKeyCode_src_url_gm4: if (config->src_url_gm4 != NULL) free(config->src_url_gm4); config->src_url_gm4 = strdup(value); break;
+        case AutotoolsSetupConfigKeyCode_src_sha_gm4: if (config->src_sha_gm4 != NULL) free(config->src_sha_gm4); config->src_sha_gm4 = strdup(value); break;
 
-        case FORMULA_KEY_CODE_src_url_pkgconf: if (config->src_url_pkgconf != NULL) free(config->src_url_pkgconf); config->src_url_pkgconf = strdup(value); break;
-        case FORMULA_KEY_CODE_src_sha_pkgconf: if (config->src_sha_pkgconf != NULL) free(config->src_sha_pkgconf); config->src_sha_pkgconf = strdup(value); break;
+        case AutotoolsSetupConfigKeyCode_src_url_pkgconf: if (config->src_url_pkgconf != NULL) free(config->src_url_pkgconf); config->src_url_pkgconf = strdup(value); break;
+        case AutotoolsSetupConfigKeyCode_src_sha_pkgconf: if (config->src_sha_pkgconf != NULL) free(config->src_sha_pkgconf); config->src_sha_pkgconf = strdup(value); break;
 
-        case FORMULA_KEY_CODE_src_url_libtool: if (config->src_url_libtool != NULL) free(config->src_url_libtool); config->src_url_libtool = strdup(value); break;
-        case FORMULA_KEY_CODE_src_sha_libtool: if (config->src_sha_libtool != NULL) free(config->src_sha_libtool); config->src_sha_libtool = strdup(value); break;
+        case AutotoolsSetupConfigKeyCode_src_url_libtool: if (config->src_url_libtool != NULL) free(config->src_url_libtool); config->src_url_libtool = strdup(value); break;
+        case AutotoolsSetupConfigKeyCode_src_sha_libtool: if (config->src_sha_libtool != NULL) free(config->src_sha_libtool); config->src_sha_libtool = strdup(value); break;
 
-        case FORMULA_KEY_CODE_src_url_automake: if (config->src_url_automake != NULL) free(config->src_url_automake); config->src_url_automake = strdup(value); break;
-        case FORMULA_KEY_CODE_src_sha_automake: if (config->src_sha_automake != NULL) free(config->src_sha_automake); config->src_sha_automake = strdup(value); break;
+        case AutotoolsSetupConfigKeyCode_src_url_automake: if (config->src_url_automake != NULL) free(config->src_url_automake); config->src_url_automake = strdup(value); break;
+        case AutotoolsSetupConfigKeyCode_src_sha_automake: if (config->src_sha_automake != NULL) free(config->src_sha_automake); config->src_sha_automake = strdup(value); break;
 
-        case FORMULA_KEY_CODE_src_url_autoconf: if (config->src_url_autoconf != NULL) free(config->src_url_autoconf); config->src_url_autoconf = strdup(value); break;
-        case FORMULA_KEY_CODE_src_sha_autoconf: if (config->src_sha_autoconf != NULL) free(config->src_sha_autoconf); config->src_sha_autoconf = strdup(value); break;
-        case FORMULA_KEY_CODE_unknown: break;
+        case AutotoolsSetupConfigKeyCode_src_url_autoconf: if (config->src_url_autoconf != NULL) free(config->src_url_autoconf); config->src_url_autoconf = strdup(value); break;
+        case AutotoolsSetupConfigKeyCode_src_sha_autoconf: if (config->src_sha_autoconf != NULL) free(config->src_sha_autoconf); config->src_sha_autoconf = strdup(value); break;
+        case AutotoolsSetupConfigKeyCode_unknown: break;
     } 
 }
 
@@ -228,7 +228,7 @@ int autotools_setup_config_parse(const char * configFilePath, AutotoolsSetupConf
 
     yaml_parser_set_input_file(&parser, file);
 
-    AutotoolsSetupConfigKeyCode configKeyCode = FORMULA_KEY_CODE_unknown;
+    AutotoolsSetupConfigKeyCode configKeyCode = AutotoolsSetupConfigKeyCode_unknown;
 
     AutotoolsSetupConfig * config = NULL;
 
