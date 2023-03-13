@@ -92,7 +92,7 @@ jobs:
               eval "$*"
           }
 
-          run source ~/.autotools-setup/autotools/env.sh
+          run . ~/.autotools-setup/autotools/env.sh
 
           run cd ctags
 

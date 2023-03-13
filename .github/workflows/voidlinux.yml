@@ -48,7 +48,7 @@ jobs:
 
       - run: ./output/bin/autotools-setup setup -v
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v1
         with:
           repository: universal-ctags/ctags
           path: ctags
@@ -69,7 +69,7 @@ jobs:
               eval "$*"
           }
 
-          run source ~/.autotools-setup/autotools/env.sh
+          run . ~/.autotools-setup/autotools/env.sh
 
           run cd ctags
 

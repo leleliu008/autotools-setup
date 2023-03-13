@@ -613,7 +613,7 @@ static int autotools_setup_setup_internal(const char * setupDir, AutotoolsSetupC
 
     //////////////////////////////////////////////////////////////////////////////
 
-    fprintf(stderr, "\n%sautotools was successfully setup to %s\n\nrun 'source %s' in your terminal to use it.%s\n", COLOR_GREEN, setupDir, envFilePath, COLOR_OFF);
+    fprintf(stderr, "\n%sautotools was successfully setup to %s\n\nrun '. %s' in your terminal to use it.%s\n", COLOR_GREEN, setupDir, envFilePath, COLOR_OFF);
 
 finalize:
     if (gmakePathNeedsToBeFreed) {

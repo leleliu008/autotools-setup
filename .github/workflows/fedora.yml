@@ -21,7 +21,7 @@ jobs:
       - uses: actions/checkout@main
 
       - run: dnf -y update
-      - run: dnf -y install cmake ninja-build gcc pkg-config libcurl-devel openssl-devel libarchive-devel libyaml-devel
+      - run: dnf -y install cmake ninja-build gcc pkg-config libcurl-devel openssl-devel libarchive-devel libyaml-devel zlib-devel
 
       - run:  cmake -S . -B   build.d -G Ninja -DCMAKE_INSTALL_PREFIX=./output -DCMAKE_VERBOSE_MAKEFILE=ON
       - run:  cmake --build   build.d
@@ -68,7 +68,7 @@ jobs:
               eval "$*"
           }
 
-          run source ~/.autotools-setup/autotools/env.sh
+          run . ~/.autotools-setup/autotools/env.sh
 
           run cd ctags
 

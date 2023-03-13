@@ -51,7 +51,7 @@ jobs:
 
             run ./output/bin/autotools-setup setup -v
 
-            run source ~/.autotools-setup/autotools/env.sh
+            run . ~/.autotools-setup/autotools/env.sh
 
             run sudo pkg_add git
 
