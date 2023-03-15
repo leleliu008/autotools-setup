@@ -161,7 +161,7 @@ int autotools_setup_main(int argc, char* argv[]) {
                         size_t outputBufSizeInBytes = readSizeInBytes << 1;
                         char   outputBuf[outputBufSizeInBytes];
 
-                        if (base16_encode(outputBuf, inputBuf, readSizeInBytes, false) != 0) {
+                        if (base16_encode(outputBuf, inputBuf, readSizeInBytes, true) != 0) {
                             perror(NULL);
                             return AUTOTOOLS_SETUP_ERROR;
                         }
@@ -191,7 +191,7 @@ int autotools_setup_main(int argc, char* argv[]) {
                 size_t outputBufSizeInBytes = inputBufSizeInBytes << 1;
                 char   outputBuf[outputBufSizeInBytes];
 
-                if (base16_encode(outputBuf, inputBuf, inputBufSizeInBytes, false) != 0) {
+                if (base16_encode(outputBuf, inputBuf, inputBufSizeInBytes, true) != 0) {
                     return AUTOTOOLS_SETUP_ERROR;
                 }
 
