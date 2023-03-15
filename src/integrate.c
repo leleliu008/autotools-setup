@@ -1,8 +1,8 @@
+#include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 #include <sys/stat.h>
 
-#include "core/http.h"
 #include "autotools-setup.h"
 
 int autotools_setup_integrate_zsh_completion(const char * outputDir, bool verbose) {
@@ -64,7 +64,7 @@ int autotools_setup_integrate_zsh_completion(const char * outputDir, bool verbos
     char     zshCompletionFilePath[zshCompletionFilePathLength];
     snprintf(zshCompletionFilePath, zshCompletionFilePathLength, "%s/_autotools-setup", zshCompletionDir);
 
-    int ret = http_fetch_to_file(url, zshCompletionFilePath, verbose, verbose);
+    int ret = autotools_setup_http_fetch_to_file(url, zshCompletionFilePath, verbose, verbose);
 
     if (ret != AUTOTOOLS_SETUP_OK) {
         return ret;

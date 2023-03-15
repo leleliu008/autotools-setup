@@ -4,8 +4,6 @@
     #include <stdio.h>
     #include <stdlib.h>
      
-    #include "../autotools-setup.h"
-
     #ifdef __cplusplus
         extern "C" {
     #endif

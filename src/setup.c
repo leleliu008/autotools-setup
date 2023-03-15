@@ -13,7 +13,6 @@
 
 #include "core/cp.h"
 #include "core/log.h"
-#include "core/http.h"
 #include "core/sysinfo.h"
 #include "core/sha256sum.h"
 #include "core/base16.h"
@@ -136,10 +135,9 @@ static int autotools_setup_download_and_uncompress(const char * url, const char 
     if (stat(filePath, &st) == 0 && S_ISREG(st.st_mode)) {
         char actualSHA256SUM[65] = {0};
 
-        ret = sha256sum_of_file(actualSHA256SUM, filePath);
-
-        if (ret != AUTOTOOLS_SETUP_OK) {
-            return ret;
+        if (sha256sum_of_file(actualSHA256SUM, filePath) != 0) {
+            perror(filePath);
+            return AUTOTOOLS_SETUP_ERROR;
         }
 
         if (strcmp(actualSHA256SUM, sha) == 0) {
@@ -152,7 +150,7 @@ static int autotools_setup_download_and_uncompress(const char * url, const char 
     }
 
     if (needFetch) {
-        ret = http_fetch_to_file(url, filePath, logLevel >= AutotoolsSetupLogLevel_verbose, logLevel != AutotoolsSetupLogLevel_silent);
+        ret = autotools_setup_http_fetch_to_file(url, filePath, logLevel >= AutotoolsSetupLogLevel_verbose, logLevel != AutotoolsSetupLogLevel_silent);
 
         if (ret != AUTOTOOLS_SETUP_OK) {
             return ret;
@@ -160,10 +158,9 @@ static int autotools_setup_download_and_uncompress(const char * url, const char 
 
         char actualSHA256SUM[65] = {0};
 
-        ret = sha256sum_of_file(actualSHA256SUM, filePath);
-
-        if (ret != AUTOTOOLS_SETUP_OK) {
-            return ret;
+        if (sha256sum_of_file(actualSHA256SUM, filePath) != 0) {
+            perror(filePath);
+            return AUTOTOOLS_SETUP_ERROR;
         }
 
         if (strcmp(actualSHA256SUM, sha) != 0) {
@@ -256,10 +253,9 @@ static int autotools_setup_install_the_given_package(Package package, const char
 
     if (stat(packageInstallingDir, &st) == 0) {
         if (S_ISDIR(st.st_mode)) {
-            int ret = rm_r(packageInstallingDir, logLevel >= AutotoolsSetupLogLevel_verbose);
-
-            if (ret != AUTOTOOLS_SETUP_OK) {
-                return ret;
+            if (rm_r(packageInstallingDir, logLevel >= AutotoolsSetupLogLevel_verbose) != 0) {
+                perror(packageInstallingDir);
+                return AUTOTOOLS_SETUP_ERROR;
             }
         } else {
             fprintf(stderr, "'%s\n' was expected to be a directory, but it was not.\n", packageInstallingDir);
@@ -536,11 +532,11 @@ static int autotools_setup_setup_internal(const char * setupDir, AutotoolsSetupC
     int redirectOutput2FD = -1;
 
     if (logLevel < AutotoolsSetupLogLevel_verbose) {
-        size_t   logFilePathLength = setupDirLength + 9;
+        size_t   logFilePathLength = autotoolsSetupInstallingRootDirLength + 9;
         char     logFilePath[logFilePathLength];
-        snprintf(logFilePath, logFilePathLength, "%s/log.txt", setupDir);
+        snprintf(logFilePath, logFilePathLength, "%s/log.txt", autotoolsSetupInstallingRootDir);
 
-        redirectOutput2FD = open(logFilePath, O_CREAT | O_TRUNC | O_WRONLY, 0666);
+        redirectOutput2FD = open("/dev/null", O_CREAT | O_TRUNC | O_WRONLY, 0666);
 
         if (redirectOutput2FD < 0) {
             perror(NULL);
@@ -595,7 +591,7 @@ static int autotools_setup_setup_internal(const char * setupDir, AutotoolsSetupC
 
     char * gmakePath = NULL;
 
-    size_t gmakePathLength;
+    size_t gmakePathLength = 0;
 
     bool   gmakePathNeedsToBeFreed;
 
@@ -604,17 +600,39 @@ static int autotools_setup_setup_internal(const char * setupDir, AutotoolsSetupC
 
         LOG_STEP(output2Terminal, logLevel, stepN++, "finding gmake")
 
-        ret = exe_lookup("gmake", &gmakePath, &gmakePathLength);
-
-        if (ret == AUTOTOOLS_SETUP_ERROR_EXE_NOT_FOUND) {
-            ret = exe_lookup("make", &gmakePath, &gmakePathLength);
+        switch (exe_lookup("gmake", &gmakePath, &gmakePathLength)) {
+            case  0:
+                break;
+            case -1:
+                perror("gmake");
+                return AUTOTOOLS_SETUP_ERROR;
+            case -2:
+                return AUTOTOOLS_SETUP_ERROR_ENV_PATH_NOT_SET;
+            case -3:
+                return AUTOTOOLS_SETUP_ERROR_ENV_PATH_NOT_SET;
+            default:
+                return AUTOTOOLS_SETUP_ERROR;
         }
 
-        if (ret == AUTOTOOLS_SETUP_ERROR_EXE_NOT_FOUND) {
+        if (gmakePath == NULL) {
+            switch (exe_lookup("make", &gmakePath, &gmakePathLength)) {
+                case  0:
+                    break;
+                case -1:
+                    perror("make");
+                    return AUTOTOOLS_SETUP_ERROR;
+                case -2:
+                    return AUTOTOOLS_SETUP_ERROR_ENV_PATH_NOT_SET;
+                case -3:
+                    return AUTOTOOLS_SETUP_ERROR_ENV_PATH_NOT_SET;
+                default:
+                    return AUTOTOOLS_SETUP_ERROR;
+            }
+        }
+
+        if (gmakePath == NULL) {
             fprintf(stderr, "neither 'gmake' nor 'make' command was found in PATH.\n");
             return AUTOTOOLS_SETUP_ERROR;
-        } else if (ret != AUTOTOOLS_SETUP_OK) {
-            return ret;
         }
     } else {
         gmakePathNeedsToBeFreed = false;
@@ -706,7 +724,10 @@ static int autotools_setup_setup_internal(const char * setupDir, AutotoolsSetupC
 
     //////////////////////////////////////////////////////////////////////////////
 
-    ret = rm_r(autotoolsSetupInstallingRootDir, logLevel >= AutotoolsSetupLogLevel_verbose);
+    if (rm_r(autotoolsSetupInstallingRootDir, logLevel >= AutotoolsSetupLogLevel_verbose) != 0) {
+        perror(autotoolsSetupInstallingRootDir);
+        ret = AUTOTOOLS_SETUP_ERROR;
+    }
 
 finalize:
     if (gmakePathNeedsToBeFreed) {
@@ -720,6 +741,7 @@ int autotools_setup_setup(const char * configFilePath, const char * setupDir, Au
     SysInfo sysinfo = {0};
 
     if (sysinfo_make(&sysinfo) < 0) {
+        perror(NULL);
         return AUTOTOOLS_SETUP_ERROR;
     }
 

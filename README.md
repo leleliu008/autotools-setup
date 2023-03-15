@@ -22,7 +22,6 @@ following packages will be installed:
 |[openssl](https://www.openssl.org/)|required|for https requesting support and SHA-256 sum checking support.|
 |[libarchive](https://www.libarchive.org/)|required|for uncompressing .zip and .tar.* files.|
 |[zlib](https://www.zlib.net/)|required|for compressing and uncompressing.|
-|[pcre2](https://www.pcre.org/)||for Regular Expressions support.<br>only required on OpenBSD.|
 
 
 ## install `autotools-setup` prebuild binary

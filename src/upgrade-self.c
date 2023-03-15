@@ -5,7 +5,6 @@
 #include "core/sysinfo.h"
 #include "core/self.h"
 #include "core/tar.h"
-#include "core/http.h"
 #include "core/log.h"
 #include "core/cp.h"
 #include "autotools-setup.h"
@@ -69,7 +68,7 @@ int autotools_setup_upgrade_self(bool verbose) {
     char     githubApiResultJsonFilePath[githubApiResultJsonFilePathLength];
     snprintf(githubApiResultJsonFilePath, githubApiResultJsonFilePathLength, "%s/latest.json", autotoolsSetupTmpDir);
 
-    int ret = http_fetch_to_file(githubApiUrl, githubApiResultJsonFilePath, verbose, verbose);
+    int ret = autotools_setup_http_fetch_to_file(githubApiUrl, githubApiResultJsonFilePath, verbose, verbose);
 
     if (ret != AUTOTOOLS_SETUP_OK) {
         return ret;
@@ -204,12 +203,14 @@ finalize:
     char osType[31] = {0};
 
     if (sysinfo_type(osType, 30) < 0) {
+        perror(NULL);
         return AUTOTOOLS_SETUP_ERROR;
     }
 
     char osArch[31] = {0};
 
     if (sysinfo_arch(osArch, 30) < 0) {
+        perror(NULL);
         return AUTOTOOLS_SETUP_ERROR;
     }
 
@@ -227,7 +228,7 @@ finalize:
     char     tarballFilePath[tarballFilePathLength];
     snprintf(tarballFilePath, tarballFilePathLength, "%s/%s", autotoolsSetupTmpDir, tarballFileName);
 
-    ret = http_fetch_to_file(tarballUrl, tarballFilePath, verbose, verbose);
+    ret = autotools_setup_http_fetch_to_file(tarballUrl, tarballFilePath, verbose, verbose);
 
     if (ret != AUTOTOOLS_SETUP_OK) {
         return ret;
@@ -253,6 +254,7 @@ finalize:
 
     if (selfRealPath == NULL) {
         perror(NULL);
+        ret = AUTOTOOLS_SETUP_ERROR;
         goto finally;
     }
 
@@ -262,9 +264,9 @@ finalize:
         goto finally;
     }
 
-    ret = copy_file(upgradableExecutableFilePath, selfRealPath);
-
-    if (ret != AUTOTOOLS_SETUP_OK) {
+    if (copy_file(upgradableExecutableFilePath, selfRealPath) < 0) {
+        perror(NULL);
+        ret = AUTOTOOLS_SETUP_ERROR;
         goto finally;
     }
 

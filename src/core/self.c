@@ -18,10 +18,15 @@
 #include <sys/sysctl.h>
 #endif
 
+#if defined (__OpenBSD__)
+#include <stdbool.h>
+#endif
+
 #include "self.h"
 
 char* self_realpath() {
 #if defined (__APPLE__)
+    // https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man3/dyld.3.html
     uint32_t bufSize = 0U;
     _NSGetExecutablePath(NULL, &bufSize);
 
@@ -121,8 +126,8 @@ char* self_realpath() {
 
         while (PATHItem != NULL) {
             if ((stat(PATHItem, &st) == 0) && S_ISDIR(st.st_mode)) {
-                size_t  fullPathLength = strlen(PATHItem) + commandNameLength + 2;
-                char    fullPath[fullPathLength];
+                size_t   fullPathLength = strlen(PATHItem) + commandNameLength + 2;
+                char     fullPath[fullPathLength];
                 snprintf(fullPath, fullPathLength, "%s/%s", PATHItem, argv[0]);
 
                 if (access(fullPath, X_OK) == 0) {

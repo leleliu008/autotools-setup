@@ -108,4 +108,6 @@ typedef enum {
 
 int autotools_setup_setup(const char * configFilePath, const char * setupDir, AutotoolsSetupLogLevel logLevel, unsigned int jobs);
 
+int autotools_setup_http_fetch_to_file(const char * url, const char * outputFilePath, bool verbose, bool showProgress);
+
 #endif

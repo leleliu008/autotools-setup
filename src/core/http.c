@@ -9,9 +9,9 @@
 
 #include "http.h"
 
-static size_t write_callback(void * ptr, size_t size, size_t nmemb, void * stream) {
-    return fwrite(ptr, size, nmemb, (FILE *)stream);
-}
+//static size_t write_callback(void * ptr, size_t size, size_t nmemb, void * stream) {
+//    return fwrite(ptr, size, nmemb, (FILE *)stream);
+//}
 
 int http_fetch_to_stream(const char * url, FILE * outputFile, bool verbose, bool showProgress) {
     if (outputFile == NULL) {
@@ -24,8 +24,7 @@ int http_fetch_to_stream(const char * url, FILE * outputFile, bool verbose, bool
         outputFile = fopen(filename, "wb");
 
         if (outputFile == NULL) {
-            perror(filename);
-            return AUTOTOOLS_SETUP_ERROR;
+            return -1;
         }
     }
 
@@ -33,26 +32,26 @@ int http_fetch_to_stream(const char * url, FILE * outputFile, bool verbose, bool
 
     CURL * curl = curl_easy_init();
 
+    // https://curl.se/libcurl/c/CURLOPT_URL.html
     curl_easy_setopt(curl, CURLOPT_URL, url);
 
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
+    // https://curl.se/libcurl/c/CURLOPT_WRITEFUNCTION.html
+    //curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
+
+    // https://curl.se/libcurl/c/CURLOPT_WRITEDATA.html
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, outputFile);
+
+    // https://curl.se/libcurl/c/CURLOPT_FOLLOWLOCATION.html
     curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+
+    // https://curl.se/libcurl/c/CURLOPT_FAILONERROR.html
     curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1L);
 
     // https://curl.se/libcurl/c/CURLOPT_VERBOSE.html
-    if (verbose) {
-        curl_easy_setopt(curl, CURLOPT_VERBOSE, 1);
-    } else {
-        curl_easy_setopt(curl, CURLOPT_VERBOSE, 0);
-    }
+    curl_easy_setopt(curl, CURLOPT_VERBOSE, verbose ? 1 : 0);
 
     // https://curl.se/libcurl/c/CURLOPT_NOPROGRESS.html
-    if (showProgress) {
-        curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0);
-    } else {
-        curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
-    }
+    curl_easy_setopt(curl, CURLOPT_NOPROGRESS, showProgress ? 0: 1L);
 
     //curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
     //curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 2L);
@@ -60,19 +59,19 @@ int http_fetch_to_stream(const char * url, FILE * outputFile, bool verbose, bool
     // https://www.openssl.org/docs/man1.1.1/man3/SSL_CTX_set_default_verify_paths.html
     const char * SSL_CERT_FILE = getenv("SSL_CERT_FILE");
 
-    if (SSL_CERT_FILE != NULL) {
+    if ((SSL_CERT_FILE != NULL) && (strcmp(SSL_CERT_FILE, "") != 0)) {
         // https://curl.se/libcurl/c/CURLOPT_CAINFO.html
         curl_easy_setopt(curl, CURLOPT_CAINFO, SSL_CERT_FILE);
     }
 
     const char * SSL_CERT_DIR = getenv("SSL_CERT_DIR");
 
-    if (SSL_CERT_DIR != NULL) {
+    if ((SSL_CERT_DIR != NULL) && (strcmp(SSL_CERT_DIR, "") != 0)) {
         // https://curl.se/libcurl/c/CURLOPT_CAPATH.html
         curl_easy_setopt(curl, CURLOPT_CAPATH, SSL_CERT_DIR);
     }
 
-    char    userAgent[50];
+    char     userAgent[50];
     snprintf(userAgent, 50, "User-Agent: libcurl-%s", LIBCURL_VERSION);
 
     struct curl_slist *list = NULL;
@@ -80,6 +79,7 @@ int http_fetch_to_stream(const char * url, FILE * outputFile, bool verbose, bool
     //list = curl_slist_append(list, "Accept: *");
     list = curl_slist_append(list, userAgent);
 
+    // https://curl.se/libcurl/c/CURLOPT_HTTPHEADER.html
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, list);
 
     CURLcode curlcode = curl_easy_perform(curl);
@@ -95,15 +95,14 @@ int http_fetch_to_stream(const char * url, FILE * outputFile, bool verbose, bool
 
     curl_global_cleanup();
 
-    return curlcode == CURLE_OK ? AUTOTOOLS_SETUP_OK : AUTOTOOLS_SETUP_ERROR_NETWORK_BASE + curlcode;
+    return curlcode;
 }
 
 int http_fetch_to_file(const char * url, const char * outputFilePath, bool verbose, bool showProgress) {
     FILE * file = fopen(outputFilePath, "wb");
 
     if (file == NULL) {
-        perror(outputFilePath);
-        return AUTOTOOLS_SETUP_ERROR;
+        return -1;
     }
 
     int ret = http_fetch_to_stream(url, file, verbose, showProgress);

@@ -4,15 +4,11 @@
 #include <curl/curlver.h>
 #include <openssl/opensslv.h>
 
-//#define PCRE2_CODE_UNIT_WIDTH 8
-//#include <pcre2.h>
-
 #include "autotools-setup.h"
 
 int autotools_setup_show_build_info() {
     printf("build.utctime: %s\n\n", AUTOTOOLS_SETUP_BUILD_TIMESTAMP);
 
-    //printf("pcre2   : %d.%d\n", PCRE2_MAJOR, PCRE2_MINOR);
     printf("build.libyaml: %s\n", yaml_get_version_string());
     printf("build.libcurl: %s\n", LIBCURL_VERSION);
 

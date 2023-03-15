@@ -7,7 +7,6 @@
 #include <yaml.h>
 
 #include "autotools-setup.h"
-#include "core/regex/regex.h"
 
 typedef enum {
     AutotoolsSetupConfigKeyCode_unknown,

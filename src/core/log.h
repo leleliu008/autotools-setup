@@ -1,5 +1,5 @@
-#ifndef AUTOTOOLS_SETUP_LOG_H
-#define AUTOTOOLS_SETUP_LOG_H
+#ifndef _LOG_H
+#define _LOG_H
 
 #include <stdio.h>
 

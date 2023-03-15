@@ -112,12 +112,6 @@ endif()
 
 ########################################################################################
 
-if (CMAKE_SYSTEM_NAME STREQUAL OpenBSD)
-    set(REGEX_SRC src/core/regex/pcre2.c)
-else()
-    set(REGEX_SRC src/core/regex/posix.c)
-endif()
-
 aux_source_directory(src/core CORE_SRCS)
 aux_source_directory(src           SRCS)
 

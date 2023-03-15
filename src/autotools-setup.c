@@ -1,3 +1,4 @@
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -5,7 +6,6 @@
 
 #include <openssl/evp.h>
 
-#include "core/regex/regex.h"
 #include "core/zlib-flate.h"
 #include "core/sha256sum.h"
 #include "core/base16.h"
@@ -146,26 +146,25 @@ int autotools_setup_main(int argc, char* argv[]) {
 
         if (strcmp(argv[2], "base16-encode") == 0) {
             if (argv[3] == NULL) {
-                unsigned char inputBuff[1024];
-                unsigned int  inputSizeInBytes;
+                unsigned char inputBuf[1024];
+                unsigned int  inputBufSizeInBytes;
 
                 for (;;) {
-                    inputSizeInBytes = fread(inputBuff, 1, 1024, stdin);
+                    inputBufSizeInBytes = fread(inputBuf, 1, 1024, stdin);
 
                     if (ferror(stdin)) {
                         return AUTOTOOLS_SETUP_ERROR;
                     }
 
-                    size_t outputSizeInBytes = inputSizeInBytes << 1;
-                    char   outputBuff[outputSizeInBytes];
+                    size_t outputBufSizeInBytes = inputBufSizeInBytes << 1;
+                    char   outputBuf[outputBufSizeInBytes];
 
-                    int ret = base16_encode(outputBuff, inputBuff, inputSizeInBytes, false);
-
-                    if (ret != AUTOTOOLS_SETUP_OK) {
-                        return ret;
+                    if (base16_encode(outputBuf, inputBuf, inputBufSizeInBytes, false) != 0) {
+                        perror(NULL);
+                        return AUTOTOOLS_SETUP_ERROR;
                     }
 
-                    if (fwrite(outputBuff, 1, outputSizeInBytes, stdout) != outputSizeInBytes || ferror(stdout)) {
+                    if (fwrite(outputBuf, 1, outputBufSizeInBytes, stdout) != outputBufSizeInBytes || ferror(stdout)) {
                         return AUTOTOOLS_SETUP_ERROR;
                     }
 
@@ -178,24 +177,22 @@ int autotools_setup_main(int argc, char* argv[]) {
                     }
                 }
             } else {
-                unsigned char * inputBuff = (unsigned char *)argv[3];
-                size_t          inputSizeInBytes = strlen(argv[3]);
+                unsigned char * inputBuf = (unsigned char *)argv[3];
+                size_t          inputBufSizeInBytes = strlen(argv[3]);
 
-                if (inputSizeInBytes == 0) {
+                if (inputBufSizeInBytes == 0) {
                     fprintf(stderr, "Usage: %s %s %s <STR> , <STR> should be non-empty.\n", argv[0], argv[1], argv[2]);
                     return AUTOTOOLS_SETUP_ERROR_ARG_IS_NULL;
                 }
 
-                size_t outputSizeInBytes = inputSizeInBytes << 1;
-                char   outputBuff[outputSizeInBytes];
+                size_t outputBufSizeInBytes = inputBufSizeInBytes << 1;
+                char   outputBuf[outputBufSizeInBytes];
 
-                int ret = base16_encode(outputBuff, inputBuff, inputSizeInBytes, false);
-
-                if (ret != AUTOTOOLS_SETUP_OK) {
-                    return ret;
+                if (base16_encode(outputBuf, inputBuf, inputBufSizeInBytes, false) != 0) {
+                    return AUTOTOOLS_SETUP_ERROR;
                 }
 
-                if (fwrite(outputBuff, 1, outputSizeInBytes, stdout) != outputSizeInBytes || ferror(stdout)) {
+                if (fwrite(outputBuf, 1, outputBufSizeInBytes, stdout) != outputBufSizeInBytes || ferror(stdout)) {
                     return AUTOTOOLS_SETUP_ERROR;
                 }
 
@@ -213,25 +210,23 @@ int autotools_setup_main(int argc, char* argv[]) {
                 return AUTOTOOLS_SETUP_ERROR_ARG_IS_NULL;
             }
 
-            size_t inputSizeInBytes = strlen(argv[3]);
+            size_t inputBufSizeInBytes = strlen(argv[3]);
 
-            if (inputSizeInBytes == 0) {
+            if (inputBufSizeInBytes == 0) {
                 fprintf(stderr, "Usage: %s %s %s <BASE16-DECODED-STR> , <BASE16-DECODED-STR> should be non-empty.\n", argv[0], argv[1], argv[2]);
                 return AUTOTOOLS_SETUP_ERROR_ARG_IS_NULL;
             }
 
-            if ((inputSizeInBytes & 1) != 0) {
+            if ((inputBufSizeInBytes & 1) != 0) {
                 fprintf(stderr, "Usage: %s %s %s <BASE16-DECODED-STR> , <BASE16-DECODED-STR> length should be an even number.\n", argv[0], argv[1], argv[2]);
                 return AUTOTOOLS_SETUP_ERROR_ARG_IS_INVALID;
             }
 
-            size_t        outputSizeInBytes = inputSizeInBytes >> 1;
-            unsigned char outputBuff[outputSizeInBytes];
+            size_t        outputBufSizeInBytes = inputBufSizeInBytes >> 1;
+            unsigned char outputBuf[outputBufSizeInBytes];
 
-            int ret = base16_decode(outputBuff, argv[3], inputSizeInBytes);
-
-            if (ret == AUTOTOOLS_SETUP_OK) {
-                if (fwrite(outputBuff, 1, outputSizeInBytes, stdout) != outputSizeInBytes || ferror(stdout)) {
+            if (base16_decode(outputBuf, argv[3], inputBufSizeInBytes) == 0) {
+                if (fwrite(outputBuf, 1, outputBufSizeInBytes, stdout) != outputBufSizeInBytes || ferror(stdout)) {
                     return AUTOTOOLS_SETUP_ERROR;
                 }
 
@@ -240,38 +235,40 @@ int autotools_setup_main(int argc, char* argv[]) {
                 }
 
                 return AUTOTOOLS_SETUP_OK;
-            } else if (ret == AUTOTOOLS_SETUP_ERROR_ARG_IS_INVALID) {
-                fprintf(stderr, "%s is invalid base64-encoded string.\n", argv[2]);
-            } else if (ret == AUTOTOOLS_SETUP_ERROR) {
-                fprintf(stderr, "occurs error.\n");
-            }
+            } else {
+                perror(NULL);
 
-            return ret;
+                if (errno == EINVAL) {
+                    return AUTOTOOLS_SETUP_ERROR_ARG_IS_INVALID;
+                } else {
+                    return AUTOTOOLS_SETUP_ERROR;
+                }
+            }
         }
 
         if (strcmp(argv[2], "base64-encode") == 0) {
             if (argv[3] == NULL) {
-                unsigned char inputBuff[1023];
-                unsigned int  inputSizeInBytes;
+                unsigned char inputBuf[1023];
+                unsigned int  inputBufSizeInBytes;
 
                 for (;;) {
-                    inputSizeInBytes = fread(inputBuff, 1, 1023, stdin);
+                    inputBufSizeInBytes = fread(inputBuf, 1, 1023, stdin);
 
                     if (ferror(stdin)) {
                         return AUTOTOOLS_SETUP_ERROR;
                     }
 
-                    unsigned int  x = (inputSizeInBytes % 3) == 0 ? 0 : 1;
-                    unsigned int  outputSizeInBytes = (inputSizeInBytes / 3 + x) << 2;
-                    unsigned char outputBuff[outputSizeInBytes];
+                    unsigned int  x = (inputBufSizeInBytes % 3) == 0 ? 0 : 1;
+                    unsigned int  outputBufSizeInBytes = (inputBufSizeInBytes / 3 + x) << 2;
+                    unsigned char outputBuf[outputBufSizeInBytes];
 
-                    int ret = EVP_EncodeBlock(outputBuff, inputBuff, inputSizeInBytes);
+                    int ret = EVP_EncodeBlock(outputBuf, inputBuf, inputBufSizeInBytes);
 
                     if (ret < 0) {
                         return ret;
                     }
 
-                    if (fwrite(outputBuff, 1, outputSizeInBytes, stdout) != outputSizeInBytes || ferror(stdout)) {
+                    if (fwrite(outputBuf, 1, outputBufSizeInBytes, stdout) != outputBufSizeInBytes || ferror(stdout)) {
                         return AUTOTOOLS_SETUP_ERROR;
                     }
 
@@ -284,25 +281,25 @@ int autotools_setup_main(int argc, char* argv[]) {
                     }
                 }
             } else {
-                unsigned char * inputBuff = (unsigned char *)argv[3];
-                unsigned int    inputSizeInBytes = strlen(argv[3]);
+                unsigned char * inputBuf = (unsigned char *)argv[3];
+                unsigned int    inputBufSizeInBytes = strlen(argv[3]);
 
-                if (inputSizeInBytes == 0) {
+                if (inputBufSizeInBytes == 0) {
                     fprintf(stderr, "Usage: %s %s %s <STR> , <STR> should be non-empty.\n", argv[0], argv[1], argv[2]);
                     return AUTOTOOLS_SETUP_ERROR_ARG_IS_NULL;
                 }
 
-                unsigned int  x = (inputSizeInBytes % 3) == 0 ? 0 : 1;
-                unsigned int  outputSizeInBytes = (inputSizeInBytes / 3 + x) << 2;
-                unsigned char outputBuff[outputSizeInBytes];
+                unsigned int  x = (inputBufSizeInBytes % 3) == 0 ? 0 : 1;
+                unsigned int  outputBufSizeInBytes = (inputBufSizeInBytes / 3 + x) << 2;
+                unsigned char outputBuf[outputBufSizeInBytes];
 
-                int ret = EVP_EncodeBlock(outputBuff, inputBuff, inputSizeInBytes);
+                int ret = EVP_EncodeBlock(outputBuf, inputBuf, inputBufSizeInBytes);
 
                 if (ret < 0) {
                     return ret;
                 }
 
-                if (fwrite(outputBuff, 1, outputSizeInBytes, stdout) != outputSizeInBytes || ferror(stdout)) {
+                if (fwrite(outputBuf, 1, outputBufSizeInBytes, stdout) != outputBufSizeInBytes || ferror(stdout)) {
                     return AUTOTOOLS_SETUP_ERROR;
                 }
 
@@ -316,26 +313,27 @@ int autotools_setup_main(int argc, char* argv[]) {
 
         if (strcmp(argv[2], "base64-decode") == 0) {
             if (argv[3] == NULL) {
-                unsigned char inputBuff[1024];
-                unsigned int  inputSizeInBytes;
+                unsigned char inputBuf[1024];
+                unsigned int  inputBufSizeInBytes;
 
                 for (;;) {
-                    inputSizeInBytes = fread(inputBuff, 1, 1024, stdin);
+                    inputBufSizeInBytes = fread(inputBuf, 1, 1024, stdin);
 
                     if (ferror(stdin)) {
                         return AUTOTOOLS_SETUP_ERROR;
                     }
 
-                    unsigned int  outputSizeInBytes = (inputSizeInBytes >> 2) * 3;
-                    unsigned char outputBuff[outputSizeInBytes];
+                    unsigned int  outputBufSizeInBytes = (inputBufSizeInBytes >> 2) * 3;
+                    unsigned char outputBuf[outputBufSizeInBytes];
 
-                    int ret = EVP_DecodeBlock(outputBuff, inputBuff, inputSizeInBytes);
+                    // EVP_DecodeBlock() returns the length of the data decoded or -1 on error.
+                    int n = EVP_DecodeBlock(outputBuf, inputBuf, inputBufSizeInBytes);
 
-                    if (ret < 0) {
-                        return ret;
+                    if (n < 0) {
+                        return AUTOTOOLS_SETUP_ERROR_ARG_IS_INVALID;
                     }
 
-                    if (fwrite(outputBuff, 1, ret, stdout) != (size_t)ret || ferror(stdout)) {
+                    if (fwrite(outputBuf, 1, n, stdout) != (size_t)n || ferror(stdout)) {
                         return AUTOTOOLS_SETUP_ERROR;
                     }
 
@@ -348,24 +346,25 @@ int autotools_setup_main(int argc, char* argv[]) {
                     }
                 }
             } else {
-                unsigned char * inputBuff = (unsigned char *)argv[3];
-                unsigned int    inputSizeInBytes = strlen(argv[3]);
+                unsigned char * inputBuf = (unsigned char *)argv[3];
+                unsigned int    inputBufSizeInBytes = strlen(argv[3]);
 
-                if (inputSizeInBytes == 0) {
+                if (inputBufSizeInBytes == 0) {
                     fprintf(stderr, "Usage: %s %s %s <BASE64-DECODED-STR> , <BASE64-DECODED-STR> should be non-empty.\n", argv[0], argv[1], argv[2]);
                     return AUTOTOOLS_SETUP_ERROR_ARG_IS_NULL;
                 }
 
-                unsigned int  outputSizeInBytes = (inputSizeInBytes >> 2) * 3;
-                unsigned char outputBuff[outputSizeInBytes];
+                unsigned int  outputBufSizeInBytes = (inputBufSizeInBytes >> 2) * 3;
+                unsigned char outputBuf[outputBufSizeInBytes];
 
-                int ret = EVP_DecodeBlock(outputBuff, inputBuff, inputSizeInBytes);
+                // EVP_DecodeBlock() returns the length of the data decoded or -1 on error.
+                int n = EVP_DecodeBlock(outputBuf, inputBuf, inputBufSizeInBytes);
 
-                if (ret < 0) {
-                    return ret;
+                if (n < 0) {
+                    return AUTOTOOLS_SETUP_ERROR_ARG_IS_INVALID;
                 }
 
-                if (fwrite(outputBuff, 1, ret, stdout) != (size_t)ret || ferror(stdout)) {
+                if (fwrite(outputBuf, 1, n, stdout) != (size_t)n || ferror(stdout)) {
                     return AUTOTOOLS_SETUP_ERROR;
                 }
 
@@ -379,32 +378,30 @@ int autotools_setup_main(int argc, char* argv[]) {
 
         if (strcmp(argv[2], "sha256sum") == 0) {
             if (argv[3] == NULL || strcmp(argv[3], "-") == 0) {
-                char outputBuff[65];
-                outputBuff[64] = '\0';
+                char outputBuf[65];
+                outputBuf[64] = '\0';
 
-                int ret = sha256sum_of_stream(outputBuff, stdin);
-
-                if (ret != AUTOTOOLS_SETUP_OK) {
-                    return ret;
+                if (sha256sum_of_stream(outputBuf, stdin) != 0) {
+                    perror(NULL);
+                    return AUTOTOOLS_SETUP_ERROR;
+                } else {
+                    printf("%s\n", outputBuf);
+                    return AUTOTOOLS_SETUP_OK;
                 }
-
-                printf("%s\n", outputBuff);
-                return AUTOTOOLS_SETUP_OK;
             } else if (strcmp(argv[3], "-h") == 0 || strcmp(argv[3], "--help") == 0) {
                 fprintf(stderr, "Usage: %s %s %s [FILEPATH]\n", argv[0], argv[1], argv[2]);
                 return AUTOTOOLS_SETUP_OK;
             } else {
-                char outputBuff[65];
-                outputBuff[64] = '\0';
+                char outputBuf[65];
+                outputBuf[64] = '\0';
 
-                int ret = sha256sum_of_file(outputBuff, argv[3]);
-
-                if (ret != AUTOTOOLS_SETUP_OK) {
-                    return ret;
+                if (sha256sum_of_file(outputBuf, argv[3]) != 0) {
+                    perror(argv[3]);
+                    return AUTOTOOLS_SETUP_ERROR;
+                } else {
+                    printf("%s\n", outputBuf);
+                    return AUTOTOOLS_SETUP_OK;
                 }
-
-                printf("%s\n", outputBuff);
-                return AUTOTOOLS_SETUP_OK;
             }
         }
 
@@ -466,7 +463,7 @@ int autotools_setup_main(int argc, char* argv[]) {
             }
 
             char ** pathList = NULL;
-            size_t  pathListSize;
+            size_t  pathListSize = 0;
 
             int ret = exe_search(argv[3], &pathList, &pathListSize, findAll);
 
