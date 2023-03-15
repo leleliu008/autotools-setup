@@ -249,11 +249,10 @@ finalize:
     char     upgradableExecutableFilePath[upgradableExecutableFilePathLength];
     snprintf(upgradableExecutableFilePath, upgradableExecutableFilePathLength, "%s/bin/autotools-setup", tarballExtractDir);
 
-    char * selfRealPath = NULL;
+    char * selfRealPath = self_realpath();
 
-    ret = self_realpath(&selfRealPath);
-
-    if (ret != AUTOTOOLS_SETUP_OK) {
+    if (selfRealPath == NULL) {
+        perror(NULL);
         goto finally;
     }
 

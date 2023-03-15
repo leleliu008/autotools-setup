@@ -3,11 +3,11 @@
 #include "autotools-setup.h"
 
 int autotools_setup_show_default_config() {
-    printf("src-url-autoconf: %s\n",   DEFAULT_SRC_URL_AUTOCONF);
-    printf("src-sha-autoconf: %s\n\n", DEFAULT_SRC_SHA_AUTOCONF);
-
     printf("src-url-automake: %s\n",   DEFAULT_SRC_URL_AUTOMAKE);
     printf("src-sha-automake: %s\n\n", DEFAULT_SRC_SHA_AUTOMAKE);
+
+    printf("src-url-autoconf: %s\n",   DEFAULT_SRC_URL_AUTOCONF);
+    printf("src-sha-autoconf: %s\n\n", DEFAULT_SRC_SHA_AUTOCONF);
 
     printf("src-url-libtool:  %s\n",   DEFAULT_SRC_URL_LIBTOOL);
     printf("src-sha-libtool:  %s\n\n", DEFAULT_SRC_SHA_LIBTOOL);
