@@ -85,6 +85,8 @@ void autotools_setup_config_dump(AutotoolsSetupConfig * config);
 
 int autotools_setup_main(int argc, char* argv[]);
 
+int autotools_setup_util(int argc, char* argv[]);
+
 int autotools_setup_help();
 
 int autotools_setup_sysinfo();
