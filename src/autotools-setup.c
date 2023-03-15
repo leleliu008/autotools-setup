@@ -147,25 +147,28 @@ int autotools_setup_main(int argc, char* argv[]) {
         if (strcmp(argv[2], "base16-encode") == 0) {
             if (argv[3] == NULL) {
                 unsigned char inputBuf[1024];
-                unsigned int  inputBufSizeInBytes;
+
+                size_t  readSizeInBytes;
 
                 for (;;) {
-                    inputBufSizeInBytes = fread(inputBuf, 1, 1024, stdin);
+                    readSizeInBytes = fread(inputBuf, 1, 1024, stdin);
 
                     if (ferror(stdin)) {
                         return AUTOTOOLS_SETUP_ERROR;
                     }
 
-                    size_t outputBufSizeInBytes = inputBufSizeInBytes << 1;
-                    char   outputBuf[outputBufSizeInBytes];
+                    if (readSizeInBytes > 0) {
+                        size_t outputBufSizeInBytes = readSizeInBytes << 1;
+                        char   outputBuf[outputBufSizeInBytes];
 
-                    if (base16_encode(outputBuf, inputBuf, inputBufSizeInBytes, false) != 0) {
-                        perror(NULL);
-                        return AUTOTOOLS_SETUP_ERROR;
-                    }
+                        if (base16_encode(outputBuf, inputBuf, readSizeInBytes, false) != 0) {
+                            perror(NULL);
+                            return AUTOTOOLS_SETUP_ERROR;
+                        }
 
-                    if (fwrite(outputBuf, 1, outputBufSizeInBytes, stdout) != outputBufSizeInBytes || ferror(stdout)) {
-                        return AUTOTOOLS_SETUP_ERROR;
+                        if (fwrite(outputBuf, 1, outputBufSizeInBytes, stdout) != outputBufSizeInBytes || ferror(stdout)) {
+                            return AUTOTOOLS_SETUP_ERROR;
+                        }
                     }
 
                     if (feof(stdin)) {
@@ -249,27 +252,30 @@ int autotools_setup_main(int argc, char* argv[]) {
         if (strcmp(argv[2], "base64-encode") == 0) {
             if (argv[3] == NULL) {
                 unsigned char inputBuf[1023];
-                unsigned int  inputBufSizeInBytes;
+
+                size_t readSizeInBytes;
 
                 for (;;) {
-                    inputBufSizeInBytes = fread(inputBuf, 1, 1023, stdin);
+                    readSizeInBytes = fread(inputBuf, 1, 1023, stdin);
 
                     if (ferror(stdin)) {
                         return AUTOTOOLS_SETUP_ERROR;
                     }
 
-                    unsigned int  x = (inputBufSizeInBytes % 3) == 0 ? 0 : 1;
-                    unsigned int  outputBufSizeInBytes = (inputBufSizeInBytes / 3 + x) << 2;
-                    unsigned char outputBuf[outputBufSizeInBytes];
+                    if (readSizeInBytes > 0) {
+                        unsigned int  x = (readSizeInBytes % 3) == 0 ? 0 : 1;
+                        unsigned int  outputBufSizeInBytes = (readSizeInBytes / 3 + x) << 2;
+                        unsigned char outputBuf[outputBufSizeInBytes];
 
-                    int ret = EVP_EncodeBlock(outputBuf, inputBuf, inputBufSizeInBytes);
+                        int ret = EVP_EncodeBlock(outputBuf, inputBuf, readSizeInBytes);
 
-                    if (ret < 0) {
-                        return ret;
-                    }
+                        if (ret < 0) {
+                            return ret;
+                        }
 
-                    if (fwrite(outputBuf, 1, outputBufSizeInBytes, stdout) != outputBufSizeInBytes || ferror(stdout)) {
-                        return AUTOTOOLS_SETUP_ERROR;
+                        if (fwrite(outputBuf, 1, outputBufSizeInBytes, stdout) != outputBufSizeInBytes || ferror(stdout)) {
+                            return AUTOTOOLS_SETUP_ERROR;
+                        }
                     }
 
                     if (feof(stdin)) {
@@ -314,27 +320,30 @@ int autotools_setup_main(int argc, char* argv[]) {
         if (strcmp(argv[2], "base64-decode") == 0) {
             if (argv[3] == NULL) {
                 unsigned char inputBuf[1024];
-                unsigned int  inputBufSizeInBytes;
+
+                size_t readSizeInBytes;
 
                 for (;;) {
-                    inputBufSizeInBytes = fread(inputBuf, 1, 1024, stdin);
+                    readSizeInBytes = fread(inputBuf, 1, 1024, stdin);
 
                     if (ferror(stdin)) {
                         return AUTOTOOLS_SETUP_ERROR;
                     }
 
-                    unsigned int  outputBufSizeInBytes = (inputBufSizeInBytes >> 2) * 3;
-                    unsigned char outputBuf[outputBufSizeInBytes];
+                    if (readSizeInBytes > 0) {
+                        unsigned int  outputBufSizeInBytes = (readSizeInBytes >> 2) * 3;
+                        unsigned char outputBuf[outputBufSizeInBytes];
 
-                    // EVP_DecodeBlock() returns the length of the data decoded or -1 on error.
-                    int n = EVP_DecodeBlock(outputBuf, inputBuf, inputBufSizeInBytes);
+                        // EVP_DecodeBlock() returns the length of the data decoded or -1 on error.
+                        int n = EVP_DecodeBlock(outputBuf, inputBuf, readSizeInBytes);
 
-                    if (n < 0) {
-                        return AUTOTOOLS_SETUP_ERROR_ARG_IS_INVALID;
-                    }
+                        if (n < 0) {
+                            return AUTOTOOLS_SETUP_ERROR_ARG_IS_INVALID;
+                        }
 
-                    if (fwrite(outputBuf, 1, n, stdout) != (size_t)n || ferror(stdout)) {
-                        return AUTOTOOLS_SETUP_ERROR;
+                        if (fwrite(outputBuf, 1, n, stdout) != (size_t)n || ferror(stdout)) {
+                            return AUTOTOOLS_SETUP_ERROR;
+                        }
                     }
 
                     if (feof(stdin)) {
