@@ -93,10 +93,6 @@ find_package(LibYAML REQUIRED)
 
 find_package(ZLIB REQUIRED)
 
-if (CMAKE_SYSTEM_NAME STREQUAL OpenBSD)
-    find_package(PCRE2 REQUIRED)
-endif()
-
 ########################################################################################
 
 if (OPENSSL_VERSION)
@@ -132,10 +128,6 @@ target_link_libraries(autotools-setup LibArchive::LibArchive)
 target_link_libraries(autotools-setup LIBYAML::LIBYAML)
 target_link_libraries(autotools-setup ZLIB::ZLIB)
 target_link_libraries(autotools-setup "-lm")
-
-if (CMAKE_SYSTEM_NAME STREQUAL OpenBSD)
-    target_link_libraries(autotools-setup PCRE2::PCRE2)
-endif()
 
 ########################################################################################
 

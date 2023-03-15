@@ -273,8 +273,8 @@ all relevant dirs and files are located in `~/.autotools-setup` directory.
 
     **Tip:** above command do two things:
 
-    1. download `gmake` prebuild binary from https://github.com/leleliu008/gmake-build/releases
-    2. build and install `gm4` `perl` `pkgconf` `libtool` `autoconf` `automake` from source
+    - download `gmake` prebuild binary from https://github.com/leleliu008/gmake-build/releases
+    - build and install `gm4` `perl` `pkgconf` `libtool` `autoconf` `automake` from source
 
 
 *   **extra common used utilities**
