@@ -203,18 +203,14 @@ finalize:
 
     char osType[31] = {0};
 
-    ret = sysinfo_type(osType, 30);
-
-    if (ret != AUTOTOOLS_SETUP_OK) {
-        return ret;
+    if (sysinfo_type(osType, 30) < 0) {
+        return AUTOTOOLS_SETUP_ERROR;
     }
 
     char osArch[31] = {0};
 
-    ret = sysinfo_arch(osArch, 30);
-
-    if (ret != AUTOTOOLS_SETUP_OK) {
-        return ret;
+    if (sysinfo_arch(osArch, 30) < 0) {
+        return AUTOTOOLS_SETUP_ERROR;
     }
 
     size_t latestVersionLength = strlen(latestVersion);

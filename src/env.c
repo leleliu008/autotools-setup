@@ -36,10 +36,8 @@ int autotools_setup_env() {
 
     SysInfo sysinfo = {0};
 
-    int ret = sysinfo_make(&sysinfo);
-
-    if (ret != AUTOTOOLS_SETUP_OK) {
-        return ret;
+    if (sysinfo_make(&sysinfo) < 0) {
+        return AUTOTOOLS_SETUP_ERROR;
     }
 
     sysinfo_dump(sysinfo);

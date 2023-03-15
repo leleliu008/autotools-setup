@@ -719,10 +719,8 @@ finalize:
 int autotools_setup_setup(const char * configFilePath, const char * setupDir, AutotoolsSetupLogLevel logLevel, unsigned int jobs) {
     SysInfo sysinfo = {0};
 
-    int ret = sysinfo_make(&sysinfo);
-
-    if (ret != AUTOTOOLS_SETUP_OK) {
-        return ret;
+    if (sysinfo_make(&sysinfo) < 0) {
+        return AUTOTOOLS_SETUP_ERROR;
     }
 
     if (jobs == 0) {
@@ -752,6 +750,8 @@ int autotools_setup_setup(const char * configFilePath, const char * setupDir, Au
     config.src_sha_autoconf = DEFAULT_SRC_SHA_AUTOCONF;
 
     AutotoolsSetupConfig * userSpecifiedConfig = NULL;
+
+    int ret = AUTOTOOLS_SETUP_OK;
 
     if (configFilePath != NULL) {
         ret = autotools_setup_config_parse(configFilePath, &userSpecifiedConfig);
