@@ -222,6 +222,7 @@ int autotools_setup_config_parse(const char * configFilePath, AutotoolsSetupConf
     // https://libyaml.docsforge.com/master/api/yaml_parser_initialize/
     if (yaml_parser_initialize(&parser) == 0) {
         perror("Failed to initialize yaml parser");
+        fclose(file);
         return AUTOTOOLS_SETUP_ERROR;
     }
 
