@@ -341,7 +341,7 @@ static int autotools_setup_setup_internal(const char * setupDir, AutotoolsSetupC
 
     size_t userHomeDirLength = strlen(userHomeDir);
 
-    if (userHomeDirLength == 0) {
+    if (userHomeDirLength == 0U) {
         return AUTOTOOLS_SETUP_ERROR_ENV_HOME_NOT_SET;
     }
 
@@ -635,7 +635,7 @@ static int autotools_setup_setup_internal(const char * setupDir, AutotoolsSetupC
     } else {
         gmakePathNeedsToBeFreed = false;
         gmakePath =       defaultGmakePath;
-        gmakePathLength = defaultGmakePathLength - 1;
+        gmakePathLength = defaultGmakePathLength - 1U;
 
         LOG_STEP(output2Terminal, logLevel, stepN++, "installing gmake")
 
@@ -743,7 +743,7 @@ int autotools_setup_setup(const char * configFilePath, const char * setupDir, Au
         return AUTOTOOLS_SETUP_ERROR;
     }
 
-    if (jobs == 0) {
+    if (jobs == 0U) {
         jobs = sysinfo.ncpu;
     }
 

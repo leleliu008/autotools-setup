@@ -103,7 +103,7 @@ char* self_realpath() {
         size_t PATHLength = strlen(PATH);
 
         // in fact, it shouldn’t happen
-        if (PATHLength == 0) {
+        if (PATHLength == 0U) {
             return NULL;
         }
 

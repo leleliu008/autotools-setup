@@ -26,7 +26,7 @@ int sha256sum_of_bytes(char outputBuffer[65], unsigned char * inputBuffer, size_
         return -1;
     }
 
-    if (inputBufferSizeInBytes == 0) {
+    if (inputBufferSizeInBytes == 0U) {
         errno = EINVAL;
         return -1;
     }
@@ -51,7 +51,7 @@ int sha256sum_of_string(char outputBuffer[65], const char * str) {
 
     size_t strLength = strlen(str);
 
-    if (strLength == 0) {
+    if (strLength == 0U) {
         errno = EINVAL;
         return -1;
     }
@@ -94,7 +94,7 @@ int sha256sum_of_stream(char outputBuffer[65], FILE * file) {
             return -1;
         }
 
-        if (size > 0) {
+        if (size > 0U) {
             SHA256_Update(&ctx, buffer, size);
         }
 

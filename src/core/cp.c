@@ -31,7 +31,7 @@ int copy_file(const char * fromFilePath, const char * toFilePath) {
             return -1;
         }
 
-        if (size > 0) {
+        if (size > 0U) {
             if (fwrite(buff, 1, size, toFile) != size || ferror(toFile)) {
                 fclose(fromFile);
                 fclose(toFile);

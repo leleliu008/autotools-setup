@@ -16,7 +16,7 @@ int base64_encode_of_string(char * * output, size_t * outputSizeInBytes, const c
         return -1;
     }
 
-    return base64_encode_of_bytes(output, outputSizeInBytes, (unsigned char *)input, inputSizeInBytes == 0 ? strlen(input) : inputSizeInBytes);
+    return base64_encode_of_bytes(output, outputSizeInBytes, (unsigned char *)input, inputSizeInBytes == 0U ? strlen(input) : inputSizeInBytes);
 }
 
 int base64_encode_of_bytes(char * * output, size_t * outputSizeInBytes, const unsigned char * input, size_t inputSizeInBytes) {
@@ -30,7 +30,7 @@ int base64_encode_of_bytes(char * * output, size_t * outputSizeInBytes, const un
         return -1;
     }
 
-    if (inputSizeInBytes == 0) {
+    if (inputSizeInBytes == 0U) {
         errno = EINVAL;
         return -1;
     }
@@ -67,11 +67,11 @@ int base64_decode_to_bytes(unsigned char * * output, size_t * outputSizeInBytes,
         return -1;
     }
 
-    if (inputSizeInBytes == 0) {
+    if (inputSizeInBytes == 0U) {
         inputSizeInBytes = strlen(input);
     }
 
-    if (inputSizeInBytes == 0) {
+    if (inputSizeInBytes == 0U) {
         errno = EINVAL;
         return -1;
     }
@@ -117,11 +117,11 @@ int base64_decode_to_string(char * * output, size_t * outputSizeInBytes, const c
         return -1;
     }
 
-    if (inputSizeInBytes == 0) {
+    if (inputSizeInBytes == 0U) {
         inputSizeInBytes = strlen(input);
     }
 
-    if (inputSizeInBytes == 0) {
+    if (inputSizeInBytes == 0U) {
         errno = EINVAL;
         return -1;
     }

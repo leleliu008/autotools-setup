@@ -13,7 +13,7 @@ int autotools_setup_show_runtime_info() {
 
     size_t userHomeDirLength = strlen(userHomeDir);
 
-    if (userHomeDirLength == 0) {
+    if (userHomeDirLength == 0U) {
         return AUTOTOOLS_SETUP_ERROR_ENV_HOME_NOT_SET;
     }
 

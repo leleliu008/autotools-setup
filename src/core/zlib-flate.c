@@ -8,7 +8,7 @@
 
 // compress
 int zlib_deflate_string_to_file(const char * inputBuf, size_t inputBufSizeInBytes, FILE * outputFile, int level) {
-    if (inputBufSizeInBytes == 0) {
+    if (inputBufSizeInBytes == 0U) {
         inputBufSizeInBytes = strlen(inputBuf);
     }
 

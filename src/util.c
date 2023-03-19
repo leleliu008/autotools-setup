@@ -32,7 +32,7 @@ int autotools_setup_util(int argc, char* argv[]) {
                     return AUTOTOOLS_SETUP_ERROR;
                 }
 
-                if (readSizeInBytes > 0) {
+                if (readSizeInBytes > 0U) {
                     size_t outputBufSizeInBytes = readSizeInBytes << 1;
                     char   outputBuf[outputBufSizeInBytes];
 
@@ -58,7 +58,7 @@ int autotools_setup_util(int argc, char* argv[]) {
             unsigned char * inputBuf = (unsigned char *)argv[3];
             size_t          inputBufSizeInBytes = strlen(argv[3]);
 
-            if (inputBufSizeInBytes == 0) {
+            if (inputBufSizeInBytes == 0U) {
                 fprintf(stderr, "Usage: %s %s %s <STR> , <STR> should be non-empty.\n", argv[0], argv[1], argv[2]);
                 return AUTOTOOLS_SETUP_ERROR_ARG_IS_NULL;
             }
@@ -90,7 +90,7 @@ int autotools_setup_util(int argc, char* argv[]) {
 
         size_t inputBufSizeInBytes = strlen(argv[3]);
 
-        if (inputBufSizeInBytes == 0) {
+        if (inputBufSizeInBytes == 0U) {
             fprintf(stderr, "Usage: %s %s %s <BASE16-DECODED-STR> , <BASE16-DECODED-STR> should be non-empty.\n", argv[0], argv[1], argv[2]);
             return AUTOTOOLS_SETUP_ERROR_ARG_IS_NULL;
         }
@@ -135,7 +135,7 @@ int autotools_setup_util(int argc, char* argv[]) {
                     return AUTOTOOLS_SETUP_ERROR;
                 }
 
-                if (readSizeInBytes > 0) {
+                if (readSizeInBytes > 0U) {
                     unsigned int  x = (readSizeInBytes % 3U) == 0U ? 0U : 1U;
                     unsigned int  outputBufSizeInBytes = (readSizeInBytes / 3U + x) << 2U;
                     unsigned char outputBuf[outputBufSizeInBytes];
@@ -163,7 +163,7 @@ int autotools_setup_util(int argc, char* argv[]) {
             unsigned char * inputBuf = (unsigned char *)argv[3];
             unsigned int    inputBufSizeInBytes = strlen(argv[3]);
 
-            if (inputBufSizeInBytes == 0) {
+            if (inputBufSizeInBytes == 0U) {
                 fprintf(stderr, "Usage: %s %s %s <STR> , <STR> should be non-empty.\n", argv[0], argv[1], argv[2]);
                 return AUTOTOOLS_SETUP_ERROR_ARG_IS_NULL;
             }
@@ -201,7 +201,7 @@ int autotools_setup_util(int argc, char* argv[]) {
                     return AUTOTOOLS_SETUP_ERROR;
                 }
 
-                if (readSizeInBytes > 0) {
+                if (readSizeInBytes > 0U) {
                     unsigned int  outputBufSizeInBytes = (readSizeInBytes >> 2U) * 3U;
                     unsigned char outputBuf[outputBufSizeInBytes];
 
@@ -229,7 +229,7 @@ int autotools_setup_util(int argc, char* argv[]) {
             unsigned char * inputBuf = (unsigned char *)argv[3];
             unsigned int    inputBufSizeInBytes = strlen(argv[3]);
 
-            if (inputBufSizeInBytes == 0) {
+            if (inputBufSizeInBytes == 0U) {
                 fprintf(stderr, "Usage: %s %s %s <BASE64-DECODED-STR> , <BASE64-DECODED-STR> should be non-empty.\n", argv[0], argv[1], argv[2]);
                 return AUTOTOOLS_SETUP_ERROR_ARG_IS_NULL;
             }

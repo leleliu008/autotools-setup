@@ -16,7 +16,7 @@ int autotools_setup_integrate_zsh_completion(const char * outputDir, bool verbos
 
     size_t userHomeDirLength = strlen(userHomeDir);
 
-    if (userHomeDirLength == 0) {
+    if (userHomeDirLength == 0U) {
         return AUTOTOOLS_SETUP_ERROR_ENV_HOME_NOT_SET;
     }
 

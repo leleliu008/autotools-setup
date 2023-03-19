@@ -12,25 +12,25 @@
 
 int sysinfo_kind(char * buf, size_t bufSize) {
 #if defined (_WIN32)
-    strncpy(buf, "windows", bufSize > 7 ? 7 : bufSize);
+    strncpy(buf, "windows", bufSize > 7U ? 7U : bufSize);
     return 0;
 #elif defined (__APPLE__)
-    strncpy(buf, "darwin", bufSize > 6 ? 6 : bufSize);
+    strncpy(buf, "darwin", bufSize > 6U ? 6U : bufSize);
     return 0;
 #elif defined (__FreeBSD__)
-    strncpy(buf, "freebsd", bufSize > 7 ? 7 : bufSize);
+    strncpy(buf, "freebsd", bufSize > 7U ? 7U : bufSize);
     return 0;
 #elif defined (__OpenBSD__)
-    strncpy(buf, "openbsd", bufSize > 7 ? 7 : bufSize);
+    strncpy(buf, "openbsd", bufSize > 7U ? 7U : bufSize);
     return 0;
 #elif defined (__NetBSD__)
-    strncpy(buf, "netbsd", bufSize > 6 ? 6 : bufSize);
+    strncpy(buf, "netbsd", bufSize > 6U ? 6U : bufSize);
     return 0;
 #elif defined (__ANDROID__)
-    strncpy(buf, "android", bufSize > 7 ? 7 : bufSize);
+    strncpy(buf, "android", bufSize > 7U ? 7U : bufSize);
     return 0;
 #elif defined (__linux__)
-    strncpy(buf, "linux", bufSize > 5 ? 5 : bufSize);
+    strncpy(buf, "linux", bufSize > 5U ? 5U : bufSize);
     return 0;
 #else
     struct utsname uts;
@@ -56,25 +56,25 @@ int sysinfo_kind(char * buf, size_t bufSize) {
 
 int sysinfo_type(char * buf, size_t bufSize) {
 #if defined (_WIN32)
-    strncpy(buf, "windows", bufSize > 7 ? 7 : bufSize);
+    strncpy(buf, "windows", bufSize > 7U ? 7U : bufSize);
     return 0;
 #elif defined (__APPLE__)
-    strncpy(buf, "macos", bufSize > 5 ? 5 : bufSize);
+    strncpy(buf, "macos", bufSize > 5U ? 5U : bufSize);
     return 0;
 #elif defined (__FreeBSD__)
-    strncpy(buf, "freebsd", bufSize > 7 ? 7 : bufSize);
+    strncpy(buf, "freebsd", bufSize > 7U ? 7U : bufSize);
     return 0;
 #elif defined (__OpenBSD__)
-    strncpy(buf, "openbsd", bufSize > 7 ? 7 : bufSize);
+    strncpy(buf, "openbsd", bufSize > 7U ? 7U : bufSize);
     return 0;
 #elif defined (__NetBSD__)
-    strncpy(buf, "netbsd", bufSize > 6 ? 6 : bufSize);
+    strncpy(buf, "netbsd", bufSize > 6U ? 6U : bufSize);
     return 0;
 #elif defined (__ANDROID__)
-    strncpy(buf, "android", bufSize > 7 ? 7 : bufSize);
+    strncpy(buf, "android", bufSize > 7U ? 7U : bufSize);
     return 0;
 #elif defined (__linux__)
-    strncpy(buf, "linux", bufSize > 5 ? 5 : bufSize);
+    strncpy(buf, "linux", bufSize > 5U ? 5U : bufSize);
     return 0;
 #else
     struct utsname uts;
@@ -114,22 +114,22 @@ int sysinfo_arch(char * buf, size_t bufSize) {
 
 int sysinfo_code(char * buf, size_t bufSize) {
 #if defined (_WIN32)
-    strncpy(buf, "windows", bufSize > 7 ? 7 : bufSize);
+    strncpy(buf, "windows", bufSize > 7U ? 7U : bufSize);
     return 0;
 #elif defined (__APPLE__)
-    strncpy(buf, "macos", bufSize > 5 ? 5 : bufSize);
+    strncpy(buf, "macos", bufSize > 5U ? 5U : bufSize);
     return 0;
 #elif defined (__FreeBSD__)
-    strncpy(buf, "freebsd", bufSize > 7 ? 7 : bufSize);
+    strncpy(buf, "freebsd", bufSize > 7U ? 7U : bufSize);
     return 0;
 #elif defined (__OpenBSD__)
-    strncpy(buf, "openbsd", bufSize > 7 ? 7 : bufSize);
+    strncpy(buf, "openbsd", bufSize > 7U ? 7U : bufSize);
     return 0;
 #elif defined (__NetBSD__)
-    strncpy(buf, "netbsd", bufSize > 6 ? 6 : bufSize);
+    strncpy(buf, "netbsd", bufSize > 6U ? 6U : bufSize);
     return 0;
 #elif defined (__ANDROID__)
-    strncpy(buf, "android", bufSize > 7 ? 7 : bufSize);
+    strncpy(buf, "android", bufSize > 7U ? 7U : bufSize);
     return 0;
 #else
     const char * filepath = "/etc/os-release";
@@ -188,22 +188,22 @@ int sysinfo_code(char * buf, size_t bufSize) {
 
 int sysinfo_name(char * buf, size_t bufSize) {
 #if defined (_WIN32)
-    strncpy(buf, "Windows", bufSize > 7 ? 7 : bufSize);
+    strncpy(buf, "Windows", bufSize > 7U ? 7U : bufSize);
     return 0;
 #elif defined (__APPLE__)
-    strncpy(buf, "macOS", bufSize > 5 ? 5 : bufSize);
+    strncpy(buf, "macOS", bufSize > 5U ? 5U : bufSize);
     return 0;
 #elif defined (__FreeBSD__)
-    strncpy(buf, "FreeBSD", bufSize > 7 ? 7 : bufSize);
+    strncpy(buf, "FreeBSD", bufSize > 7U ? 7U : bufSize);
     return 0;
 #elif defined (__OpenBSD__)
-    strncpy(buf, "OpenBSD", bufSize > 7 ? 7 : bufSize);
+    strncpy(buf, "OpenBSD", bufSize > 7U ? 7U : bufSize);
     return 0;
 #elif defined (__NetBSD__)
-    strncpy(buf, "NetBSD", bufSize > 6 ? 6 : bufSize);
+    strncpy(buf, "NetBSD", bufSize > 6U ? 6U : bufSize);
     return 0;
 #elif defined (__ANDROID__)
-    strncpy(buf, "Android", bufSize > 7 ? 7 : bufSize);
+    strncpy(buf, "Android", bufSize > 7U ? 7U : bufSize);
     return 0;
 #else
     const char * filepath = "/etc/os-release";
@@ -388,7 +388,7 @@ int sysinfo_vers(char * buf, size_t bufSize) {
                     return -1;
                 } else {
                     fclose(file);
-                    strncpy(buf, "rolling", bufSize > 7 ? 7 : bufSize);
+                    strncpy(buf, "rolling", bufSize > 7U ? 7U : bufSize);
                     return 0;
                 }
             }
@@ -481,7 +481,7 @@ int sysinfo_ncpu() {
 #if defined (_SC_NPROCESSORS_ONLN)
     nprocs = sysconf(_SC_NPROCESSORS_ONLN);
 
-    if (nprocs > 0) {
+    if (nprocs > 0L) {
         return nprocs;
     }
 #endif
@@ -489,12 +489,12 @@ int sysinfo_ncpu() {
 #if defined (_SC_NPROCESSORS_CONF)
     nprocs = sysconf(_SC_NPROCESSORS_CONF);
 
-    if (nprocs > 0) {
+    if (nprocs > 0L) {
         return nprocs;
     }
 #endif
 
-    nprocs = 1;
+    nprocs = 1L;
     return nprocs;
 }
 

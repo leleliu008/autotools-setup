@@ -96,12 +96,12 @@ int tar_extract(const char * outputDir, const char * inputFilePath, int flags, b
 
         const char * entry_pathname = archive_entry_pathname(entry);
 
-        if (stripComponentsNumber > 0) {
+        if (stripComponentsNumber > 0U) {
             size_t entry_pathname_length = strlen(entry_pathname);
 
             for (size_t i = 0; i < entry_pathname_length; i++) {
                 if (entry_pathname[i] == '/') {
-                    entry_pathname = entry_pathname + i + 1;
+                    entry_pathname = entry_pathname + i + 1U;
                     break;
                 }
             }
@@ -130,11 +130,11 @@ int tar_extract(const char * outputDir, const char * inputFilePath, int flags, b
         const char * hardlinkname = archive_entry_hardlink(entry);
 
         if (hardlinkname != NULL) {
-            if (stripComponentsNumber > 0) {
+            if (stripComponentsNumber > 0U) {
                 size_t hardlinkname_length = strlen(hardlinkname);
                 for (size_t i = 0; i < hardlinkname_length; i++) {
                     if (hardlinkname[i] == '/') {
-                        hardlinkname = hardlinkname + i + 1;
+                        hardlinkname = hardlinkname + i + 1U;
                         break;
                     }
                 }
@@ -248,7 +248,7 @@ int list_files(const char * dirPath, bool verbose, StringArrayList * stringArray
             continue;
         }
 
-        size_t filePathLength = strlen(dirPath) + strlen(dir_entry->d_name) + 2;
+        size_t filePathLength = strlen(dirPath) + strlen(dir_entry->d_name) + 2U;
         char   filePath[filePathLength];
         snprintf(filePath, filePathLength, "%s/%s", dirPath, dir_entry->d_name);
 
@@ -320,7 +320,7 @@ int tar_create(const char * inputDir, const char * outputFilePath, ArchiveType t
         return ret;
     }
 
-    if (stringArrayList.size == 0) {
+    if (stringArrayList.size == 0U) {
         return 1;
     }
 
@@ -411,7 +411,7 @@ int tar_create(const char * inputDir, const char * outputFilePath, ArchiveType t
 
             len = read(fd, buff, sizeof(buff));
 
-            while (len > 0) {
+            while (len > 0U) {
                 archive_write_data(aw, buff, len);
                 len = read(fd, buff, sizeof(buff));
             }
@@ -435,7 +435,7 @@ finalize:
 	archive_write_close(aw);
   	archive_write_free(aw);
 
-    if (stringArrayList.size > 0) {
+    if (stringArrayList.size > 0U) {
         for (size_t i = 0; i < stringArrayList.size; i++) {
             free(stringArrayList.array[i]);
             stringArrayList.array[i] = NULL;

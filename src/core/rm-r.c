@@ -15,7 +15,7 @@ int rm_r(const char * dirPath, bool verbose) {
 
     size_t dirPathLength = strlen(dirPath);
 
-    if (dirPathLength == 0) {
+    if (dirPathLength == 0U) {
         errno = EINVAL;
         return -1;
     }

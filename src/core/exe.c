@@ -14,7 +14,7 @@ int exe_search(const char * commandName, char *** listP, size_t * listSize, bool
 
     size_t commandNameLength = strlen(commandName);
 
-    if (commandNameLength == 0) {
+    if (commandNameLength == 0U) {
         errno = EINVAL;
         return -1;
     }
@@ -37,7 +37,7 @@ int exe_search(const char * commandName, char *** listP, size_t * listSize, bool
 
     size_t PATHLength = strlen(PATH);
 
-    if (PATHLength == 0) {
+    if (PATHLength == 0U) {
         return -3;
     }
 
@@ -48,8 +48,8 @@ int exe_search(const char * commandName, char *** listP, size_t * listSize, bool
     struct stat st;
 
     char ** stringArrayList = NULL;
-    size_t  stringArrayListSize    = 0;
-    size_t  stringArrayListCapcity = 0;
+    size_t  stringArrayListSize    = 0U;
+    size_t  stringArrayListCapcity = 0U;
 
     char * PATHItem = strtok(PATH2, ":");
 
@@ -120,7 +120,7 @@ int exe_lookup(const char * commandName, char ** pathP, size_t * pathLength) {
 
     size_t commandNameLength = strlen(commandName);
 
-    if (commandNameLength == 0) {
+    if (commandNameLength == 0U) {
         errno = EINVAL;
         return -1;
     }
@@ -138,7 +138,7 @@ int exe_lookup(const char * commandName, char ** pathP, size_t * pathLength) {
 
     size_t PATHLength = strlen(PATH);
 
-    if (PATHLength == 0) {
+    if (PATHLength == 0U) {
         return -3;
     }
 
@@ -193,7 +193,7 @@ int exe_lookup2(const char * commandName, char buf[], size_t * writtenSize, size
 
     size_t commandNameLength = strlen(commandName);
 
-    if (commandNameLength == 0) {
+    if (commandNameLength == 0U) {
         errno = EINVAL;
         return -1;
     }
@@ -203,7 +203,7 @@ int exe_lookup2(const char * commandName, char buf[], size_t * writtenSize, size
         return -1;
     }
 
-    if (maxSize == 0) {
+    if (maxSize == 0U) {
         errno = EINVAL;
         return -1;
     }
@@ -216,7 +216,7 @@ int exe_lookup2(const char * commandName, char buf[], size_t * writtenSize, size
 
     size_t PATHLength = strlen(PATH);
 
-    if (PATHLength == 0) {
+    if (PATHLength == 0U) {
         return -3;
     }
 

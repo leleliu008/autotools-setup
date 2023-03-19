@@ -16,7 +16,7 @@ int base16_encode(char * outputBuf, const unsigned char * inputBuf, size_t input
         return -1;
     }
 
-    if (inputBufSizeInBytes == 0) {
+    if (inputBufSizeInBytes == 0U) {
         errno = EINVAL;
         return -1;
     }
@@ -64,12 +64,12 @@ int base16_decode(unsigned char * outputBuf, const char * inputBuf, size_t input
         return -1;
     }
 
-    if (inputBufSizeInBytes == 0) {
+    if (inputBufSizeInBytes == 0U) {
         inputBufSizeInBytes = strlen(inputBuf);
     }
 
     //inputBuf指向的字符串长度必须是2的整数倍，也就是必须是偶数
-    if (1 == (inputBufSizeInBytes & 1)) {
+    if (1U == (inputBufSizeInBytes & 1)) {
         errno = EINVAL;
         return -1;
     }
