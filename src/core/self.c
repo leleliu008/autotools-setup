@@ -93,7 +93,7 @@ char* self_realpath() {
     if (ispath(argv[0])) {
         return realpath(argv[0], NULL);
     } else {
-        const char * PATH = getenv("PATH");
+        const char * const PATH = getenv("PATH");
 
         // in fact, it shouldn’t happen
         if (PATH == NULL) {

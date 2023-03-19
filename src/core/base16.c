@@ -21,7 +21,7 @@ int base16_encode(char * outputBuf, const unsigned char * inputBuf, size_t input
         return -1;
     }
 
-    const char *table = isToUpper ? "0123456789ABCDEF" : "0123456789abcdef";
+    const char * const table = isToUpper ? "0123456789ABCDEF" : "0123456789abcdef";
 
     for (size_t i = 0; i < inputBufSizeInBytes; i++) {
         //向右移动4bit，获得高4bit

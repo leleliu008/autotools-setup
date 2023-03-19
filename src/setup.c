@@ -333,7 +333,7 @@ static int autotools_setup_install_the_given_package(Package package, const char
 static int autotools_setup_setup_internal(const char * setupDir, AutotoolsSetupConfig config, AutotoolsSetupLogLevel logLevel, unsigned int jobs, SysInfo sysinfo) {
     bool output2Terminal = isatty(STDOUT_FILENO);
 
-    const char * userHomeDir = getenv("HOME");
+    const char * const userHomeDir = getenv("HOME");
 
     if (userHomeDir == NULL) {
         return AUTOTOOLS_SETUP_ERROR_ENV_HOME_NOT_SET;
@@ -395,7 +395,7 @@ static int autotools_setup_setup_internal(const char * setupDir, AutotoolsSetupC
 
     //////////////////////////////////////////////////////////////////////////////
 
-    const char * PATH = getenv("PATH");
+    const char * const PATH = getenv("PATH");
 
     if ((PATH == NULL) || (strcmp(PATH, "") == 0)) {
         return AUTOTOOLS_SETUP_ERROR_ENV_PATH_NOT_SET;

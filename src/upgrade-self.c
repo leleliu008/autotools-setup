@@ -10,7 +10,7 @@
 #include "autotools-setup.h"
 
 int autotools_setup_upgrade_self(bool verbose) {
-    const char * userHomeDir = getenv("HOME");
+    const char * const userHomeDir = getenv("HOME");
 
     if (userHomeDir == NULL) {
         return AUTOTOOLS_SETUP_ERROR_ENV_HOME_NOT_SET;
@@ -62,7 +62,7 @@ int autotools_setup_upgrade_self(bool verbose) {
 
     ////////////////////////////////////////////////////////////////////////////////////////////
 
-    const char * githubApiUrl = "https://api.github.com/repos/leleliu008/autotools-setup/releases/latest";
+    const char * const githubApiUrl = "https://api.github.com/repos/leleliu008/autotools-setup/releases/latest";
 
     size_t   githubApiResultJsonFilePathLength = autotoolsSetupTmpDirLength + 13U;
     char     githubApiResultJsonFilePath[githubApiResultJsonFilePathLength];
