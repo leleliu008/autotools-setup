@@ -87,7 +87,22 @@ int base16_decode(unsigned char * outputBuf, const char * inputBuf, size_t input
     for (i = 0; i < halfInputSize; i++) {
         //16进制数字转换为10进制数字的过程
         j = i << 1;
-        outputBuf[i] = (hex2dec(inputBuf[j]) << 4) + hex2dec(inputBuf[j + 1]);
+
+        char c1 = hex2dec(inputBuf[j]) << 4;
+
+        if (c1 < 0) {
+            errno = EINVAL;
+            return -1;
+        }
+
+        char c0 = hex2dec(inputBuf[j + 1]);
+
+        if (c0 < 0) {
+            errno = EINVAL;
+            return -1;
+        }
+
+        outputBuf[i] = c1 + c0;
     }
 
     return 0;

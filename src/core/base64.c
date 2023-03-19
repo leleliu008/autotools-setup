@@ -35,7 +35,7 @@ int base64_encode_of_bytes(char * * output, size_t * outputSizeInBytes, const un
         return -1;
     }
 
-    size_t bufLength = (inputSizeInBytes << 2) / 3 + 3;
+    size_t bufLength = (inputSizeInBytes << 2U) / 3U + 3U;
     char   buf[bufLength];
     memset(buf, 0, bufLength);
 
@@ -126,7 +126,7 @@ int base64_decode_to_string(char * * output, size_t * outputSizeInBytes, const c
         return -1;
     }
 
-    size_t bufLength = ((inputSizeInBytes * 3) >> 2) + 1;
+    size_t bufLength = ((inputSizeInBytes * 3U) >> 2U) + 1U;
     char   buf[bufLength];
     memset(buf, 0, bufLength);
 

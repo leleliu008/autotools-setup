@@ -140,8 +140,8 @@ int autotools_setup_util(int argc, char* argv[]) {
                 }
 
                 if (readSizeInBytes > 0) {
-                    unsigned int  x = (readSizeInBytes % 3) == 0 ? 0 : 1;
-                    unsigned int  outputBufSizeInBytes = (readSizeInBytes / 3 + x) << 2;
+                    unsigned int  x = (readSizeInBytes % 3U) == 0U ? 0U : 1U;
+                    unsigned int  outputBufSizeInBytes = (readSizeInBytes / 3U + x) << 2U;
                     unsigned char outputBuf[outputBufSizeInBytes];
 
                     int ret = EVP_EncodeBlock(outputBuf, inputBuf, readSizeInBytes);
@@ -172,8 +172,8 @@ int autotools_setup_util(int argc, char* argv[]) {
                 return AUTOTOOLS_SETUP_ERROR_ARG_IS_NULL;
             }
 
-            unsigned int  x = (inputBufSizeInBytes % 3) == 0 ? 0 : 1;
-            unsigned int  outputBufSizeInBytes = (inputBufSizeInBytes / 3 + x) << 2;
+            unsigned int  x = (inputBufSizeInBytes % 3U) == 0U ? 0U : 1U;
+            unsigned int  outputBufSizeInBytes = (inputBufSizeInBytes / 3U + x) << 2U;
             unsigned char outputBuf[outputBufSizeInBytes];
 
             int ret = EVP_EncodeBlock(outputBuf, inputBuf, inputBufSizeInBytes);
@@ -208,7 +208,7 @@ int autotools_setup_util(int argc, char* argv[]) {
                 }
 
                 if (readSizeInBytes > 0) {
-                    unsigned int  outputBufSizeInBytes = (readSizeInBytes >> 2) * 3;
+                    unsigned int  outputBufSizeInBytes = (readSizeInBytes >> 2U) * 3U;
                     unsigned char outputBuf[outputBufSizeInBytes];
 
                     // EVP_DecodeBlock() returns the length of the data decoded or -1 on error.
@@ -240,7 +240,7 @@ int autotools_setup_util(int argc, char* argv[]) {
                 return AUTOTOOLS_SETUP_ERROR_ARG_IS_NULL;
             }
 
-            unsigned int  outputBufSizeInBytes = (inputBufSizeInBytes >> 2) * 3;
+            unsigned int  outputBufSizeInBytes = (inputBufSizeInBytes >> 2U) * 3U;
             unsigned char outputBuf[outputBufSizeInBytes];
 
             // EVP_DecodeBlock() returns the length of the data decoded or -1 on error.

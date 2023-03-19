@@ -37,13 +37,13 @@ char* self_realpath() {
 #elif defined (__FreeBSD__)
     const int mib[] = { CTL_KERN, KERN_PROC, KERN_PROC_PATHNAME, -1 };
 
-    size_t bufLength = 0;
+    size_t bufLength = 0U;
 
     if (sysctl(mib, 4, NULL, &bufLength, NULL, 0) < 0) {
         return NULL;
     }
 
-    char * buf = (char*)calloc(bufLength + 1, sizeof(char));
+    char * buf = (char*)calloc(bufLength + 1U, sizeof(char));
 
     if (buf == NULL) {
         errno = ENOMEM;
@@ -114,7 +114,7 @@ char* self_realpath() {
             return NULL;
         }
 
-        size_t  PATH2Length = PATHLength + 1;
+        size_t  PATH2Length = PATHLength + 1U;
         char    PATH2[PATH2Length];
         strncpy(PATH2, PATH, PATH2Length);
 
@@ -126,7 +126,7 @@ char* self_realpath() {
 
         while (PATHItem != NULL) {
             if ((stat(PATHItem, &st) == 0) && S_ISDIR(st.st_mode)) {
-                size_t   fullPathLength = strlen(PATHItem) + commandNameLength + 2;
+                size_t   fullPathLength = strlen(PATHItem) + commandNameLength + 2U;
                 char     fullPath[fullPathLength];
                 snprintf(fullPath, fullPathLength, "%s/%s", PATHItem, argv[0]);
 
