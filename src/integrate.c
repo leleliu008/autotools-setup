@@ -8,7 +8,7 @@
 int autotools_setup_integrate_zsh_completion(const char * outputDir, bool verbose) {
     const char * url = "https://raw.githubusercontent.com/leleliu008/autotools-setup/master/autotools-setup-zsh-completion";
 
-    char * userHomeDir = getenv("HOME");
+    const char * userHomeDir = getenv("HOME");
 
     if (userHomeDir == NULL) {
         return AUTOTOOLS_SETUP_ERROR_ENV_HOME_NOT_SET;

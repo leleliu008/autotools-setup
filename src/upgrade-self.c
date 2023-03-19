@@ -10,7 +10,7 @@
 #include "autotools-setup.h"
 
 int autotools_setup_upgrade_self(bool verbose) {
-    char * userHomeDir = getenv("HOME");
+    const char * userHomeDir = getenv("HOME");
 
     if (userHomeDir == NULL) {
         return AUTOTOOLS_SETUP_ERROR_ENV_HOME_NOT_SET;

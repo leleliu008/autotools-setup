@@ -5,8 +5,8 @@
 
 #include "sha256sum.h"
 
-static inline void tohex(char buf[65], unsigned char * sha256Bytes) {
-    const char * table = "0123456789abcdef";
+static inline void tohex(char buf[65], const unsigned char * sha256Bytes) {
+    const char * const table = "0123456789abcdef";
 
     for (size_t i = 0; i < SHA256_DIGEST_LENGTH; i++) {
         size_t j = i << 1;

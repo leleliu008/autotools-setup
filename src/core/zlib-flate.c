@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "zlib-flate.h"
+
 #define CHUNK 16384
 
 // this source file was modified from https://www.zlib.net/zpipe.c

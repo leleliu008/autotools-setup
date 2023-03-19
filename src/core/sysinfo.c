@@ -84,7 +84,7 @@ int sysinfo_type(char * buf, size_t bufSize) {
     }
 
     size_t osKindLength = strlen(uts.sysname);
-    size_t n = bufSize > (osKindLength ? osKindLength) : bufSize;
+    size_t n = (bufSize > osKindLength) ? osKindLength : bufSize;
 
     strncpy(buf, uts.sysname, n);
 

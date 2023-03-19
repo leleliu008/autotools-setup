@@ -29,7 +29,7 @@ int exe_search(const char * commandName, char *** listP, size_t * listSize, bool
         return -1;
     }
 
-    char * PATH = getenv("PATH");
+    const char * PATH = getenv("PATH");
 
     if (PATH == NULL) {
         return -2;
@@ -130,7 +130,7 @@ int exe_lookup(const char * commandName, char ** pathP, size_t * pathLength) {
         return -1;
     }
 
-    char * PATH = getenv("PATH");
+    const char * PATH = getenv("PATH");
 
     if (PATH == NULL) {
         return -2;
@@ -208,7 +208,7 @@ int exe_lookup2(const char * commandName, char buf[], size_t * writtenSize, size
         return -1;
     }
 
-    char * PATH = getenv("PATH");
+    const char * PATH = getenv("PATH");
 
     if (PATH == NULL) {
         return -2;
