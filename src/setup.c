@@ -130,7 +130,7 @@ static int autotools_setup_download_and_uncompress(const char * url, const char 
 
     struct stat st;
 
-    if (stat(filePath, &st) == 0 && S_ISREG(st.st_mode)) {
+    if ((stat(filePath, &st) == 0) && S_ISREG(st.st_mode)) {
         char actualSHA256SUM[65] = {0};
 
         if (sha256sum_of_file(actualSHA256SUM, filePath) != 0) {
@@ -208,8 +208,8 @@ static int autotools_setup_write_receipt(const char * setupDir, size_t setupDirL
         return AUTOTOOLS_SETUP_ERROR;
     }
 
-    fprintf(receiptFile, "bin-url-gmake:    %s\n",   binUrlGmake == NULL ? "" : binUrlGmake);
-    fprintf(receiptFile, "bin-sha-gmake:    %s\n\n", binShaGmake == NULL ? "" : binShaGmake);
+    fprintf(receiptFile, "bin-url-gmake:    %s\n",   (binUrlGmake == NULL) ? "" : binUrlGmake);
+    fprintf(receiptFile, "bin-sha-gmake:    %s\n\n", (binShaGmake == NULL) ? "" : binShaGmake);
 
     fprintf(receiptFile, "src-url-gm4:      %s\n",   config.src_url_gm4);
     fprintf(receiptFile, "src-sha-gm4:      %s\n\n", config.src_sha_gm4);
@@ -294,7 +294,7 @@ static int autotools_setup_install_the_given_package(Package package, const char
     } else {
         size_t   configurePhaseCmdLength = setupDirLength + 32U;
         char     configurePhaseCmd[configurePhaseCmdLength];
-        snprintf(configurePhaseCmd, configurePhaseCmdLength, "./configure --prefix=%s %s", setupDir, logLevel == AutotoolsSetupLogLevel_silent ? "--silent" : "");
+        snprintf(configurePhaseCmd, configurePhaseCmdLength, "./configure --prefix=%s %s", setupDir, (logLevel == AutotoolsSetupLogLevel_silent) ? "--silent" : "");
 
         LOG_RUN_CMD(output2Terminal, logLevel, configurePhaseCmd)
 
@@ -397,7 +397,7 @@ static int autotools_setup_setup_internal(const char * setupDir, AutotoolsSetupC
 
     char * PATH = getenv("PATH");
 
-    if (PATH == NULL || strcmp(PATH, "") == 0) {
+    if ((PATH == NULL) || (strcmp(PATH, "") == 0)) {
         return AUTOTOOLS_SETUP_ERROR_ENV_PATH_NOT_SET;
     }
 

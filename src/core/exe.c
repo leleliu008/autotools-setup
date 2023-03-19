@@ -235,7 +235,7 @@ int exe_lookup2(const char * commandName, char buf[], size_t * writtenSize, size
             snprintf(fullPath, fullPathLength, "%s/%s", PATHItem, commandName);
 
             if (access(fullPath, X_OK) == 0) {
-                size_t n = maxSize > fullPathLength ? fullPathLength : maxSize;
+                size_t n = (maxSize > fullPathLength) ? fullPathLength : maxSize;
 
                 strncpy(buf, fullPath, n);
 

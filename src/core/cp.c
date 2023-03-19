@@ -32,7 +32,7 @@ int copy_file(const char * fromFilePath, const char * toFilePath) {
         }
 
         if (size > 0U) {
-            if (fwrite(buff, 1, size, toFile) != size || ferror(toFile)) {
+            if ((fwrite(buff, 1, size, toFile) != size) || ferror(toFile)) {
                 fclose(fromFile);
                 fclose(toFile);
                 errno = EIO;

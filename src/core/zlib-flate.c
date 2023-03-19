@@ -45,7 +45,7 @@ int zlib_deflate_string_to_file(const char * inputBuf, size_t inputBufSizeInByte
 
         unsigned int have = CHUNK - zStream.avail_out;
 
-        if (fwrite(outputBuf, 1, have, outputFile) != have || ferror(outputFile)) {
+        if ((fwrite(outputBuf, 1, have, outputFile) != have) || ferror(outputFile)) {
             (void)deflateEnd(&zStream);
             return Z_ERRNO;
         }
@@ -97,7 +97,7 @@ int zlib_deflate_file_to_file(FILE * inputFile, FILE * outputFile, int level) {
 
             have = CHUNK - zStream.avail_out;
 
-            if (fwrite(out, 1, have, outputFile) != have || ferror(outputFile)) {
+            if ((fwrite(out, 1, have, outputFile) != have) || ferror(outputFile)) {
                 (void)deflateEnd(&zStream);
                 return Z_ERRNO;
             }
@@ -158,7 +158,7 @@ int zlib_inflate_file_to_file(FILE * inputFile, FILE * outputFile) {
 
             have = CHUNK - zStream.avail_out;
 
-            if (fwrite(outputBuf, 1, have, outputFile) != have || ferror(outputFile)) {
+            if ((fwrite(outputBuf, 1, have, outputFile) != have) || ferror(outputFile)) {
                 (void)inflateEnd(&zStream);
                 return Z_ERRNO;
             }

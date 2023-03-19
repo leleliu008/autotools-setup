@@ -8,7 +8,7 @@
 #include "tar.h"
 
 int tar_list(const char * inputFilePath, int flags) {
-	if (inputFilePath != NULL && strcmp(inputFilePath, "-") == 0) {
+	if ((inputFilePath != NULL) && (strcmp(inputFilePath, "-") == 0)) {
 		inputFilePath = NULL;
     }
 
@@ -57,7 +57,7 @@ finalize:
 }
 
 int tar_extract(const char * outputDir, const char * inputFilePath, int flags, bool verbose, size_t stripComponentsNumber) {
-    if (inputFilePath != NULL && strcmp(inputFilePath, "-") == 0) {
+    if ((inputFilePath != NULL) && (strcmp(inputFilePath, "-") == 0)) {
 		inputFilePath = NULL;
     }
 
@@ -324,7 +324,7 @@ int tar_create(const char * inputDir, const char * outputFilePath, ArchiveType t
         return 1;
     }
 
-    if (outputFilePath != NULL && strcmp(outputFilePath, "-") == 0) {
+    if ((outputFilePath != NULL) && (strcmp(outputFilePath, "-") == 0)) {
 		outputFilePath = NULL;
     }
 
@@ -395,7 +395,7 @@ int tar_create(const char * inputDir, const char * outputFilePath, ArchiveType t
 
             ret = archive_write_header(aw, entry);
 
-            if (ret == ARCHIVE_RETRY || ret == ARCHIVE_WARN) {
+            if ((ret == ARCHIVE_RETRY) || (ret == ARCHIVE_WARN)) {
                 ret =  ARCHIVE_OK;
             }
 

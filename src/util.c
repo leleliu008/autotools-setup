@@ -41,7 +41,7 @@ int autotools_setup_util(int argc, char* argv[]) {
                         return AUTOTOOLS_SETUP_ERROR;
                     }
 
-                    if (fwrite(outputBuf, 1, outputBufSizeInBytes, stdout) != outputBufSizeInBytes || ferror(stdout)) {
+                    if ((fwrite(outputBuf, 1, outputBufSizeInBytes, stdout) != outputBufSizeInBytes) || ferror(stdout)) {
                         return AUTOTOOLS_SETUP_ERROR;
                     }
                 }
@@ -70,7 +70,7 @@ int autotools_setup_util(int argc, char* argv[]) {
                 return AUTOTOOLS_SETUP_ERROR;
             }
 
-            if (fwrite(outputBuf, 1, outputBufSizeInBytes, stdout) != outputBufSizeInBytes || ferror(stdout)) {
+            if ((fwrite(outputBuf, 1, outputBufSizeInBytes, stdout) != outputBufSizeInBytes) || ferror(stdout)) {
                 return AUTOTOOLS_SETUP_ERROR;
             }
 
@@ -104,7 +104,7 @@ int autotools_setup_util(int argc, char* argv[]) {
         unsigned char outputBuf[outputBufSizeInBytes];
 
         if (base16_decode(outputBuf, argv[3], inputBufSizeInBytes) == 0) {
-            if (fwrite(outputBuf, 1, outputBufSizeInBytes, stdout) != outputBufSizeInBytes || ferror(stdout)) {
+            if ((fwrite(outputBuf, 1, outputBufSizeInBytes, stdout) != outputBufSizeInBytes) || ferror(stdout)) {
                 return AUTOTOOLS_SETUP_ERROR;
             }
 
@@ -136,7 +136,7 @@ int autotools_setup_util(int argc, char* argv[]) {
                 }
 
                 if (readSizeInBytes > 0U) {
-                    unsigned int  x = (readSizeInBytes % 3U) == 0U ? 0U : 1U;
+                    unsigned int  x = ((readSizeInBytes % 3U) == 0U) ? 0U : 1U;
                     unsigned int  outputBufSizeInBytes = (readSizeInBytes / 3U + x) << 2U;
                     unsigned char outputBuf[outputBufSizeInBytes];
 
@@ -146,7 +146,7 @@ int autotools_setup_util(int argc, char* argv[]) {
                         return ret;
                     }
 
-                    if (fwrite(outputBuf, 1, outputBufSizeInBytes, stdout) != outputBufSizeInBytes || ferror(stdout)) {
+                    if ((fwrite(outputBuf, 1, outputBufSizeInBytes, stdout) != outputBufSizeInBytes) || ferror(stdout)) {
                         return AUTOTOOLS_SETUP_ERROR;
                     }
                 }
@@ -168,7 +168,7 @@ int autotools_setup_util(int argc, char* argv[]) {
                 return AUTOTOOLS_SETUP_ERROR_ARG_IS_NULL;
             }
 
-            unsigned int  x = (inputBufSizeInBytes % 3U) == 0U ? 0U : 1U;
+            unsigned int  x = ((inputBufSizeInBytes % 3U) == 0U) ? 0U : 1U;
             unsigned int  outputBufSizeInBytes = (inputBufSizeInBytes / 3U + x) << 2U;
             unsigned char outputBuf[outputBufSizeInBytes];
 
@@ -178,7 +178,7 @@ int autotools_setup_util(int argc, char* argv[]) {
                 return ret;
             }
 
-            if (fwrite(outputBuf, 1, outputBufSizeInBytes, stdout) != outputBufSizeInBytes || ferror(stdout)) {
+            if ((fwrite(outputBuf, 1, outputBufSizeInBytes, stdout) != outputBufSizeInBytes) || ferror(stdout)) {
                 return AUTOTOOLS_SETUP_ERROR;
             }
 
@@ -212,7 +212,7 @@ int autotools_setup_util(int argc, char* argv[]) {
                         return AUTOTOOLS_SETUP_ERROR_ARG_IS_INVALID;
                     }
 
-                    if (fwrite(outputBuf, 1, n, stdout) != (size_t)n || ferror(stdout)) {
+                    if ((fwrite(outputBuf, 1, n, stdout) != (size_t)n) || ferror(stdout)) {
                         return AUTOTOOLS_SETUP_ERROR;
                     }
                 }
@@ -244,7 +244,7 @@ int autotools_setup_util(int argc, char* argv[]) {
                 return AUTOTOOLS_SETUP_ERROR_ARG_IS_INVALID;
             }
 
-            if (fwrite(outputBuf, 1, n, stdout) != (size_t)n || ferror(stdout)) {
+            if ((fwrite(outputBuf, 1, n, stdout) != (size_t)n) || ferror(stdout)) {
                 return AUTOTOOLS_SETUP_ERROR;
             }
 
@@ -257,7 +257,7 @@ int autotools_setup_util(int argc, char* argv[]) {
     }
 
     if (strcmp(argv[2], "sha256sum") == 0) {
-        if (argv[3] == NULL || strcmp(argv[3], "-") == 0) {
+        if ((argv[3] == NULL) || (strcmp(argv[3], "-") == 0)) {
             char outputBuf[65];
             outputBuf[64] = '\0';
 
@@ -302,7 +302,7 @@ int autotools_setup_util(int argc, char* argv[]) {
                     return AUTOTOOLS_SETUP_ERROR;
                 }
 
-                if (p[0] < '1' || p[0] > '9') {
+                if ((p[0] < '1') || (p[0] > '9')) {
                     fprintf(stderr, "Usage: %s %s %s [-L N] (N>=1 && N <=9) , The smaller the N, the faster the speed and the lower the compression ratio.\n", argv[0], argv[1], argv[2]);
                     return AUTOTOOLS_SETUP_ERROR;
                 }

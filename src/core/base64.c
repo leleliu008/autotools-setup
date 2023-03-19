@@ -16,7 +16,11 @@ int base64_encode_of_string(char * * output, size_t * outputSizeInBytes, const c
         return -1;
     }
 
-    return base64_encode_of_bytes(output, outputSizeInBytes, (unsigned char *)input, inputSizeInBytes == 0U ? strlen(input) : inputSizeInBytes);
+    if (inputSizeInBytes == 0U) {
+        inputSizeInBytes = strlen(input);
+    }
+
+    return base64_encode_of_bytes(output, outputSizeInBytes, (unsigned char *)input, inputSizeInBytes);
 }
 
 int base64_encode_of_bytes(char * * output, size_t * outputSizeInBytes, const unsigned char * input, size_t inputSizeInBytes) {
