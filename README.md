@@ -1,4 +1,5 @@
 # autotools-setup
+
 a command-line tool to setup GNU Autotools and relevant build environment.
 
 following packages will be installed:
@@ -12,6 +13,7 @@ following packages will be installed:
 - [gmake](https://www.gnu.org/software/make/)
 
 ## dependences
+
 |dependency|required?|purpose|
 |----|---------|-------|
 |[cmake](https://cmake.org/)|required |for generating `build.ninja`|
@@ -24,9 +26,9 @@ following packages will be installed:
 |[libarchive](https://www.libarchive.org/)|required|for uncompressing .zip and .tar.* files.|
 |[zlib](https://www.zlib.net/)|required|for compressing and uncompressing.|
 
-
 ## install `autotools-setup` prebuild binary
-go to https://github.com/leleliu008/autotools-setup/releases
+
+go to <https://github.com/leleliu008/autotools-setup/releases>
 
 ## build and install autotools-setup via [ppkg](https://github.com/leleliu008/ppkg)
 
@@ -221,98 +223,112 @@ cmake --build   build.d
 cmake --install build.d
 ```
 
-
 ## ~/.autotools-setup
+
 all relevant dirs and files are located in `~/.autotools-setup` directory.
 
 **Note**: Please do NOT place your own files in `~/.autotools-setup` directory, as `autotools-setup` will change files in `~/.autotools-setup` directory without notice.
 
-
 ## autotools-setup command usage
-*   **show help of this command**
-        
-        autotools-setup -h
-        autotools-setup --help
-        
-*   **show version of this command**
 
-        autotools-setup -V
-        autotools-setup --version
-        
-*   **show your system's information**
+- **show help of this command**
 
-        autotools-setup sysinfo
+    ```bash
+    autotools-setup -h
+    autotools-setup --help
+    ```
 
-*   **show your system's information and other information**
+- **show version of this command**
 
-        autotools-setup env
-        
-*   **show default config**
+    ```bash
+    autotools-setup -V
+    autotools-setup --version
+    ```
 
-        autotools-setup show-default-config
-        autotools-setup show-default-config > config.yml
-        
-*   **integrate `zsh-completion` script**
+- **show your system's information**
 
-        autotools-setup integrate zsh
-        autotools-setup integrate zsh --output-dir=/usr/local/share/zsh/site-functions
-        autotools-setup integrate zsh -v
-        
+    ```bash
+    autotools-setup sysinfo
+    ```
+
+- **show your system's information and other information**
+
+    ```bash
+    autotools-setup env
+    ```
+
+- **show default config**
+
+    ```bash
+    autotools-setup show-default-config
+    autotools-setup show-default-config > config.yml
+    ```
+
+- **integrate `zsh-completion` script**
+
+    ```bash
+    autotools-setup integrate zsh
+    autotools-setup integrate zsh --output-dir=/usr/local/share/zsh/site-functions
+    autotools-setup integrate zsh -v
+    ```
+
     I provide a zsh-completion script for `autotools-setup`. when you've typed `autotools-setup` then type `TAB` key, the rest of the arguments will be automatically complete for you.
 
     **Note**: to apply this feature, you may need to run the command `autoload -U compinit && compinit` in your terminal (your current running shell must be zsh).
 
-*   **setup GNU Autotools and relevant build environment**
+- **setup GNU Autotools and relevant build environment**
 
-        autotools-setup setup
-        autotools-setup setup --prefix=.autotools
-        autotools-setup setup --prefix=.autotools --jobs=8
-        autotools-setup setup --prefix=.autotools --config=my-config.yml
-        autotools-setup setup --prefix=.autotools -v
- 
+    ```bash
+    autotools-setup setup
+    autotools-setup setup --prefix=.autotools
+    autotools-setup setup --prefix=.autotools --jobs=8
+    autotools-setup setup --prefix=.autotools --config=my-config.yml
+    autotools-setup setup --prefix=.autotools -v
+    ```
+
     **Note**: C compiler should be installed by yourself using your system's default package manager before running this command.
-
 
     **Tip:** above command do two things:
 
-    - download `gmake` prebuild binary from https://github.com/leleliu008/gmake-build/releases
-    - build and install `gm4` `perl` `pkgconf` `libtool` `autoconf` `automake` from source
+  - download `gmake` prebuild binary from <https://github.com/leleliu008/gmake-build/releases>
+  - build and install `gm4` `perl` `pkgconf` `libtool` `autoconf` `automake` from source
 
+- **extra common used utilities**
 
-*   **extra common used utilities**
-        
-        autotools-setup util zlib-deflate -L 6 < input/file/path
-        autotools-setup util zlib-inflate      < input/file/path
+    ```bash
+    autotools-setup util zlib-deflate -L 6 < input/file/path
+    autotools-setup util zlib-inflate      < input/file/path
 
-        autotools-setup util base16-encode "string to be encoded with base16 algorithm"
-        autotools-setup util base16-encode < input/file/path
+    autotools-setup util base16-encode "string to be encoded with base16 algorithm"
+    autotools-setup util base16-encode < input/file/path
 
-        autotools-setup util base16-decode ABCD
-        autotools-setup util base16-decode ABCD > output/file/path
+    autotools-setup util base16-decode ABCD
+    autotools-setup util base16-decode ABCD > output/file/path
 
-        autotools-setup util base64-encode "string to be encoded with base64 algorithm"
-        autotools-setup util base64-encode < input/file/path
+    autotools-setup util base64-encode "string to be encoded with base64 algorithm"
+    autotools-setup util base64-encode < input/file/path
 
-        autotools-setup util base64-decode YQ==
-        autotools-setup util base64-decode YQ== > output/file/path
+    autotools-setup util base64-decode YQ==
+    autotools-setup util base64-decode YQ== > output/file/path
 
-        autotools-setup util sha256sum   input/file/path
-        autotools-setup util sha256sum < input/file/path
+    autotools-setup util sha256sum   input/file/path
+    autotools-setup util sha256sum < input/file/path
 
-        autotools-setup util which tree
-        autotools-setup util which tree -a
+    autotools-setup util which tree
+    autotools-setup util which tree -a
+    ```
 
 ## environment variables
 
-*   **HOME**
+- **HOME**
 
     this environment variable already have been set on most systems, if not set or set a empty string, you will receive an error message.
 
-*   **PATH**
+- **PATH**
 
     this environment variable already have been set on most systems, if not set or set a empty string, you will receive an error message.
 
-*   **SSL_CERT_FILE**
+- **SSL_CERT_FILE**
 
     ```bash
     curl -LO https://curl.se/ca/cacert.pem
