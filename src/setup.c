@@ -64,8 +64,8 @@ static int run_cmd(char * cmd, int redirectOutput2FD) {
 
         ////////////////////////////////////////
 
-        size_t argc = 0;
-        char* argv[10] = {0};
+        size_t argc = 0U;
+        char*  argv[10] = {0};
 
         char * arg = strtok(cmd, " ");
 
@@ -122,7 +122,7 @@ static int autotools_setup_download_and_uncompress(const char * url, const char 
 
     size_t   fileNameLength = strlen(urlCopy);
 
-    size_t   filePathLength = downloadsDirLength + fileNameLength + 2;
+    size_t   filePathLength = downloadsDirLength + fileNameLength + 2U;
     char     filePath[filePathLength];
     snprintf(filePath, filePathLength, "%s/%s", downloadsDir, fileName);
 
@@ -169,7 +169,7 @@ static int autotools_setup_download_and_uncompress(const char * url, const char 
         }
     }
 
-    size_t   uncompressPhaseCmdLength = filePathLength + 36;
+    size_t   uncompressPhaseCmdLength = filePathLength + 36U;
     char     uncompressPhaseCmd[uncompressPhaseCmdLength];
     snprintf(uncompressPhaseCmd, uncompressPhaseCmdLength, "Uncompressing %s --strip-components=1", filePath);
 
@@ -199,7 +199,7 @@ static int autotools_setup_write_env(const char * envFilePath, const char * setu
 }
 
 static int autotools_setup_write_receipt(const char * setupDir, size_t setupDirLength, const char * binUrlGmake, const char * binShaGmake, AutotoolsSetupConfig config, SysInfo sysinfo) {
-    size_t   receiptFilePathLength = setupDirLength + 13;
+    size_t   receiptFilePathLength = setupDirLength + 13U;
     char     receiptFilePath[receiptFilePathLength];
     snprintf(receiptFilePath, receiptFilePathLength, "%s/receipt.yml", setupDir);
 
@@ -286,7 +286,7 @@ static int autotools_setup_install_the_given_package(Package package, const char
     //////////////////////////////////////////////////////////////////////////////
 
     if (strcmp(package.name, "perl") == 0) {
-        size_t   configurePhaseCmdLength = setupDirLength + 110;
+        size_t   configurePhaseCmdLength = setupDirLength + 110U;
         char     configurePhaseCmd[configurePhaseCmdLength];
         snprintf(configurePhaseCmd, configurePhaseCmdLength, "./Configure -Dprefix=%s -des -Dmake=gmake -Duselargefiles -Duseshrplib -Dusethreads -Dusenm=false -Dusedl=true", setupDir);
 
@@ -294,7 +294,7 @@ static int autotools_setup_install_the_given_package(Package package, const char
 
         ret = run_cmd(configurePhaseCmd, redirectOutput2FD);
     } else {
-        size_t   configurePhaseCmdLength = setupDirLength + 32;
+        size_t   configurePhaseCmdLength = setupDirLength + 32U;
         char     configurePhaseCmd[configurePhaseCmdLength];
         snprintf(configurePhaseCmd, configurePhaseCmdLength, "./configure --prefix=%s %s", setupDir, logLevel == AutotoolsSetupLogLevel_silent ? "--silent" : "");
 
@@ -309,7 +309,7 @@ static int autotools_setup_install_the_given_package(Package package, const char
 
     //////////////////////////////////////////////////////////////////////////////
 
-    size_t   buildPhaseCmdLength = gmakePathLength + 12;
+    size_t   buildPhaseCmdLength = gmakePathLength + 12U;
     char     buildPhaseCmd[buildPhaseCmdLength];
     snprintf(buildPhaseCmd, buildPhaseCmdLength, "%s --jobs=%u", gmakePath, jobs);
 
@@ -323,7 +323,7 @@ static int autotools_setup_install_the_given_package(Package package, const char
 
     //////////////////////////////////////////////////////////////////////////////
 
-    size_t   installPhaseCmdLength = gmakePathLength + 20;
+    size_t   installPhaseCmdLength = gmakePathLength + 20U;
     char     installPhaseCmd[installPhaseCmdLength];
     snprintf(installPhaseCmd, installPhaseCmdLength, "%s install", gmakePath);
 
@@ -349,7 +349,7 @@ static int autotools_setup_setup_internal(const char * setupDir, AutotoolsSetupC
 
     //////////////////////////////////////////////////////////////////////////////
 
-    size_t   autotoolsSetupHomeDirLength = userHomeDirLength + 18;
+    size_t   autotoolsSetupHomeDirLength = userHomeDirLength + 18U;
     char     autotoolsSetupHomeDir[autotoolsSetupHomeDirLength];
     snprintf(autotoolsSetupHomeDir, autotoolsSetupHomeDirLength, "%s/.autotools-setup", userHomeDir);
 
@@ -369,7 +369,7 @@ static int autotools_setup_setup_internal(const char * setupDir, AutotoolsSetupC
 
     //////////////////////////////////////////////////////////////////////////////
 
-    size_t   defaultSetupDirLength = autotoolsSetupHomeDirLength + 11;
+    size_t   defaultSetupDirLength = autotoolsSetupHomeDirLength + 11U;
     char     defaultSetupDir[defaultSetupDirLength];
     snprintf(defaultSetupDir, defaultSetupDirLength, "%s/autotools", autotoolsSetupHomeDir);
 
@@ -381,11 +381,11 @@ static int autotools_setup_setup_internal(const char * setupDir, AutotoolsSetupC
 
     size_t setupDirLength = strlen(setupDir);
 
-    size_t   setupBinDirLength = setupDirLength + 5;
+    size_t   setupBinDirLength = setupDirLength + 5U;
     char     setupBinDir[setupBinDirLength];
     snprintf(setupBinDir, setupBinDirLength, "%s/bin", setupDir);
 
-    size_t   setupAclocalDirLength = setupDirLength + 15;
+    size_t   setupAclocalDirLength = setupDirLength + 15U;
     char     setupAclocalDir[setupAclocalDirLength];
     snprintf(setupAclocalDir, setupAclocalDirLength, "%s/share/aclocal", setupDir);
 
@@ -403,7 +403,7 @@ static int autotools_setup_setup_internal(const char * setupDir, AutotoolsSetupC
         return AUTOTOOLS_SETUP_ERROR_ENV_PATH_NOT_SET;
     }
 
-    size_t   newPATHLength = setupBinDirLength + strlen(PATH) + 2;
+    size_t   newPATHLength = setupBinDirLength + strlen(PATH) + 2U;
     char     newPATH[newPATHLength];
     snprintf(newPATH, newPATHLength, "%s:%s", setupBinDir, PATH);
 
@@ -443,7 +443,7 @@ static int autotools_setup_setup_internal(const char * setupDir, AutotoolsSetupC
 
     //////////////////////////////////////////////////////////////////////////////
 
-    size_t   autotoolsSetupDownloadsDirLength = autotoolsSetupHomeDirLength + 11;
+    size_t   autotoolsSetupDownloadsDirLength = autotoolsSetupHomeDirLength + 11U;
     char     autotoolsSetupDownloadsDir[autotoolsSetupDownloadsDirLength];
     snprintf(autotoolsSetupDownloadsDir, autotoolsSetupDownloadsDirLength, "%s/downloads", autotoolsSetupHomeDir);
 
@@ -461,7 +461,7 @@ static int autotools_setup_setup_internal(const char * setupDir, AutotoolsSetupC
 
     //////////////////////////////////////////////////////////////////////////////
 
-    size_t   autotoolsSetupInstallingRootDirLength = autotoolsSetupHomeDirLength + 12;
+    size_t   autotoolsSetupInstallingRootDirLength = autotoolsSetupHomeDirLength + 12U;
     char     autotoolsSetupInstallingRootDir[autotoolsSetupInstallingRootDirLength];
     snprintf(autotoolsSetupInstallingRootDir, autotoolsSetupInstallingRootDirLength, "%s/installing", autotoolsSetupHomeDir);
 
@@ -479,7 +479,7 @@ static int autotools_setup_setup_internal(const char * setupDir, AutotoolsSetupC
 
     //////////////////////////////////////////////////////////////////////////////
 
-    size_t   envFilePathLength = setupDirLength + 8;
+    size_t   envFilePathLength = setupDirLength + 8U;
     char     envFilePath[envFilePathLength];
     snprintf(envFilePath, envFilePathLength, "%s/env.sh", setupDir);
 
@@ -532,7 +532,7 @@ static int autotools_setup_setup_internal(const char * setupDir, AutotoolsSetupC
     int redirectOutput2FD = -1;
 
     if (logLevel < AutotoolsSetupLogLevel_verbose) {
-        size_t   logFilePathLength = autotoolsSetupInstallingRootDirLength + 9;
+        size_t   logFilePathLength = autotoolsSetupInstallingRootDirLength + 9U;
         char     logFilePath[logFilePathLength];
         snprintf(logFilePath, logFilePathLength, "%s/log.txt", autotoolsSetupInstallingRootDir);
 
@@ -577,13 +577,13 @@ static int autotools_setup_setup_internal(const char * setupDir, AutotoolsSetupC
 
     //////////////////////////////////////////////////////////////////////////////
 
-    unsigned int stepN = 1;
+    unsigned int stepN = 1U;
 
     int ret = AUTOTOOLS_SETUP_OK;
 
     //////////////////////////////////////////////////////////////////////////////
 
-    size_t   defaultGmakePathLength = setupBinDirLength + 7;
+    size_t   defaultGmakePathLength = setupBinDirLength + 7U;
     char     defaultGmakePath[defaultGmakePathLength];
     snprintf(defaultGmakePath, defaultGmakePathLength, "%s/gmake", setupBinDir);
 
@@ -591,7 +591,7 @@ static int autotools_setup_setup_internal(const char * setupDir, AutotoolsSetupC
 
     char * gmakePath = NULL;
 
-    size_t gmakePathLength = 0;
+    size_t gmakePathLength = 0U;
 
     bool   gmakePathNeedsToBeFreed;
 
@@ -659,7 +659,7 @@ static int autotools_setup_setup_internal(const char * setupDir, AutotoolsSetupC
     packages[4] = (Package){ "autoconf", config.src_url_autoconf, config.src_sha_autoconf };
     packages[5] = (Package){ "automake", config.src_url_automake, config.src_sha_automake };
 
-    for (unsigned int i = 0; i < 6; i++) {
+    for (unsigned int i = 0U; i < 6U; i++) {
         Package package = packages[i];
 
         if (logLevel != AutotoolsSetupLogLevel_silent) { \

@@ -17,7 +17,7 @@ int autotools_setup_show_runtime_info() {
         return AUTOTOOLS_SETUP_ERROR_ENV_HOME_NOT_SET;
     }
 
-    size_t   autotoolsSetupHomeDirLength = userHomeDirLength + 18;
+    size_t   autotoolsSetupHomeDirLength = userHomeDirLength + 18U;
     char     autotoolsSetupHomeDir[autotoolsSetupHomeDirLength];
     snprintf(autotoolsSetupHomeDir, autotoolsSetupHomeDirLength, "%s/.autotools-setup", userHomeDir);
 

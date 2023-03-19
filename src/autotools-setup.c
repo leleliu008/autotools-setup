@@ -89,7 +89,7 @@ int autotools_setup_main(int argc, char* argv[]) {
         const char * configFilePath = NULL;
         const char * setupDir = NULL;
 
-        unsigned int jobs = 0;
+        unsigned int jobs = 0U;
 
         for (int i = 2; i < argc; i++) {
             if (strcmp(argv[i], "-q") == 0) {
