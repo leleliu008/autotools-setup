@@ -8,10 +8,8 @@
 static inline void tohex(char buf[65], unsigned char * sha256Bytes) {
     const char * table = "0123456789abcdef";
 
-    size_t i, j;
-
-    for (i = 0; i < SHA256_DIGEST_LENGTH; i++) {
-        j = i << 1;
+    for (size_t i = 0; i < SHA256_DIGEST_LENGTH; i++) {
+        size_t j = i << 1;
         buf[j]     = table[sha256Bytes[i] >> 4];
         buf[j + 1] = table[sha256Bytes[i] & 0x0F];
     }
@@ -87,10 +85,9 @@ int sha256sum_of_stream(char outputBuffer[65], FILE * file) {
     SHA256_Init(&ctx);
 
     unsigned char buffer[1024];
-    size_t size;
 
     for (;;) {
-        size = fread(buffer, 1, 1024, file);
+        size_t size = fread(buffer, 1, 1024, file);
 
         if (ferror(file)) {
             errno = EIO;

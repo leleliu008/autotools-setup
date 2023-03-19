@@ -22,18 +22,16 @@ int base16_encode(char * outputBuf, const unsigned char * inputBuf, size_t input
     }
 
     const char *table = isToUpper ? "0123456789ABCDEF" : "0123456789abcdef";
-    unsigned char highByte, lowByte;
-    size_t i, j;
 
-    for (i = 0; i < inputBufSizeInBytes; i++) {
+    for (size_t i = 0; i < inputBufSizeInBytes; i++) {
         //向右移动4bit，获得高4bit
-        highByte = inputBuf[i] >> 4;
+        unsigned char highByte = inputBuf[i] >> 4;
         //与0x0f做位与运算，获得低4bit
-        lowByte = inputBuf[i] & 0x0F;
+        unsigned char lowByte = inputBuf[i] & 0x0F;
 
         //由于高4bit和低4bit都只有4个bit，他们转换成10进制的数字，范围都在0 ～ 15闭区间内
         //大端模式
-        j = i << 1;
+        size_t j = i << 1;
         outputBuf[j] = table[highByte];
         outputBuf[j + 1] = table[lowByte];
     }
@@ -81,12 +79,11 @@ int base16_decode(unsigned char * outputBuf, const char * inputBuf, size_t input
         return -1;
     }
 
-    size_t i, j;
     size_t halfInputSize = inputBufSizeInBytes >> 1;
 
-    for (i = 0; i < halfInputSize; i++) {
+    for (size_t i = 0; i < halfInputSize; i++) {
         //16进制数字转换为10进制数字的过程
-        j = i << 1;
+        size_t j = i << 1;
 
         char c1 = hex2dec(inputBuf[j]) << 4;
 

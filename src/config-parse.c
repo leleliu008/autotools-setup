@@ -169,10 +169,8 @@ static void autotools_setup_config_set_value(AutotoolsSetupConfigKeyCode keyCode
         return;
     }
 
-    char c;
-
     for (;;) {
-        c = value[0];
+        char c = value[0];
 
         if (c == '\0') {
             return;

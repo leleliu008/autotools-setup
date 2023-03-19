@@ -78,18 +78,14 @@ char* self_realpath() {
 
     bool isPath = false;
 
-    char c;
-
     char * p = argv[0];
 
     for (;;) {
-        c = p[0];
-
-        if (c == '\0') {
+        if (p[0] == '\0') {
             break;
         }
 
-        if (c == '/') {
+        if (p[0] == '/') {
             isPath = true;
             break;
         }
