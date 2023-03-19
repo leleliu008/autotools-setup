@@ -16,7 +16,7 @@ int base16_encode(char * outputBuf, const unsigned char * inputBuf, size_t input
         return -1;
     }
 
-    if (inputBufSizeInBytes <= 0) {
+    if (inputBufSizeInBytes == 0) {
         errno = EINVAL;
         return -1;
     }
@@ -64,11 +64,6 @@ int base16_decode(unsigned char * outputBuf, const char * inputBuf, size_t input
         return -1;
     }
 
-    if (inputBufSizeInBytes < 0) {
-        errno = EINVAL;
-        return -1;
-    }
-
     if (inputBufSizeInBytes == 0) {
         inputBufSizeInBytes = strlen(inputBuf);
     }
@@ -92,7 +87,7 @@ int base16_decode(unsigned char * outputBuf, const char * inputBuf, size_t input
             return -1;
         }
 
-        char c0 = hex2dec(inputBuf[j + 1]);
+        char c0 = hex2dec(inputBuf[j + 1U]);
 
         if (c0 < 0) {
             errno = EINVAL;

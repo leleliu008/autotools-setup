@@ -76,7 +76,7 @@ int base64_decode_to_bytes(unsigned char * * output, size_t * outputSizeInBytes,
         return -1;
     }
 
-    size_t bufLength = (inputSizeInBytes * 3) >> 2;
+    size_t bufLength = (inputSizeInBytes * 3U) >> 2;
     unsigned char  buf[bufLength];
     memset(buf, 0, bufLength);
 

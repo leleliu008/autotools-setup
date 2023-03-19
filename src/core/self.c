@@ -20,6 +20,20 @@
 
 #if defined (__OpenBSD__)
 #include <stdbool.h>
+
+static inline bool ispath(const char * p) {
+    for (;;) {
+        if (p[0] == '\0') {
+            return false;
+        }
+
+        if (p[0] == '/') {
+            return true;
+        }
+
+        p++;
+    }
+}
 #endif
 
 #include "self.h"
@@ -76,24 +90,7 @@ char* self_realpath() {
         return NULL;
     }
 
-    bool isPath = false;
-
-    char * p = argv[0];
-
-    for (;;) {
-        if (p[0] == '\0') {
-            break;
-        }
-
-        if (p[0] == '/') {
-            isPath = true;
-            break;
-        }
-
-        p++;
-    }
-
-    if (isPath) {
+    if (ispath(argv[0])) {
         return realpath(argv[0], NULL);
     } else {
         char * PATH = getenv("PATH");
