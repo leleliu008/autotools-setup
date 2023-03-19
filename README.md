@@ -2,6 +2,7 @@
 a command-line tool to setup GNU Autotools and relevant build environment.
 
 following packages will be installed:
+
 - [automake](https://www.gnu.org/software/automake/)
 - [autoconf](https://www.gnu.org/software/autoconf/)
 - [libtool](https://www.gnu.org/software/libtool/)
@@ -28,6 +29,7 @@ following packages will be installed:
 go to https://github.com/leleliu008/autotools-setup/releases
 
 ## build and install autotools-setup via [ppkg](https://github.com/leleliu008/ppkg)
+
 ```bash
 ppkg install autotools-setup
 ```

@@ -26,9 +26,9 @@
 #define LOG_STEP(output2Terminal, logLevel, stepN, msg) \
     if (logLevel != AutotoolsSetupLogLevel_silent) { \
         if (output2Terminal) { \
-            fprintf(stderr, "\n%s=>> STEP %d : %s%s\n", COLOR_PURPLE, stepN, msg, COLOR_OFF); \
+            fprintf(stderr, "\n%s=>> STEP %u : %s%s\n", COLOR_PURPLE, stepN, msg, COLOR_OFF); \
         } else { \
-            fprintf(stderr, "\n=>> STEP %d : %s\n", stepN, msg); \
+            fprintf(stderr, "\n=>> STEP %u : %s\n", stepN, msg); \
         } \
     }
 
