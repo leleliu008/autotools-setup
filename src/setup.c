@@ -107,7 +107,7 @@ static int run_cmd(char * cmd, int redirectOutput2FD) {
 static int autotools_setup_download_and_uncompress(const char * url, const char * sha, const char * downloadsDir, size_t downloadsDirLength, const char * uncompressDir, AutotoolsSetupLogLevel logLevel) {
     size_t   urlLength = strlen(url);
 
-    size_t   fetchPhaseCmdLength = urlLength + 10;
+    size_t   fetchPhaseCmdLength = urlLength + 10U;
     char     fetchPhaseCmd[fetchPhaseCmdLength];
     snprintf(fetchPhaseCmd, fetchPhaseCmdLength, "Fetching %s", url);
 
@@ -115,8 +115,8 @@ static int autotools_setup_download_and_uncompress(const char * url, const char 
 
     ////////////////////////////////////////////////////////////////////////
 
-    char    urlCopy[urlLength + 1];
-    strncpy(urlCopy, url, urlLength + 1);
+    char    urlCopy[urlLength + 1U];
+    strncpy(urlCopy, url, urlLength + 1U);
 
     char *   fileName = basename(urlCopy);
 
@@ -129,8 +129,6 @@ static int autotools_setup_download_and_uncompress(const char * url, const char 
     bool needFetch = true;
 
     struct stat st;
-
-    int ret = AUTOTOOLS_SETUP_OK;
 
     if (stat(filePath, &st) == 0 && S_ISREG(st.st_mode)) {
         char actualSHA256SUM[65] = {0};
@@ -150,7 +148,7 @@ static int autotools_setup_download_and_uncompress(const char * url, const char 
     }
 
     if (needFetch) {
-        ret = autotools_setup_http_fetch_to_file(url, filePath, logLevel >= AutotoolsSetupLogLevel_verbose, logLevel != AutotoolsSetupLogLevel_silent);
+        int ret = autotools_setup_http_fetch_to_file(url, filePath, logLevel >= AutotoolsSetupLogLevel_verbose, logLevel != AutotoolsSetupLogLevel_silent);
 
         if (ret != AUTOTOOLS_SETUP_OK) {
             return ret;

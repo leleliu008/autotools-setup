@@ -33,7 +33,7 @@ int base16_encode(char * outputBuf, const unsigned char * inputBuf, size_t input
         //大端模式
         size_t j = i << 1;
         outputBuf[j] = table[highByte];
-        outputBuf[j + 1] = table[lowByte];
+        outputBuf[j + 1U] = table[lowByte];
     }
 
     return 0;

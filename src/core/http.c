@@ -15,7 +15,7 @@
 
 int http_fetch_to_stream(const char * url, FILE * outputFile, bool verbose, bool showProgress) {
     if (outputFile == NULL) {
-        size_t  urlCopyLength = strlen(url) + 1;
+        size_t  urlCopyLength = strlen(url) + 1U;
         char    urlCopy[urlCopyLength];
         strncpy(urlCopy, url, urlCopyLength);
 

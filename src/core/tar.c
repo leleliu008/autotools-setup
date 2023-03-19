@@ -116,7 +116,7 @@ int tar_extract(const char * outputDir, const char * inputFilePath, int flags, b
         }
 
         if ((outputDir != NULL) && (strcmp(outputDir, "") != 0)) {
-            size_t outputFilePathLength = strlen(outputDir) + strlen(entry_pathname) + 2;
+            size_t outputFilePathLength = strlen(outputDir) + strlen(entry_pathname) + 2U;
             char   outputFilePath[outputFilePathLength];
             snprintf(outputFilePath, outputFilePathLength, "%s/%s", outputDir, entry_pathname);
 
@@ -140,7 +140,7 @@ int tar_extract(const char * outputDir, const char * inputFilePath, int flags, b
                 }
 
                 if ((outputDir != NULL) && (strcmp(outputDir, "") != 0)) {
-                    size_t outputFilePathLength = strlen(outputDir) + strlen(hardlinkname) + 2;
+                    size_t outputFilePathLength = strlen(outputDir) + strlen(hardlinkname) + 2U;
                     char   outputFilePath[outputFilePathLength];
                     snprintf(outputFilePath, outputFilePathLength, "%s/%s", outputDir, hardlinkname);
 
@@ -228,12 +228,10 @@ int list_files(const char * dirPath, bool verbose, StringArrayList * stringArray
 
     struct stat st;
 
-    struct dirent * dir_entry;
-
     for (;;) {
         errno = 0;
 
-        dir_entry = readdir(dir);
+        struct dirent * dir_entry = readdir(dir);
 
         if (dir_entry == NULL) {
             if (errno == 0) {
@@ -265,7 +263,7 @@ int list_files(const char * dirPath, bool verbose, StringArrayList * stringArray
                 }
             } else {
                 if (stringArrayList->size == stringArrayList->capcity) {
-                    size_t  newCapcity = stringArrayList->capcity + 10;
+                    size_t  newCapcity = stringArrayList->capcity + 10U;
                     char ** p = (char**)realloc(stringArrayList->array, newCapcity * sizeof(char*));
 
                     if (p == NULL) {
@@ -305,7 +303,7 @@ int list_files(const char * dirPath, bool verbose, StringArrayList * stringArray
                 }
 
                 stringArrayList->array[stringArrayList->size] = p2;
-                stringArrayList->size += 1;
+                stringArrayList->size += 1U;
             }
         } else {
             return -5;

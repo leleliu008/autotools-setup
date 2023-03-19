@@ -24,7 +24,7 @@ int autotools_setup_integrate_zsh_completion(const char * outputDir, bool verbos
 
     struct stat st;
 
-    size_t   autotoolsSetupHomeDirLength = userHomeDirLength + 18;
+    size_t   autotoolsSetupHomeDirLength = userHomeDirLength + 18U;
     char     autotoolsSetupHomeDir[autotoolsSetupHomeDirLength];
     snprintf(autotoolsSetupHomeDir, autotoolsSetupHomeDirLength, "%s/.autotools-setup", userHomeDir);
 
@@ -42,7 +42,7 @@ int autotools_setup_integrate_zsh_completion(const char * outputDir, bool verbos
 
     ////////////////////////////////////////////////////////////////
 
-    size_t zshCompletionDirLength = autotoolsSetupHomeDirLength + 16;
+    size_t zshCompletionDirLength = autotoolsSetupHomeDirLength + 16U;
     char   zshCompletionDir[zshCompletionDirLength];
     snprintf(zshCompletionDir, zshCompletionDirLength, "%s/zsh_completion", autotoolsSetupHomeDir);
 
@@ -60,7 +60,7 @@ int autotools_setup_integrate_zsh_completion(const char * outputDir, bool verbos
 
     ////////////////////////////////////////////////////////////////
 
-    size_t   zshCompletionFilePathLength = zshCompletionDirLength + 18;
+    size_t   zshCompletionFilePathLength = zshCompletionDirLength + 18U;
     char     zshCompletionFilePath[zshCompletionFilePathLength];
     snprintf(zshCompletionFilePath, zshCompletionFilePathLength, "%s/_autotools-setup", zshCompletionDir);
 
@@ -84,7 +84,7 @@ int autotools_setup_integrate_zsh_completion(const char * outputDir, bool verbos
         return AUTOTOOLS_SETUP_ERROR;
     }
 
-    size_t   destFilePathLength = strlen(outputDir) + 18;
+    size_t   destFilePathLength = strlen(outputDir) + 18U;
     char     destFilePath[destFilePathLength];
     snprintf(destFilePath, destFilePathLength, "%s/_autotools-setup", outputDir);
 

@@ -26,7 +26,7 @@ int autotools_setup_upgrade_self(bool verbose) {
 
     struct stat st;
 
-    size_t   autotoolsSetupHomeDirLength = userHomeDirLength + 18;
+    size_t   autotoolsSetupHomeDirLength = userHomeDirLength + 18U;
     char     autotoolsSetupHomeDir[autotoolsSetupHomeDirLength];
     snprintf(autotoolsSetupHomeDir, autotoolsSetupHomeDirLength, "%s/.autotools-setup", userHomeDir);
 
@@ -44,7 +44,7 @@ int autotools_setup_upgrade_self(bool verbose) {
 
     ////////////////////////////////////////////////////////////////
 
-    size_t   autotoolsSetupTmpDirLength = autotoolsSetupHomeDirLength + 5;
+    size_t   autotoolsSetupTmpDirLength = autotoolsSetupHomeDirLength + 5U;
     char     autotoolsSetupTmpDir[autotoolsSetupTmpDirLength];
     snprintf(autotoolsSetupTmpDir, autotoolsSetupTmpDirLength, "%s/tmp", autotoolsSetupHomeDir);
 
@@ -64,7 +64,7 @@ int autotools_setup_upgrade_self(bool verbose) {
 
     const char * githubApiUrl = "https://api.github.com/repos/leleliu008/autotools-setup/releases/latest";
 
-    size_t   githubApiResultJsonFilePathLength = autotoolsSetupTmpDirLength + 13;
+    size_t   githubApiResultJsonFilePathLength = autotoolsSetupTmpDirLength + 13U;
     char     githubApiResultJsonFilePath[githubApiResultJsonFilePathLength];
     snprintf(githubApiResultJsonFilePath, githubApiResultJsonFilePathLength, "%s/latest.json", autotoolsSetupTmpDir);
 
@@ -154,7 +154,7 @@ finalize:
         return AUTOTOOLS_SETUP_ERROR;
     }
 
-    size_t latestVersionCopyLength = strlen(latestVersion) + 1;
+    size_t latestVersionCopyLength = strlen(latestVersion) + 1U;
     char   latestVersionCopy[latestVersionCopyLength];
     strncpy(latestVersionCopy, latestVersion, latestVersionCopyLength);
 
@@ -216,15 +216,15 @@ finalize:
 
     size_t latestVersionLength = strlen(latestVersion);
 
-    size_t   tarballFileNameLength = latestVersionLength + strlen(osType) + strlen(osArch) + 26;
+    size_t   tarballFileNameLength = latestVersionLength + strlen(osType) + strlen(osArch) + 26U;
     char     tarballFileName[tarballFileNameLength];
     snprintf(tarballFileName, tarballFileNameLength, "autotools-setup-%s-%s-%s.tar.xz", latestVersion, osType, osArch);
 
-    size_t   tarballUrlLength = tarballFileNameLength + latestVersionLength + 66;
+    size_t   tarballUrlLength = tarballFileNameLength + latestVersionLength + 66U;
     char     tarballUrl[tarballUrlLength];
     snprintf(tarballUrl, tarballUrlLength, "https://github.com/leleliu008/autotools-setup/releases/download/%s/%s", latestVersion, tarballFileName);
 
-    size_t   tarballFilePathLength = autotoolsSetupTmpDirLength + tarballFileNameLength + 2;
+    size_t   tarballFilePathLength = autotoolsSetupTmpDirLength + tarballFileNameLength + 2U;
     char     tarballFilePath[tarballFilePathLength];
     snprintf(tarballFilePath, tarballFilePathLength, "%s/%s", autotoolsSetupTmpDir, tarballFileName);
 
@@ -236,7 +236,7 @@ finalize:
 
     //////////////////////////////////////////////////////////////////////////////////
 
-    size_t   tarballExtractDirLength = tarballFilePathLength + 3;
+    size_t   tarballExtractDirLength = tarballFilePathLength + 3U;
     char     tarballExtractDir[tarballExtractDirLength];
     snprintf(tarballExtractDir, tarballExtractDirLength, "%s.d", tarballFilePath);
 
@@ -246,7 +246,7 @@ finalize:
         return abs(ret) + AUTOTOOLS_SETUP_ERROR_ARCHIVE_BASE;
     }
 
-    size_t   upgradableExecutableFilePathLength = tarballExtractDirLength + 21;
+    size_t   upgradableExecutableFilePathLength = tarballExtractDirLength + 21U;
     char     upgradableExecutableFilePath[upgradableExecutableFilePathLength];
     snprintf(upgradableExecutableFilePath, upgradableExecutableFilePathLength, "%s/bin/autotools-setup", tarballExtractDir);
 

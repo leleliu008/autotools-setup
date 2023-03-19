@@ -29,8 +29,6 @@ int zlib_deflate_string_to_file(const char * inputBuf, size_t inputBufSizeInByte
 
     unsigned char outputBuf[CHUNK];
 
-    unsigned have;
-
     zStream.avail_in = inputBufSizeInBytes;
     zStream.next_in  = (unsigned char *)inputBuf;
 
@@ -45,7 +43,7 @@ int zlib_deflate_string_to_file(const char * inputBuf, size_t inputBufSizeInByte
             return ret;
         }
 
-        have = CHUNK - zStream.avail_out;
+        unsigned int have = CHUNK - zStream.avail_out;
 
         if (fwrite(outputBuf, 1, have, outputFile) != have || ferror(outputFile)) {
             (void)deflateEnd(&zStream);

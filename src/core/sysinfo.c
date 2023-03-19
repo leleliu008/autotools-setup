@@ -455,7 +455,7 @@ int sysinfo_libc() {
             }
         }
 
-        size_t   muslDynamicLoaderPathLength = osArchLength + 19;
+        size_t   muslDynamicLoaderPathLength = osArchLength + 19U;
         char     muslDynamicLoaderPath[muslDynamicLoaderPathLength];
         snprintf(muslDynamicLoaderPath, muslDynamicLoaderPathLength, "/lib/ld-musl-%s.so.1", uts.machine);
 
@@ -463,7 +463,7 @@ int sysinfo_libc() {
             return 2;
         }
 
-        size_t   dynamicLoaderPathLength = osArchLength + 22;
+        size_t   dynamicLoaderPathLength = osArchLength + 22U;
         char     dynamicLoaderPath[dynamicLoaderPathLength];
         snprintf(dynamicLoaderPath, dynamicLoaderPathLength, "/lib64/ld-linux-%s.so.2", uts.machine);
 
