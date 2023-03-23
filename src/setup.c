@@ -504,7 +504,7 @@ static int autotools_setup_setup_internal(const char * setupDir, AutotoolsSetupC
         if (strcmp(sysinfo.arch, "x86_64") == 0) {
             binUrlGmake = "https://github.com/leleliu008/gmake-build/releases/download/4.3/gmake-4.3-macos11.0-x86_64.tar.xz";
             binShaGmake = "f22660038bc9e318fc37660f406767fe3e2a0ccc205defaae3f4b2bc0708e3a9";
-        } else if (strcmp(sysinfo.arch, "aarch64") == 0) {
+        } else if (strcmp(sysinfo.arch, "arm64") == 0) {
             binUrlGmake = "https://github.com/leleliu008/gmake-build/releases/download/4.3/gmake-4.3-macos11.0-arm64.tar.xz";
             binShaGmake = "41680f6d1270497f1a3c717ac6150b4239b44430cfbfde4b9f51ff4d4dd1d52c";
         }
