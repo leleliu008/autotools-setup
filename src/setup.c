@@ -65,7 +65,7 @@ static int run_cmd(char * cmd, int redirectOutput2FD) {
         ////////////////////////////////////////
 
         size_t argc = 0U;
-        char*  argv[10] = {0};
+        char*  argv[15] = {0};
 
         char * arg = strtok(cmd, " ");
 
@@ -284,7 +284,7 @@ static int autotools_setup_install_the_given_package(Package package, const char
     //////////////////////////////////////////////////////////////////////////////
 
     if (strcmp(package.name, "perl") == 0) {
-        size_t   configurePhaseCmdLength = (setupDirLength * 3) + 160U;
+        size_t   configurePhaseCmdLength = (setupDirLength * 3) + 161U;
         char     configurePhaseCmd[configurePhaseCmdLength];
         snprintf(configurePhaseCmd, configurePhaseCmdLength, "./Configure -des -Dprefix=%s -Dman1dir=%s/share/man/man1 -Dman3dir=%s/share/man/man3 -Dmake=gmake -Duselargefiles -Duseshrplib -Dusethreads -Dusenm=false -Dusedl=true", setupDir, setupDir, setupDir);
 
