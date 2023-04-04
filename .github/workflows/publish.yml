@@ -194,8 +194,35 @@ jobs:
           name: autotools-setup---macos${{ matrix.target-version }}-${{ matrix.target-arch }}-tar-xz
           path: autotools-setup-*-macos*.tar.xz
 
-  linux-aarch64:
+
+  linux-x86_64:
     needs: [check, macos]
+    if: needs.check.outputs.if-has-new-commit == 'yes'
+
+    runs-on: ubuntu-latest
+
+    container: alpine:3.16
+
+    steps:
+      - run: wget https://raw.githubusercontent.com/leleliu008/ppkg/master/ppkg
+      - run: chmod a+x ppkg
+      - run: ./ppkg setup --use-system-package-manager
+      - run: ./ppkg update
+
+      - run: |
+          sed -i "/git-url/a git-sha: ${{ needs.check.outputs.git-sha }}" ~/.ppkg/repos.d/offical-core/formula/autotools-setup.yml
+
+      - run: ./ppkg install autotools-setup --link-type=static-only --install-lib=static
+      - run: ./ppkg pack    autotools-setup -o .
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: autotools-setup---linux-x86_64-tar-xz
+          path: autotools-setup-*-linux-x86_64.tar.xz
+
+
+  linux-aarch64:
+    needs: [check, linux-x86_64]
     if: needs.check.outputs.if-has-new-commit == 'yes'
 
     runs-on: ubuntu-latest
@@ -228,9 +255,7 @@ jobs:
           sed -i "/git-url/a git-sha: ${{ needs.check.outputs.git-sha }}" ~/.ppkg/repos.d/offical-core/formula/autotools-setup.yml
 
           run ./ppkg install autotools-setup gh --link-type=static-only --install-lib=static
-          run ./ppkg pack    autotools-setup
-
-          ls ~/.ppkg/packed/autotools-setup-*.tar.xz > filepath.txt
+          run ./ppkg pack    autotools-setup -o .
           EOF
 
           chmod +x run.sh
@@ -238,7 +263,6 @@ jobs:
       # https://github.com/multiarch/qemu-user-static
       - run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
       - run: docker run -v $PWD:$PWD -w $PWD --name alpine arm64v8/alpine sh run.sh
-      - run: docker cp alpine:$(cat filepath.txt) .
 
       - run: ls
 
@@ -247,7 +271,8 @@ jobs:
           name: autotools-setup---linux-aarch64-tar-xz
           path: autotools-setup-*-linux-aarch64.tar.xz
 
-  linux-s390x:
+
+  linux-ppc64le:
     needs: [check, linux-aarch64]
     if: needs.check.outputs.if-has-new-commit == 'yes'
 
@@ -281,9 +306,58 @@ jobs:
           sed -i "/git-url/a git-sha: ${{ needs.check.outputs.git-sha }}" ~/.ppkg/repos.d/offical-core/formula/autotools-setup.yml
 
           run ./ppkg install autotools-setup gh --link-type=static-only --install-lib=static
-          run ./ppkg pack    autotools-setup
+          run ./ppkg pack    autotools-setup -o .
+          EOF
 
-          ls ~/.ppkg/packed/autotools-setup-*.tar.xz > filepath.txt
+          chmod +x run.sh
+
+      # https://github.com/multiarch/qemu-user-static
+      - run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+      - run: docker run -v $PWD:$PWD -w $PWD --name alpine ppc64le/alpine sh run.sh
+
+      - run: ls
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: autotools-setup---linux-ppc64le-tar-xz
+          path: autotools-setup-*-linux-ppc64le.tar.xz
+
+
+  linux-s390x:
+    needs: [check, linux-ppc64le]
+    if: needs.check.outputs.if-has-new-commit == 'yes'
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: |
+          cat > run.sh <<EOF
+          set -e
+
+          COLOR_GREEN='\033[0;32m'        # Green
+          COLOR_PURPLE='\033[0;35m'       # Purple
+          COLOR_OFF='\033[0m'             # Reset
+
+          echo() {
+              printf '%b\n' "\$*"
+          }
+
+          run() {
+              echo "\${COLOR_PURPLE}==>\${COLOR_OFF} \${COLOR_GREEN}\$@\${COLOR_OFF}"
+              eval "\$*"
+          }
+
+          run uname -a
+
+          run wget https://raw.githubusercontent.com/leleliu008/ppkg/master/ppkg
+          run chmod a+x ppkg
+          run ./ppkg setup --use-system-package-manager
+          run ./ppkg update
+
+          sed -i "/git-url/a git-sha: ${{ needs.check.outputs.git-sha }}" ~/.ppkg/repos.d/offical-core/formula/autotools-setup.yml
+
+          run ./ppkg install autotools-setup gh --link-type=static-only --install-lib=static
+          run ./ppkg pack    autotools-setup -o .
           EOF
 
           chmod +x run.sh
@@ -291,7 +365,6 @@ jobs:
       # https://github.com/multiarch/qemu-user-static
       - run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
       - run: docker run -v $PWD:$PWD -w $PWD --name alpine s390x/alpine sh run.sh
-      - run: docker cp alpine:$(cat filepath.txt) .
 
       - run: ls
 
@@ -301,35 +374,8 @@ jobs:
           path: autotools-setup-*-linux-s390x.tar.xz
 
 
-  linux-x86_64:
-    needs: [check, linux-s390x]
-    if: needs.check.outputs.if-has-new-commit == 'yes'
-
-    runs-on: ubuntu-latest
-
-    container: alpine:3.16
-
-    steps:
-      - run: wget https://raw.githubusercontent.com/leleliu008/ppkg/master/ppkg
-      - run: chmod a+x ppkg
-      - run: ./ppkg setup --use-system-package-manager
-      - run: ./ppkg update
-
-      - run: |
-          sed -i "/git-url/a git-sha: ${{ needs.check.outputs.git-sha }}" ~/.ppkg/repos.d/offical-core/formula/autotools-setup.yml
-
-      - run: ./ppkg install autotools-setup --link-type=static-only --install-lib=static
-      - run: ./ppkg pack    autotools-setup
-      - run: cp ~/.ppkg/packed/autotools-setup-*-linux-x86_64.tar.xz .
-
-      - uses: actions/upload-artifact@v3
-        with:
-          name: autotools-setup---linux-x86_64-tar-xz
-          path: autotools-setup-*-linux-x86_64.tar.xz
-
-
   publish:
-    needs: [check, linux-x86_64]
+    needs: [check, linux-s390x]
     if: needs.check.outputs.if-has-new-commit == 'yes'
 
     runs-on: ubuntu-latest
@@ -385,17 +431,22 @@ jobs:
 
       - uses: actions/download-artifact@v3
         with:
+          name: autotools-setup---linux-x86_64-tar-xz
+          path: .
+
+      - uses: actions/download-artifact@v3
+        with:
           name: autotools-setup---linux-aarch64-tar-xz
           path: .
 
       - uses: actions/download-artifact@v3
         with:
-          name: autotools-setup---linux-s390x-tar-xz
+          name: autotools-setup---linux-ppc64le-tar-xz
           path: .
 
       - uses: actions/download-artifact@v3
         with:
-          name: autotools-setup---linux-x86_64-tar-xz
+          name: autotools-setup---linux-s390x-tar-xz
           path: .
 
       - run: ls -a
