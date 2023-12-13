@@ -225,10 +225,10 @@ static int autotools_setup_download_and_uncompress(const char * url, const char 
         }
 
         if (strcmp(actualSHA256SUM, expectedSHA256SUM) == 0) {
-            size_t renamePhaseCmdCapacity = tmpFilePathCapacity + filePathCapacity + 8U;
+            size_t renamePhaseCmdCapacity = tmpFilePathCapacity + filePathCapacity + 4U;
             char   renamePhaseCmd[renamePhaseCmdCapacity];
 
-            ret = snprintf(renamePhaseCmd, renamePhaseCmdCapacity, "rename %s %s", tmpFilePath, filePath);
+            ret = snprintf(renamePhaseCmd, renamePhaseCmdCapacity, "mv %s %s", tmpFilePath, filePath);
 
             if (ret < 0) {
                 perror(NULL);
@@ -256,7 +256,7 @@ static int autotools_setup_download_and_uncompress(const char * url, const char 
         size_t uncompressPhaseCmdCapacity = filePathCapacity + unpackDIRLength + 36U;
         char   uncompressPhaseCmd[uncompressPhaseCmdCapacity];
 
-        ret = snprintf(uncompressPhaseCmd, uncompressPhaseCmdCapacity, "bsdtar xf %s -C %s --strip-components=1", filePath, unpackDIR);
+        ret = snprintf(uncompressPhaseCmd, uncompressPhaseCmdCapacity, "tar xf %s -C %s --strip-components=1", filePath, unpackDIR);
 
         if (ret < 0) {
             perror(NULL);

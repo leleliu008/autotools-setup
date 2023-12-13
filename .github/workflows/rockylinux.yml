@@ -39,24 +39,24 @@ jobs:
       - run:  echo "SSL_CERT_FILE=$HOME/.ppkg/core/etc/ssl/certs/cacert.pem" >> $GITHUB_ENV
 
 
-      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup
+      - run: ~/.ppkg/installed/linux-glibc-x86_64/autotools-setup/bin/autotools-setup
 
-      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup --help
-      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup -h
+      - run: ~/.ppkg/installed/linux-glibc-x86_64/autotools-setup/bin/autotools-setup --help
+      - run: ~/.ppkg/installed/linux-glibc-x86_64/autotools-setup/bin/autotools-setup -h
 
-      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup --version
-      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup -V
+      - run: ~/.ppkg/installed/linux-glibc-x86_64/autotools-setup/bin/autotools-setup --version
+      - run: ~/.ppkg/installed/linux-glibc-x86_64/autotools-setup/bin/autotools-setup -V
 
-      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup sysinfo
+      - run: ~/.ppkg/installed/linux-glibc-x86_64/autotools-setup/bin/autotools-setup sysinfo
 
-      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup env
+      - run: ~/.ppkg/installed/linux-glibc-x86_64/autotools-setup/bin/autotools-setup env
 
-      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup config
+      - run: ~/.ppkg/installed/linux-glibc-x86_64/autotools-setup/bin/autotools-setup config
 
-      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup integrate zsh
-      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup integrate zsh -v
+      - run: ~/.ppkg/installed/linux-glibc-x86_64/autotools-setup/bin/autotools-setup integrate zsh
+      - run: ~/.ppkg/installed/linux-glibc-x86_64/autotools-setup/bin/autotools-setup integrate zsh -v
 
-      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup setup -v
+      - run: ~/.ppkg/installed/linux-glibc-x86_64/autotools-setup/bin/autotools-setup setup -v
 
       - uses: actions/checkout@v3
         with:
@@ -88,4 +88,4 @@ jobs:
           run gmake
           run gmake install
 
-       #- run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup upgrade-self
+       #- run: ~/.ppkg/installed/linux-glibc-x86_64/autotools-setup/bin/autotools-setup upgrade-self
