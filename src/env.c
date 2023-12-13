@@ -1,12 +1,12 @@
 #include <stdio.h>
 
-#include "autotools-setup.h"
+#include "main.h"
 
-extern int autotools_setup_show_build_info();
+extern int autotools_setup_buildinfo();
 extern int autotools_setup_show_runtime_info();
 
 int autotools_setup_env() {
-    int ret = autotools_setup_show_build_info();
+    int ret = autotools_setup_buildinfo();
 
     if (ret != AUTOTOOLS_SETUP_OK) {
         return ret;
@@ -29,8 +29,6 @@ int autotools_setup_env() {
     }
 
     ///////////////////////////////////////////////
-
-    printf("default config:\n\n");
 
     return autotools_setup_show_default_config();
 }

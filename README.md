@@ -32,13 +32,13 @@ go to <https://github.com/leleliu008/autotools-setup/releases>
 
 ## build and install autotools-setup via [ppkg](https://github.com/leleliu008/ppkg)
 
+**Note:** This is the recommended way to build and install autotools-setup.
+
 ```bash
 ppkg install autotools-setup
 ```
 
 ## build and install `autotools-setup` using [vcpkg](https://github.com/microsoft/vcpkg)
-
-**Note:** This is the recommended way to build and install autotools-setup.
 
 ```bash
 # install g++ curl zip unzip tar git
@@ -50,7 +50,7 @@ cd vcpkg
 
 cd -
 
-git clone https://github.com/leleliu008/autotools-setup
+git clone --depth=1 https://github.com/leleliu008/autotools-setup
 cd autotools-setup
 
 cmake -S . -B   build.d -G Ninja -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake
@@ -66,7 +66,7 @@ cmake --install build.d
 apt -y update
 apt -y install git cmake ninja-build pkg-config gcc libcurl4 libcurl4-openssl-dev libarchive-dev libyaml-dev
 
-git clone https://github.com/leleliu008/autotools-setup
+git clone --depth=1 https://github.com/leleliu008/autotools-setup
 cd autotools-setup
 
 cmake -S . -B   build.d -G Ninja -DCMAKE_INSTALL_PREFIX=/usr/local
@@ -80,7 +80,7 @@ cmake --install build.d
 dnf -y update
 dnf -y install git cmake ninja-build pkg-config gcc libcurl-devel openssl-devel libarchive-devel libyaml-devel zlib-devel
 
-git clone https://github.com/leleliu008/autotools-setup
+git clone --depth=1 https://github.com/leleliu008/autotools-setup
 cd autotools-setup
 
 cmake -S . -B   build.d -G Ninja -DCMAKE_INSTALL_PREFIX=/usr/local
@@ -94,7 +94,7 @@ cmake --install build.d
 pacman -Syyuu --noconfirm
 pacman -S     --noconfirm git cmake ninja pkg-config gcc curl openssl libarchive libyaml
 
-git clone https://github.com/leleliu008/autotools-setup
+git clone --depth=1 https://github.com/leleliu008/autotools-setup
 cd autotools-setup
 
 cmake -S . -B   build.d -G Ninja -DCMAKE_INSTALL_PREFIX=/usr/local
@@ -107,7 +107,7 @@ cmake --install build.d
 ```bash
 apk add git cmake ninja pkgconf gcc libc-dev curl-dev openssl-dev libarchive-dev yaml-dev
 
-git clone https://github.com/leleliu008/autotools-setup
+git clone --depth=1 https://github.com/leleliu008/autotools-setup
 cd autotools-setup
 
 cmake -S . -B   build.d -G Ninja -DCMAKE_INSTALL_PREFIX=/usr/local
@@ -121,7 +121,7 @@ cmake --install build.d
 xbps-install -Suy xbps
 xbps-install -Suy cmake ninja gcc pkg-config libcurl-devel libarchive-devel libyaml-devel
 
-git clone https://github.com/leleliu008/autotools-setup
+git clone --depth=1 https://github.com/leleliu008/autotools-setup
 cd autotools-setup
 
 cmake -S . -B   build.d -G Ninja -DCMAKE_INSTALL_PREFIX=/usr/local
@@ -134,7 +134,7 @@ cmake --install build.d
 ```bash
 emerge dev-vcs/git cmake dev-util/ninja gcc pkg-config net-misc/curl libarchive dev-libs/libyaml
 
-git clone https://github.com/leleliu008/autotools-setup
+git clone --depth=1 https://github.com/leleliu008/autotools-setup
 cd autotools-setup
 
 cmake -S . -B   build.d -G Ninja -DCMAKE_INSTALL_PREFIX=/usr/local
@@ -148,7 +148,7 @@ cmake --install build.d
 zypper update  -y  
 zypper install -y git cmake ninja gcc pkg-config libcurl-devel openssl-devel libarchive-devel libyaml-devel zlib-devel
 
-git clone https://github.com/leleliu008/autotools-setup
+git clone --depth=1 https://github.com/leleliu008/autotools-setup
 cd autotools-setup
 
 cmake -S . -B   build.d -G Ninja -DCMAKE_INSTALL_PREFIX=/usr/local
@@ -162,7 +162,7 @@ cmake --install build.d
 brew update
 brew install git cmake pkg-config ninja curl libyaml libarchive
 
-git clone https://github.com/leleliu008/autotools-setup
+git clone --depth=1 https://github.com/leleliu008/autotools-setup
 cd autotools-setup
 
 export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:/usr/local/opt/openssl@1.1/lib/pkgconfig:/usr/local/opt/curl/lib/pkgconfig:/usr/local/opt/libarchive/lib/pkgconfig"
@@ -182,12 +182,12 @@ cmake --build   build.d
 cmake --install build.d
 ```
 
-**[FreeBSD](https://www.freebsd.org/)**
+**[FreeBSD](https://www.freebsd.org/)** and **[DragonFlyBSD](https://www.dragonflybsd.org/)**
 
 ```bash
 pkg install -y git cmake ninja pkgconf gcc curl openssl libarchive libyaml
 
-git clone https://github.com/leleliu008/autotools-setup
+git clone --depth=1 https://github.com/leleliu008/autotools-setup
 cd autotools-setup
 
 cmake -S . -B   build.d -G Ninja -DCMAKE_INSTALL_PREFIX=/usr/local
@@ -200,7 +200,7 @@ cmake --install build.d
 ```bash
 pkg_add git cmake ninja pkgconf llvm curl libarchive libyaml
 
-git clone https://github.com/leleliu008/autotools-setup
+git clone --depth=1 https://github.com/leleliu008/autotools-setup
 cd autotools-setup
 
 cmake -S . -B   build.d -G Ninja -DCMAKE_INSTALL_PREFIX=/usr/local
@@ -215,7 +215,7 @@ pkgin -y install git mozilla-rootcerts cmake ninja-build pkg-config clang curl o
 
 mozilla-rootcerts install
 
-git clone https://github.com/leleliu008/autotools-setup
+git clone --depth=1 https://github.com/leleliu008/autotools-setup
 cd autotools-setup
 
 cmake -S . -B   build.d -G Ninja -DCMAKE_INSTALL_PREFIX=/usr/local
@@ -245,23 +245,42 @@ all relevant dirs and files are located in `~/.autotools-setup` directory.
     autotools-setup --version
     ```
 
-- **show your system's information**
-
-    ```bash
-    autotools-setup sysinfo
-    ```
-
-- **show your system's information and other information**
+- **show basic information about this software**
 
     ```bash
     autotools-setup env
     ```
 
+- **show build information about this software**
+
+    ```bash
+    autotools-setup buildinfo
+    ```
+
+- **show basic information about your current running operation system**
+
+    ```bash
+    autotools-setup sysinfo
+    ```
+
 - **show default config**
 
     ```bash
-    autotools-setup show-default-config
-    autotools-setup show-default-config > config.yml
+    autotools-setup config
+    autotools-setup config > config.yml
+    ```
+
+- **generate url-transform sample**
+
+    ```bash
+    autotools-setup gen-url-transform-sample
+    ```
+
+- **upgrade this software**
+
+    ```bash
+    autotools-setup upgrade-self
+    autotools-setup upgrade-self -v
     ```
 
 - **integrate `zsh-completion` script**
@@ -280,10 +299,10 @@ all relevant dirs and files are located in `~/.autotools-setup` directory.
 
     ```bash
     autotools-setup setup
-    autotools-setup setup --prefix=.autotools
-    autotools-setup setup --prefix=.autotools --jobs=8
-    autotools-setup setup --prefix=.autotools --config=my-config.yml
-    autotools-setup setup --prefix=.autotools -v
+    autotools-setup setup --prefix=path/of/autotools
+    autotools-setup setup --prefix=path/of/autotools --jobs=8
+    autotools-setup setup --prefix=path/of/autotools --config=my-config.yml
+    autotools-setup setup --prefix=path/of/autotools -v
     ```
 
     **Note**: C compiler should be installed by yourself using your system's default package manager before running this command.
@@ -291,7 +310,7 @@ all relevant dirs and files are located in `~/.autotools-setup` directory.
     **Tip:** above command do two things:
 
   - download `gmake` prebuild binary from <https://github.com/leleliu008/gmake-build/releases>
-  - build and install `gm4` `perl` `pkgconf` `libtool` `autoconf` `automake` from source
+  - build `gm4` `perl` `pkgconf` `libtool` `autoconf` `automake` from source
 
 - **extra common used utilities**
 
@@ -337,6 +356,20 @@ all relevant dirs and files are located in `~/.autotools-setup` directory.
 
     In general, you don't need to set this environment variable, but, if you encounter the reporting `the SSL certificate is invalid`, trying to run above commands in your terminal will do the trick.
 
+- **AUTOTOOLS_SETUP_URL_TRANSFORM**
+
+    ```bash
+    export AUTOTOOLS_SETUP_URL_TRANSFORM=/path/of/url-transform
+    ```
+
+    `/path/of/url-transform` command would be invoked as `/path/of/url-transform <URL>`
+
+    `/path/of/url-transform` command must output a `<URL>`
+
+    you can generate a url-transform sample via `autotools-setup gen-url-transform-sample`
+
+    If you want to change the request url, you can set this environment variable. It is very useful for chinese users.
+
 ## config
 
 If default config dosn't meets your needs, you can specify your config via `--config=your/config/file/path`
@@ -345,7 +378,7 @@ config is a [YAML](https://yaml.org/spec/1.2.2/) format file.
 
 **example**:
 
-```yml
+```yaml
 src-url-gm4:      https://ftp.gnu.org/gnu/m4/m4-1.4.19.tar.xz
 src-sha-gm4:      63aede5c6d33b6d9b13511cd0be2cac046f2e70fd0a07aa9573a04a82783af96
 

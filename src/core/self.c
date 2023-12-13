@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include <unistd.h>
 #include <sys/stat.h>
 
@@ -113,17 +114,21 @@ char* self_realpath() {
         char    PATH2[PATH2Length];
         strncpy(PATH2, PATH, PATH2Length);
 
+        struct stat st;
+
+        char buf[PATH_MAX];
+
         size_t commandNameLength = strlen(argv[0]);
 
         char * PATHItem = strtok(PATH2, ":");
 
-        struct stat st;
-
         while (PATHItem != NULL) {
             if ((stat(PATHItem, &st) == 0) && S_ISDIR(st.st_mode)) {
-                size_t   fullPathLength = strlen(PATHItem) + commandNameLength + 2U;
-                char     fullPath[fullPathLength];
-                snprintf(fullPath, fullPathLength, "%s/%s", PATHItem, argv[0]);
+                ret = snprintf(fullPath, PATH_MAX, "%s/%s", PATHItem, argv[0]);
+
+                if (ret < 0) {
+                    return -1;
+                }
 
                 if (access(fullPath, X_OK) == 0) {
                     char * p = strdup(fullPath);
@@ -144,9 +149,12 @@ char* self_realpath() {
         return NULL;
     }
 #else
-    char buf[PATH_MAX + 1] = {0};
+    // PATH_MAX : maximum number of bytes in a pathname, including the terminating null character.
+    // https://pubs.opengroup.org/onlinepubs/009695399/basedefs/limits.h.html
+    char buf[PATH_MAX] = {0};
 
-    if (readlink("/proc/self/exe", buf, PATH_MAX) < 0) {
+    //  readlink() does not append a terminating null byte to buf.
+    if (readlink("/proc/self/exe", buf, PATH_MAX - 1U) == -1) {
         return NULL;
     }
 

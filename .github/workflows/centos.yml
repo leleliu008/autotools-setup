@@ -49,7 +49,7 @@ jobs:
 
       - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup env
 
-      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup show-default-config
+      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup config
 
       - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup integrate zsh
       - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup integrate zsh -v
@@ -125,7 +125,7 @@ jobs:
 
       - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup env
 
-      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup show-default-config
+      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup config
 
       - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup integrate zsh
       - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup integrate zsh -v
@@ -207,7 +207,7 @@ jobs:
 
       - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup env
 
-      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup show-default-config
+      - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup config
 
       - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup integrate zsh
       - run: ~/.ppkg/installed/autotools-setup/bin/autotools-setup integrate zsh -v

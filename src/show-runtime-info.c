@@ -2,28 +2,33 @@
 #include <string.h>
 
 #include "core/self.h"
-#include "autotools-setup.h"
+
+#include "main.h"
 
 int autotools_setup_show_runtime_info() {
-    const char * const userHomeDir = getenv("HOME");
+    const char * const userHomeDIR = getenv("HOME");
 
-    if (userHomeDir == NULL) {
+    if (userHomeDIR == NULL) {
         return AUTOTOOLS_SETUP_ERROR_ENV_HOME_NOT_SET;
     }
 
-    size_t userHomeDirLength = strlen(userHomeDir);
-
-    if (userHomeDirLength == 0U) {
+    if (userHomeDIR[0] == '\0') {
         return AUTOTOOLS_SETUP_ERROR_ENV_HOME_NOT_SET;
     }
 
-    size_t   autotoolsSetupHomeDirLength = userHomeDirLength + 18U;
-    char     autotoolsSetupHomeDir[autotoolsSetupHomeDirLength];
-    snprintf(autotoolsSetupHomeDir, autotoolsSetupHomeDirLength, "%s/.autotools-setup", userHomeDir);
+    size_t autotoolsSetupHomeDIRCapacity = strlen(userHomeDIR) + 18U;
+    char   autotoolsSetupHomeDIR[autotoolsSetupHomeDIRCapacity];
+
+    int ret = snprintf(autotoolsSetupHomeDIR, autotoolsSetupHomeDIRCapacity, "%s/.autotools-setup", userHomeDIR);
+
+    if (ret < 0) {
+        perror(NULL);
+        return AUTOTOOLS_SETUP_ERROR;
+    }
 
     printf("\n");
     printf("autotools-setup.vers : %s\n", AUTOTOOLS_SETUP_VERSION);
-    printf("autotools-setup.home : %s\n", autotoolsSetupHomeDir);
+    printf("autotools-setup.home : %s\n", autotoolsSetupHomeDIR);
 
     char * selfRealPath = self_realpath();
 

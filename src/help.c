@@ -17,13 +17,29 @@ int autotools_setup_help() {
         COLOR_OFF
         "    show version of this command.\n\n"
         COLOR_GREEN
-        "autotools-setup sysinfo\n"
-        COLOR_OFF
-        "    show your system's information.\n\n"
-        COLOR_GREEN
         "autotools-setup env\n"
         COLOR_OFF
-        "    show your system's information and other information.\n\n"
+        "    show basic information about this software.\n\n"
+        COLOR_GREEN
+        "autotools-setup buildinfo\n"
+        COLOR_OFF
+        "    show build information about this software.\n\n"
+        COLOR_GREEN
+        "autotools-setup sysinfo\n"
+        COLOR_OFF
+        "    show basic information about your current running operation system.\n\n"
+        COLOR_GREEN
+        "autotools-setup config\n"
+        COLOR_OFF
+        "    show software config.\n\n"
+        COLOR_GREEN
+        "autotools_setup gen-url-transform-sample\n"
+        COLOR_OFF
+        "    generate url-transform sample.\n\n"
+        COLOR_GREEN
+        "autotools-setup upgrade-self\n"
+        COLOR_OFF
+        "    upgrade this software.\n\n"
         COLOR_GREEN
         "autotools-setup integrate zsh [-v] [--output-dir=<DIR>]\n"
         COLOR_OFF

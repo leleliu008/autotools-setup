@@ -5,12 +5,13 @@ _commands=(
     '--help:show help of this command.'
     '-V:show version of this command.'
     '--version:show version of this command.'
-    'setup:setup autotools.'
+    'env:show basic information about this software.'
+    'buidinfo:show build information about this software.'
+    'sysinfo:show basic information about your current running operation system.'
+    'config:show default config.'
     'upgrade-self:upgrade this software.'
     'integrate:integrate zsh completions.'
-    'sysinfo:show your system information.'
-    'env:show your system information and other information.'
-    'show-default-config:show default config.'
+    'setup:setup autotools.'
 )
 
 function _autotools_setup_commands() {

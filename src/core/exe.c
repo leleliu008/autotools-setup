@@ -1,7 +1,9 @@
 #include <errno.h>
 #include <stdio.h>
 #include <string.h>
+
 #include <unistd.h>
+#include <limits.h>
 #include <sys/stat.h>
 
 #include "exe.h"
@@ -12,9 +14,7 @@ int exe_search(const char * commandName, char *** listP, size_t * listSize, bool
         return -1;
     }
 
-    size_t commandNameLength = strlen(commandName);
-
-    if (commandNameLength == 0U) {
+    if (commandName[0] == '\0') {
         errno = EINVAL;
         return -1;
     }
@@ -35,35 +35,40 @@ int exe_search(const char * commandName, char *** listP, size_t * listSize, bool
         return -2;
     }
 
-    size_t PATHLength = strlen(PATH);
-
-    if (PATHLength == 0U) {
+    if (PATH[0] == '\0') {
         return -3;
     }
 
-    size_t  PATH2Length = PATHLength + 1U;
+    size_t  PATH2Length = strlen(PATH) + 1U;
     char    PATH2[PATH2Length];
     strncpy(PATH2, PATH, PATH2Length);
 
     struct stat st;
 
+    size_t commandNameLength = strlen(commandName);
+
     char ** stringArrayList = NULL;
     size_t  stringArrayListSize    = 0U;
-    size_t  stringArrayListCapcity = 0U;
+    size_t  stringArrayListCapacity = 0U;
 
     char * PATHItem = strtok(PATH2, ":");
 
     while (PATHItem != NULL) {
         if ((stat(PATHItem, &st) == 0) && S_ISDIR(st.st_mode)) {
-            size_t   fullPathLength = strlen(PATHItem) + commandNameLength + 2U;
-            char     fullPath[fullPathLength];
-            snprintf(fullPath, fullPathLength, "%s/%s", PATHItem, commandName);
+            size_t fullPathCapacity = strlen(PATHItem) + commandNameLength + 2U;
+            char   fullPath[fullPathCapacity];
+
+            int ret = snprintf(fullPath, fullPathCapacity, "%s/%s", PATHItem, commandName);
+
+            if (ret < 0) {
+                return -1;
+            }
 
             if (access(fullPath, X_OK) == 0) {
-                if (stringArrayListCapcity == stringArrayListSize) {
-                    stringArrayListCapcity += 2U;
+                if (stringArrayListCapacity == stringArrayListSize) {
+                    stringArrayListCapacity += 2U;
 
-                    char** paths = (char**)realloc(stringArrayList, stringArrayListCapcity * sizeof(char*));
+                    char** paths = (char**)realloc(stringArrayList, stringArrayListCapacity * sizeof(char*));
 
                     if (paths == NULL) {
                         if (stringArrayList != NULL) {
@@ -118,9 +123,7 @@ int exe_lookup(const char * commandName, char ** pathP, size_t * pathLength) {
         return -1;
     }
 
-    size_t commandNameLength = strlen(commandName);
-
-    if (commandNameLength == 0U) {
+    if (commandName[0] == '\0') {
         errno = EINVAL;
         return -1;
     }
@@ -136,25 +139,30 @@ int exe_lookup(const char * commandName, char ** pathP, size_t * pathLength) {
         return -2;
     }
 
-    size_t PATHLength = strlen(PATH);
-
-    if (PATHLength == 0U) {
+    if (PATH[0] == '\0') {
         return -3;
     }
 
-    size_t  PATH2Length = PATHLength + 1U;
+    size_t  PATH2Length = strlen(PATH) + 1U;
     char    PATH2[PATH2Length];
     strncpy(PATH2, PATH, PATH2Length);
 
     struct stat st;
 
+    size_t commandNameLength = strlen(commandName);
+
     char * PATHItem = strtok(PATH2, ":");
 
     while (PATHItem != NULL) {
         if ((stat(PATHItem, &st) == 0) && S_ISDIR(st.st_mode)) {
-            size_t   fullPathLength = strlen(PATHItem) + commandNameLength + 2U;
-            char     fullPath[fullPathLength];
-            snprintf(fullPath, fullPathLength, "%s/%s", PATHItem, commandName);
+            size_t fullPathCapacity = strlen(PATHItem) + commandNameLength + 2U;
+            char   fullPath[fullPathCapacity];
+
+            int ret = snprintf(fullPath, fullPathCapacity, "%s/%s", PATHItem, commandName);
+
+            if (ret < 0) {
+                return -1;
+            }
 
             if (access(fullPath, X_OK) == 0) {
                 char * fullPathDup = strdup(fullPath);
@@ -167,7 +175,7 @@ int exe_lookup(const char * commandName, char ** pathP, size_t * pathLength) {
                 (*pathP) = fullPathDup;
 
                 if (pathLength != NULL) {
-                    (*pathLength) = fullPathLength;
+                    (*pathLength) = ret;
                 }
 
                 return 0;
@@ -185,15 +193,13 @@ int exe_lookup(const char * commandName, char ** pathP, size_t * pathLength) {
     return 0;
 }
 
-int exe_lookup2(const char * commandName, char buf[], size_t * writtenSize, size_t maxSize) {
+int exe_where(const char * commandName, char buf[], size_t bufSize, size_t * writtenSize) {
     if (commandName == NULL) {
         errno = EINVAL;
         return -1;
     }
 
-    size_t commandNameLength = strlen(commandName);
-
-    if (commandNameLength == 0U) {
+    if (commandName[0] == '\0') {
         errno = EINVAL;
         return -1;
     }
@@ -203,7 +209,7 @@ int exe_lookup2(const char * commandName, char buf[], size_t * writtenSize, size
         return -1;
     }
 
-    if (maxSize == 0U) {
+    if (bufSize == 0U) {
         errno = EINVAL;
         return -1;
     }
@@ -214,30 +220,41 @@ int exe_lookup2(const char * commandName, char buf[], size_t * writtenSize, size
         return -2;
     }
 
-    size_t PATHLength = strlen(PATH);
-
-    if (PATHLength == 0U) {
+    if (PATH[0] == '\0') {
         return -3;
     }
 
-    size_t  PATH2Length = PATHLength + 1U;
+    size_t  PATH2Length = strlen(PATH) + 1U;
     char    PATH2[PATH2Length];
     strncpy(PATH2, PATH, PATH2Length);
 
     struct stat st;
 
+    size_t commandNameLength = strlen(commandName);
+
     char * PATHItem = strtok(PATH2, ":");
+
+    char   pathBuf[PATH_MAX];
 
     while (PATHItem != NULL) {
         if ((stat(PATHItem, &st) == 0) && S_ISDIR(st.st_mode)) {
-            size_t   fullPathLength = strlen(PATHItem) + commandNameLength + 2U;
-            char     fullPath[fullPathLength];
-            snprintf(fullPath, fullPathLength, "%s/%s", PATHItem, commandName);
+            size_t max = strlen(PATHItem) + commandNameLength + 2U;
 
-            if (access(fullPath, X_OK) == 0) {
-                size_t n = (maxSize > fullPathLength) ? fullPathLength : maxSize;
+            int ret = snprintf(pathBuf, max, "%s/%s", PATHItem, commandName);
 
-                strncpy(buf, fullPath, n);
+            if (ret < 0) {
+                return -1;
+            }
+
+            size_t pathLength = ret;
+
+            if (access(pathBuf, X_OK) == 0) {
+                size_t m = bufSize - 1U;
+                size_t n = (m > pathLength) ? pathLength : m;
+
+                strncpy(buf, pathBuf, n);
+
+                buf[n] = '\0';
 
                 if (writtenSize != NULL) {
                     (*writtenSize) = n;

@@ -3,7 +3,8 @@
 #include <string.h>
 
 #include "core/log.h"
-#include "autotools-setup.h"
+
+#include "main.h"
 
 int autotools_setup_main(int argc, char* argv[]) {
     if (argc == 1) {
@@ -25,12 +26,20 @@ int autotools_setup_main(int argc, char* argv[]) {
         return autotools_setup_sysinfo();
     }
 
+    if (strcmp(argv[1], "buildinfo") == 0) {
+        return autotools_setup_buildinfo();
+    }
+
     if (strcmp(argv[1], "env") == 0) {
         return autotools_setup_env();
     }
 
-    if (strcmp(argv[1], "show-default-config") == 0) {
+    if (strcmp(argv[1], "config") == 0) {
         return autotools_setup_show_default_config();
+    }
+
+    if (strcmp(argv[1], "gen-url-transform-sample") == 0) {
+        return autotools_setup_generate_url_transform_sample();
     }
 
     if (strcmp(argv[1], "upgrade-self") == 0) {
@@ -53,7 +62,7 @@ int autotools_setup_main(int argc, char* argv[]) {
             fprintf(stderr, "Usage: %s integrate <zsh|bash|fish>\n", argv[0]);
             return AUTOTOOLS_SETUP_ERROR_ARG_IS_NULL;
         } else if (strcmp(argv[2], "zsh") == 0) {
-            char * outputDirPath = NULL;
+            char * outputDIRPath = NULL;
 
             for (int i = 3; i < argc; i++) {
                 if (strncmp(argv[i], "--output-dir=", 13) == 0) {
@@ -61,7 +70,7 @@ int autotools_setup_main(int argc, char* argv[]) {
                         fprintf(stderr, "--output-dir=VALUE, VALUE should be a non-empty string.\n");
                         return AUTOTOOLS_SETUP_ERROR_ARG_IS_INVALID;
                     } else {
-                        outputDirPath = &argv[i][13];
+                        outputDIRPath = &argv[i][13];
                     }
                 } else if (strcmp(argv[i], "-v") == 0) {
                     verbose = true;
@@ -71,7 +80,7 @@ int autotools_setup_main(int argc, char* argv[]) {
                 }
             }
 
-            return autotools_setup_integrate_zsh_completion (outputDirPath, verbose);
+            return autotools_setup_integrate_zsh_completion (outputDIRPath, verbose);
         } else if (strcmp(argv[2], "bash") == 0) {
             return autotools_setup_integrate_bash_completion(NULL, verbose);
         } else if (strcmp(argv[2], "fish") == 0) {
@@ -87,7 +96,7 @@ int autotools_setup_main(int argc, char* argv[]) {
         AutotoolsSetupLogLevel logLevel = AutotoolsSetupLogLevel_normal;
 
         const char * configFilePath = NULL;
-        const char * setupDir = NULL;
+        const char * setupDIR = NULL;
 
         unsigned int jobs = 0U;
 
@@ -118,7 +127,7 @@ int autotools_setup_main(int argc, char* argv[]) {
                     fprintf(stderr, "Usage: %s %s [-q | -v | -vv | --prefix=<DIR> --config=<FILEPATH> --jobs=<N>], <DIR> should be a non-empty string.\n", argv[0], argv[1]);
                     return AUTOTOOLS_SETUP_ERROR_ARG_IS_NULL;
                 } else {
-                    setupDir = argv[i] + 9;
+                    setupDIR = argv[i] + 9;
                 }
             } else {
                 fprintf(stderr, "Usage: %s %s [-q | -v | -vv | --prefix=<DIR> --config=<FILEPATH> --jobs=<N>]\n", argv[0], argv[1]);
@@ -126,7 +135,7 @@ int autotools_setup_main(int argc, char* argv[]) {
             }
         }
 
-        return autotools_setup_setup(configFilePath, setupDir, logLevel, jobs);
+        return autotools_setup_setup(configFilePath, setupDIR, logLevel, jobs);
     }
 
     if (strcmp(argv[1], "util") == 0) {

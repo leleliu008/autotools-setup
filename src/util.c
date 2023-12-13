@@ -7,12 +7,13 @@
 #include <openssl/evp.h>
 
 #include "core/zlib-flate.h"
-#include "core/sha256sum.h"
 #include "core/base16.h"
 #include "core/base64.h"
 #include "core/exe.h"
 #include "core/log.h"
-#include "autotools-setup.h"
+
+#include "sha256sum.h"
+#include "main.h"
 
 //invoked as 'autotools-setup util <CMD> [ARGUMENTS]'
 int autotools_setup_util(int argc, char* argv[]) {

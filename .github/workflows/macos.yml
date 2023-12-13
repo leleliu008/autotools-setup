@@ -55,7 +55,7 @@ jobs:
 
       - run: ./output/bin/autotools-setup env
 
-      - run: ./output/bin/autotools-setup show-default-config
+      - run: ./output/bin/autotools-setup config
 
       - run: ./output/bin/autotools-setup integrate zsh
       - run: ./output/bin/autotools-setup integrate zsh -v
@@ -144,7 +144,7 @@ jobs:
 
       - run: ./output/bin/autotools-setup env
 
-      - run: ./output/bin/autotools-setup show-default-config
+      - run: ./output/bin/autotools-setup config
 
       - run: ./output/bin/autotools-setup integrate zsh
       - run: ./output/bin/autotools-setup integrate zsh -v
@@ -237,7 +237,7 @@ jobs:
 
       - run: ./output/bin/autotools-setup env
 
-      - run: ./output/bin/autotools-setup show-default-config
+      - run: ./output/bin/autotools-setup config
 
       - run: ./output/bin/autotools-setup integrate zsh
       - run: ./output/bin/autotools-setup integrate zsh -v
@@ -327,7 +327,7 @@ jobs:
 
       - run: ./output/bin/autotools-setup env
 
-      - run: ./output/bin/autotools-setup show-default-config
+      - run: ./output/bin/autotools-setup config
 
       - run: ./output/bin/autotools-setup integrate zsh
       - run: ./output/bin/autotools-setup integrate zsh -v

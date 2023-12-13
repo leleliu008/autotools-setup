@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 
 project(autotools-setup C)
 
-set(PROJECT_VERSION       1.0.0)
+set(PROJECT_VERSION       1.1.0)
 set(PROJECT_VERSION_MAJOR 1)
 set(PROJECT_VERSION_MINOR 0)
 set(PROJECT_VERSION_PATCH 0)
@@ -102,8 +102,14 @@ if (OPENSSL_VERSION)
     list(GET OPENSSL_VERSION_PART_LIST 0 OPENSSL_VERSION_MAJOR)
 
     message(STATUS "OPENSSL_VERSION_MAJOR = ${OPENSSL_VERSION_MAJOR}")
+
+    if (OPENSSL_VERSION_MAJOR STREQUAL 3)
+        set(SHA256SUM_SRC src/openssl/3/sha256sum.c)
+    else()
+        set(SHA256SUM_SRC src/openssl/1/sha256sum.c)
+    endif()
 else()
-    message(FATAL "no OPENSSL_VERSION set.")
+    set(SHA256SUM_SRC src/openssl/1/sha256sum.c)
 endif()
 
 ########################################################################################
@@ -111,7 +117,7 @@ endif()
 aux_source_directory(src/core CORE_SRCS)
 aux_source_directory(src           SRCS)
 
-add_executable(autotools-setup "${CORE_SRCS};${REGEX_SRC};${SRCS}")
+add_executable(autotools-setup "${CORE_SRCS};${REGEX_SRC};${SHA256SUM_SRC};${SRCS}")
 
 ########################################################################################
 

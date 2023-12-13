@@ -1,7 +1,8 @@
+#include <errno.h>
 #include <string.h>
+
 #include <locale.h>
 #include <fcntl.h>
-#include <errno.h>
 #include <dirent.h>
 #include <sys/stat.h>
 
@@ -106,7 +107,7 @@ int tar_extract(const char * outputDir, const char * inputFilePath, int flags, b
                 }
             }
 
-            if (strcmp(entry_pathname, "") == 0) {
+            if (entry_pathname[0] == '\0') {
                 continue;
             }
         }
@@ -115,10 +116,16 @@ int tar_extract(const char * outputDir, const char * inputFilePath, int flags, b
 			printf("x %s\n", entry_pathname);
         }
 
-        if ((outputDir != NULL) && (strcmp(outputDir, "") != 0)) {
+        if ((outputDir != NULL) && (outputDir[0] != '\0')) {
             size_t outputFilePathLength = strlen(outputDir) + strlen(entry_pathname) + 2U;
             char   outputFilePath[outputFilePathLength];
-            snprintf(outputFilePath, outputFilePathLength, "%s/%s", outputDir, entry_pathname);
+
+            ret = snprintf(outputFilePath, outputFilePathLength, "%s/%s", outputDir, entry_pathname);
+
+            if (ret < 0) {
+                perror(NULL);
+                return -1;
+            }
 
             archive_entry_set_pathname(entry, outputFilePath);
         } else {
@@ -139,10 +146,16 @@ int tar_extract(const char * outputDir, const char * inputFilePath, int flags, b
                     }
                 }
 
-                if ((outputDir != NULL) && (strcmp(outputDir, "") != 0)) {
+                if ((outputDir != NULL) && (outputDir[0] != '\0')) {
                     size_t outputFilePathLength = strlen(outputDir) + strlen(hardlinkname) + 2U;
                     char   outputFilePath[outputFilePathLength];
-                    snprintf(outputFilePath, outputFilePathLength, "%s/%s", outputDir, hardlinkname);
+
+                    ret = snprintf(outputFilePath, outputFilePathLength, "%s/%s", outputDir, hardlinkname);
+
+                    if (ret < 0) {
+                        perror(NULL);
+                        return -1;
+                    }
 
                     archive_entry_set_hardlink_utf8(entry, outputFilePath);
                 } else {
@@ -213,7 +226,7 @@ typedef struct {
 } StringArrayList;
 
 int list_files(const char * dirPath, bool verbose, StringArrayList * stringArrayList) {
-    if ((dirPath == NULL) || (strcmp(dirPath, "") == 0)) {
+    if ((dirPath == NULL) || (dirPath[0] == '\0')) {
         return -1;
     }
 
@@ -250,7 +263,14 @@ int list_files(const char * dirPath, bool verbose, StringArrayList * stringArray
 
         size_t filePathLength = strlen(dirPath) + strlen(dir_entry->d_name) + 2U;
         char   filePath[filePathLength];
-        snprintf(filePath, filePathLength, "%s/%s", dirPath, dir_entry->d_name);
+
+        ret = snprintf(filePath, filePathLength, "%s/%s", dirPath, dir_entry->d_name);
+
+        if (ret < 0) {
+            perror(NULL);
+            closedir(dir);
+            return -1;
+        }
 
         //if (verbose) printf("%s\n", filePath);
 
@@ -263,8 +283,8 @@ int list_files(const char * dirPath, bool verbose, StringArrayList * stringArray
                 }
             } else {
                 if (stringArrayList->size == stringArrayList->capcity) {
-                    size_t  newCapcity = stringArrayList->capcity + 10U;
-                    char ** p = (char**)realloc(stringArrayList->array, newCapcity * sizeof(char*));
+                    size_t  newCapacity = stringArrayList->capcity + 10U;
+                    char ** p = (char**)realloc(stringArrayList->array, newCapacity * sizeof(char*));
 
                     if (p == NULL) {
                         if (stringArrayList->array != NULL) {
@@ -285,7 +305,7 @@ int list_files(const char * dirPath, bool verbose, StringArrayList * stringArray
                     }
 
                     stringArrayList->array   = p;
-                    stringArrayList->capcity = newCapcity;
+                    stringArrayList->capcity = newCapacity;
                 }
 
                 char * p2 = strdup(filePath);

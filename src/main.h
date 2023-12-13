@@ -46,11 +46,11 @@
 #define DEFAULT_SRC_URL_LIBTOOL  "https://ftp.gnu.org/gnu/libtool/libtool-2.4.7.tar.xz"
 #define DEFAULT_SRC_SHA_LIBTOOL  "4f7f217f057ce655ff22559ad221a0fd8ef84ad1fc5fcb6990cecc333aa1635d"
 
-#define DEFAULT_SRC_URL_PKGCONF  "http://distfiles.dereferenced.org/pkgconf/pkgconf-1.9.3.tar.xz"
-#define DEFAULT_SRC_SHA_PKGCONF  "5fb355b487d54fb6d341e4f18d4e2f7e813a6622cf03a9e87affa6a40565699d"
+#define DEFAULT_SRC_URL_PKGCONF  "http://distfiles.dereferenced.org/pkgconf/pkgconf-2.1.0.tar.xz"
+#define DEFAULT_SRC_SHA_PKGCONF  "266d5861ee51c52bc710293a1d36622ae16d048d71ec56034a02eb9cf9677761"
 
-#define DEFAULT_SRC_URL_PERL     "https://cpan.metacpan.org/authors/id/R/RJ/RJBS/perl-5.36.0.tar.xz"
-#define DEFAULT_SRC_SHA_PERL     "0f386dccbee8e26286404b2cca144e1005be65477979beb9b1ba272d4819bcf0"
+#define DEFAULT_SRC_URL_PERL     "https://www.cpan.org/src/5.0/perl-5.38.0.tar.xz"
+#define DEFAULT_SRC_SHA_PERL     "eca551caec3bc549a4e590c0015003790bdd1a604ffe19cc78ee631d51f7072e"
 
 #define DEFAULT_SRC_URL_GM4      "https://ftp.gnu.org/gnu/m4/m4-1.4.19.tar.xz"
 #define DEFAULT_SRC_SHA_GM4      "63aede5c6d33b6d9b13511cd0be2cac046f2e70fd0a07aa9573a04a82783af96"
@@ -91,15 +91,17 @@ int autotools_setup_help();
 
 int autotools_setup_sysinfo();
 
+int autotools_setup_buildinfo();
+
 int autotools_setup_env();
 
 int autotools_setup_show_default_config();
 
 int autotools_setup_upgrade_self(bool verbose);
 
-int autotools_setup_integrate_zsh_completion (const char * outputDir, bool verbose);
-int autotools_setup_integrate_bash_completion(const char * outputDir, bool verbose);
-int autotools_setup_integrate_fish_completion(const char * outputDir, bool verbose);
+int autotools_setup_integrate_zsh_completion (const char * outputDIR, bool verbose);
+int autotools_setup_integrate_bash_completion(const char * outputDIR, bool verbose);
+int autotools_setup_integrate_fish_completion(const char * outputDIR, bool verbose);
 
 typedef enum {
     AutotoolsSetupLogLevel_silent,
@@ -108,8 +110,18 @@ typedef enum {
     AutotoolsSetupLogLevel_very_verbose
 } AutotoolsSetupLogLevel;
 
-int autotools_setup_setup(const char * configFilePath, const char * setupDir, AutotoolsSetupLogLevel logLevel, unsigned int jobs);
+int autotools_setup_setup(const char * configFilePath, const char * setupDIR, AutotoolsSetupLogLevel logLevel, unsigned int jobs);
 
 int autotools_setup_http_fetch_to_file(const char * url, const char * outputFilePath, bool verbose, bool showProgress);
+
+int autotools_setup_copy_file(const char * fromFilePath, const char * toFilePath);
+
+int autotools_setup_mkdir_p(const char * dirPath, bool verbose);
+
+int autotools_setup_rm_r(const char * dirPath, bool verbose);
+
+int autotools_setup_examine_file_extension_from_url(const char * url, char buf[], size_t bufSize);
+
+int autotools_setup_generate_url_transform_sample();
 
 #endif

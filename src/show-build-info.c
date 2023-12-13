@@ -4,9 +4,9 @@
 #include <curl/curlver.h>
 #include <openssl/opensslv.h>
 
-#include "autotools-setup.h"
+#include "main.h"
 
-int autotools_setup_show_build_info() {
+int autotools_setup_buildinfo() {
     printf("build.utctime: %s\n\n", AUTOTOOLS_SETUP_BUILD_TIMESTAMP);
 
     printf("build.libyaml: %s\n", yaml_get_version_string());

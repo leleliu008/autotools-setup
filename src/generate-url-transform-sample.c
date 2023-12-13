@@ -2,13 +2,16 @@
 #include <stdio.h>
 #include <string.h>
 
-#include <unistd.h>
+#include <fcntl.h>
 #include <limits.h>
+#include <unistd.h>
 #include <sys/stat.h>
+
+#include "core/log.h"
 
 #include "main.h"
 
-int autotools_setup_integrate_zsh_completion(const char * outputDIR, bool verbose) {
+int autotools_setup_generate_url_transform_sample() {
     const char * const userHomeDIR = getenv("HOME");
 
     if (userHomeDIR == NULL) {
@@ -122,92 +125,94 @@ int autotools_setup_integrate_zsh_completion(const char * outputDIR, bool verbos
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////
 
-    size_t tmpFilePathCapacity = sessionDIRCapacity + 18U;
+    size_t tmpFilePathCapacity = sessionDIRCapacity + 22U;
     char   tmpFilePath[tmpFilePathCapacity];
 
-    ret = snprintf(tmpFilePath, tmpFilePathCapacity, "%s/_autotools-setup", sessionDIR);
+    ret = snprintf(tmpFilePath, tmpFilePathCapacity, "%s/url-transform.sample", sessionDIR);
 
     if (ret < 0) {
         perror(NULL);
         return AUTOTOOLS_SETUP_ERROR;
     }
 
-    const char * const url = "https://raw.githubusercontent.com/leleliu008/autotools-setup/master/autotools-setup-zsh-completion";
+    int fd = open(tmpFilePath, O_CREAT | O_TRUNC | O_WRONLY, 0666);
 
-    ret = autotools_setup_http_fetch_to_file(url, tmpFilePath, verbose, verbose);
-
-    if (ret != AUTOTOOLS_SETUP_OK) {
-        return ret;
+    if (fd == -1) {
+        perror(tmpFilePath);
+        return AUTOTOOLS_SETUP_ERROR;
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////
+    const char * p = ""
+        "#!/bin/sh\n"
+        "case $1 in\n"
+        "    *githubusercontent.com/*)\n"
+        "        printf '%s\\n' \"$1\" | sed 's|githubusercontent|gitmirror|'\n"
+        "        ;;\n"
+        "    https://github.com/*)\n"
+        "        printf 'https://hub.gitmirror.com/%s\\n' \"$1\"\n"
+        "        ;;\n"
+        "    '') printf '%s\\n' \"$0 <URL>, <URL> is unspecified.\" >&2 ; exit 1 ;;\n"
+        "    *)  printf '%s\\n' \"$1\"\n"
+        "esac";
 
-    size_t defaultOutputDIRCapacity = homeDIRCapacity + 26U;
-    char   defaultOutputDIR[defaultOutputDIRCapacity];
+    size_t pSize = strlen(p);
 
-    ret = snprintf(defaultOutputDIR, defaultOutputDIRCapacity, "%s/share/zsh/site-functions", homeDIR);
+    ssize_t writeSize = write(fd, p, pSize);
+
+    if (writeSize == -1) {
+        perror(tmpFilePath);
+        close(fd);
+        return AUTOTOOLS_SETUP_ERROR;
+    }
+
+    close(fd);
+
+    if ((size_t)writeSize != pSize) {
+        fprintf(stderr, "not fully written to %s\n", tmpFilePath);
+        return AUTOTOOLS_SETUP_ERROR;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+    if (chmod(tmpFilePath, S_IRWXU) != 0) {
+        perror(tmpFilePath);
+        return AUTOTOOLS_SETUP_ERROR;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+    size_t outFilePathCapacity = homeDIRCapacity + 22U;
+    char   outFilePath[outFilePathCapacity];
+
+    ret = snprintf(outFilePath, outFilePathCapacity, "%s/url-transform.sample", homeDIR);
 
     if (ret < 0) {
         perror(NULL);
         return AUTOTOOLS_SETUP_ERROR;
     }
 
-    size_t outputDIRLength;
-
-    if (outputDIR == NULL) {
-        outputDIR       = defaultOutputDIR;
-        outputDIRLength = ret;
-    } else {
-        outputDIRLength = strlen(outputDIR);
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////
-
-    ret = autotools_setup_mkdir_p(outputDIR, verbose);
-
-    if (ret != AUTOTOOLS_SETUP_OK) {
-        return ret;
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////
-
-    size_t outputFilePathCapacity = outputDIRLength + 18U;
-    char   outputFilePath[outputFilePathCapacity];
-
-    ret = snprintf(outputFilePath, outputFilePathCapacity, "%s/_autotools-setup", outputDIR);
-
-    if (ret < 0) {
-        perror(NULL);
-        return AUTOTOOLS_SETUP_ERROR;
-    }
-
-    if (rename(tmpFilePath, outputFilePath) != 0) {
+    if (rename(tmpFilePath, outFilePath) != 0) {
         if (errno == EXDEV) {
-            ret = autotools_setup_copy_file(tmpFilePath, outputFilePath);
+            ret = autotools_setup_copy_file(tmpFilePath, outFilePath);
 
             if (ret != AUTOTOOLS_SETUP_OK) {
                 return ret;
             }
         } else {
-            perror(outputFilePath);
+            perror(tmpFilePath);
             return AUTOTOOLS_SETUP_ERROR;
         }
     }
 
-    printf("zsh completion script for autotools_setup has been written to %s\n", outputFilePath);
-    return AUTOTOOLS_SETUP_OK;
-}
+    ////////////////////////////////////////////////////////////////////////////////////////////
 
-int autotools_setup_integrate_bash_completion(const char * outputDIR, bool verbose) {
-    (void)outputDIR;
-    (void)verbose;
-    return AUTOTOOLS_SETUP_OK;
-}
+    fprintf(stderr, "%surl-transform sample has been written into %s%s\n\n", COLOR_GREEN, outFilePath, COLOR_OFF);
 
-int autotools_setup_integrate_fish_completion(const char * outputDIR, bool verbose) {
-    (void)outputDIR;
-    (void)verbose;
-    return AUTOTOOLS_SETUP_OK;
+    outFilePath[outFilePathCapacity - 9U] = '\0';
+
+    fprintf(stderr, "%sYou can rename url-transform.sample to url-transform then edit it to meet your needs.\n\nTo apply this, you should run 'export AUTOTOOLS_SETUP_URL_TRANSFORM=%s' in your terminal.\n%s", COLOR_GREEN, outFilePath, COLOR_OFF);
+
+    return autotools_setup_rm_r(sessionDIR, false);
 }

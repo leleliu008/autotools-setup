@@ -49,117 +49,92 @@ jobs:
 
 
   netbsd-amd64:
-    needs: check
+    needs: [check]
     if: needs.check.outputs.if-has-new-commit == 'yes'
 
-    runs-on: macos-12
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        # https://ftp.netbsd.org/pub/NetBSD/
+        target-version: ['9.1', '9.2', '9.3']
 
     steps:
-      - uses: leleliu008/github-actions-vagrant@main
-        with:
-          mem: 2048
-          box: generic/netbsd9
-          run: |
-            export HOME=/home/vagrant
+      - run: curl -LO https://raw.githubusercontent.com/leleliu008/ppkg/master/ppkg
+      - run: chmod a+x ppkg
+      - run: ./ppkg setup
+      - run: ./ppkg update
 
-            run sudo sed -i 's/#ETCCERTSDIR=/ETCCERTSDIR=/' /usr/pkg/etc/ca-certificates-dir.conf
-            run sudo update-ca-certificates
+      - run: |
+          ~/.uppm/installed/gsed/bin/gsed -i "/git-url/a git-sha: ${{ needs.check.outputs.git-sha }}" ~/.ppkg/repos.d/offical-core/formula/autotools-setup.yml
 
-            unset ETCCERTSDIR
-
-            ETCCERTSDIR=$(sed -n '/^ETCCERTSDIR=/p' /usr/pkg/etc/ca-certificates-dir.conf | sed 's|ETCCERTSDIR=\(.*\)|\1|')
-
-            if [ -n "$ETCCERTSDIR" ] ; then
-                export SSL_CERT_FILE="$ETCCERTSDIR/ca-certificates.crt"
-            fi
-
-            run curl -LO https://raw.githubusercontent.com/leleliu008/ppkg/master/ppkg
-            run chmod a+x ppkg
-            run ./ppkg setup --use-system-package-manager
-            run ./ppkg update
-
-            gsed -i "/git-url/a git-sha: ${{ needs.check.outputs.git-sha }}" ~/.ppkg/repos.d/offical-core/formula/autotools-setup.yml
-
-            run ./ppkg install autotools-setup --link-type=static-only --install-lib=static
-            run ./ppkg pack    autotools-setup
-
-      - run: scp -i $VAGRANT_CWD/.vagrant/machines/default/virtualbox/private_key -o StrictHostKeyChecking=no -r -P 2222 vagrant@127.0.0.1:/home/vagrant/.ppkg/packed/autotools-setup-*-netbsd-amd64.tar.xz .
+      - run: ./ppkg install netbsd-${{ matrix.target-version }}-amd64/autotools-setup --link-type=static-full
+      - run: ./ppkg pack    netbsd-${{ matrix.target-version }}-amd64/autotools-setup
 
       - uses: actions/upload-artifact@v3
         with:
-          name: autotools-setup---netbsd-amd64-tar-xz
-          path: autotools-setup-*-netbsd-amd64.tar.xz
+          name: autotools-setup---netbsd-${{ matrix.target-version }}-amd64-tar-xz
+          path: autotools-setup-*-netbsd-${{ matrix.target-version }}-amd64.tar.xz
 
   openbsd-amd64:
     needs: [check, netbsd-amd64]
     if: needs.check.outputs.if-has-new-commit == 'yes'
 
-    runs-on: macos-12
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        # https://cdn.openbsd.org/pub/OpenBSD/
+        target-version: ['7.2', '7.3', '7.4']
 
     steps:
-      - run: brew install openssh
+      - run: curl -LO https://raw.githubusercontent.com/leleliu008/ppkg/master/ppkg
+      - run: chmod a+x ppkg
+      - run: ./ppkg setup
+      - run: ./ppkg update
 
-      - uses: leleliu008/github-actions-vagrant@main
-        with:
-          mem: 2048
-          box: generic/openbsd7
-          run: |
-            run sudo pkg_add curl
+      - run: |
+          ~/.uppm/installed/gsed/bin/gsed -i "/git-url/a git-sha: ${{ needs.check.outputs.git-sha }}" ~/.ppkg/repos.d/offical-core/formula/autotools-setup.yml
 
-            export HOME=/home/vagrant
-            export LD_LIBRARY_PATH=/usr/local/lib
-
-            run sudo ln -sf /usr/local/bin/pkgconf /usr/bin/pkg-config
-
-            run curl -LO https://raw.githubusercontent.com/leleliu008/ppkg/master/ppkg
-            run chmod a+x ppkg
-            run ./ppkg setup --use-system-package-manager
-            run ./ppkg update
-
-            gsed -i "/git-url/a git-sha: ${{ needs.check.outputs.git-sha }}" ~/.ppkg/repos.d/offical-core/formula/autotools-setup.yml
-
-            run ./ppkg install autotools-setup --link-type=static-only --install-lib=static
-            run ./ppkg pack    autotools-setup
-
-      - run: scp -i $VAGRANT_CWD/.vagrant/machines/default/virtualbox/private_key -o StrictHostKeyChecking=no -r -P 2222 vagrant@127.0.0.1:/home/vagrant/.ppkg/packed/autotools-setup-*-openbsd-amd64.tar.xz .
+      - run: ./ppkg install openbsd-${{ matrix.target-version }}-amd64/autotools-setup --link-type=static-most
+      - run: ./ppkg pack    openbsd-${{ matrix.target-version }}-amd64/autotools-setup
 
       - uses: actions/upload-artifact@v3
         with:
-          name: autotools-setup---openbsd-amd64-tar-xz
-          path: autotools-setup-*-openbsd-amd64.tar.xz
+          name: autotools-setup---openbsd-${{ matrix.target-version }}-amd64-tar-xz
+          path: autotools-setup-*-openbsd-${{ matrix.target-version }}-amd64.tar.xz
 
   freebsd-amd64:
     needs: [check, openbsd-amd64]
     if: needs.check.outputs.if-has-new-commit == 'yes'
 
-    runs-on: macos-12
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        # https://archive.freebsd.org/old-releases/amd64/
+        target-version: ['13.0', '13.1', '13.2']
 
     steps:
-      - uses: leleliu008/github-actions-vagrant@main
-        with:
-          mem: 2048
-          box: generic/freebsd13
-          run: |
-            export HOME=/home/vagrant
+      - run: curl -LO https://raw.githubusercontent.com/leleliu008/ppkg/master/ppkg
+      - run: chmod a+x ppkg
+      - run: ./ppkg setup
+      - run: ./ppkg update
 
-            run pkg install -y curl libnghttp2
+      - run: |
+          ~/.uppm/installed/gsed/bin/gsed -i "/git-url/a git-sha: ${{ needs.check.outputs.git-sha }}" ~/.ppkg/repos.d/offical-core/formula/autotools-setup.yml
 
-            run curl -LO https://raw.githubusercontent.com/leleliu008/ppkg/master/ppkg
-            run chmod a+x ppkg
-            run ./ppkg setup --use-system-package-manager
-            run ./ppkg update
-
-            gsed -i "/git-url/a git-sha: ${{ needs.check.outputs.git-sha }}" ~/.ppkg/repos.d/offical-core/formula/autotools-setup.yml
-
-            run ./ppkg install autotools-setup --link-type=static-only --install-lib=static
-            run ./ppkg pack    autotools-setup
-
-      - run: scp -i $VAGRANT_CWD/.vagrant/machines/default/virtualbox/private_key -o StrictHostKeyChecking=no -r -P 2222 vagrant@127.0.0.1:/home/vagrant/.ppkg/packed/autotools-setup-*-freebsd-amd64.tar.xz .
+      - run: ./ppkg install freebsd-${{ matrix.target-version }}-amd64/autotools-setup --link-type=static-full
+      - run: ./ppkg pack    freebsd-${{ matrix.target-version }}-amd64/autotools-setup
 
       - uses: actions/upload-artifact@v3
         with:
-          name: autotools-setup---freebsd-amd64-tar-xz
-          path: autotools-setup-*-freebsd-amd64.tar.xz
+          name: autotools-setup---freebsd-${{ matrix.target-version }}-amd64-tar-xz
+          path: autotools-setup-*-freebsd-${{ matrix.target-version }}-amd64.tar.xz
+
 
   macos:
     needs: [check, freebsd-amd64]
@@ -201,7 +176,7 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    container: alpine:3.16
+    container: alpine:3.18
 
     steps:
       - run: wget https://raw.githubusercontent.com/leleliu008/ppkg/master/ppkg
@@ -212,7 +187,7 @@ jobs:
       - run: |
           sed -i "/git-url/a git-sha: ${{ needs.check.outputs.git-sha }}" ~/.ppkg/repos.d/offical-core/formula/autotools-setup.yml
 
-      - run: ./ppkg install autotools-setup --link-type=static-only --install-lib=static
+      - run: ./ppkg install autotools-setup --link-type=static-full --install-lib=static
       - run: ./ppkg pack    autotools-setup -o .
 
       - uses: actions/upload-artifact@v3
@@ -254,7 +229,7 @@ jobs:
 
           sed -i "/git-url/a git-sha: ${{ needs.check.outputs.git-sha }}" ~/.ppkg/repos.d/offical-core/formula/autotools-setup.yml
 
-          run ./ppkg install autotools-setup gh --link-type=static-only --install-lib=static
+          run ./ppkg install autotools-setup gh --link-type=static-full --install-lib=static
           run ./ppkg pack    autotools-setup -o .
           EOF
 
@@ -305,7 +280,7 @@ jobs:
 
           sed -i "/git-url/a git-sha: ${{ needs.check.outputs.git-sha }}" ~/.ppkg/repos.d/offical-core/formula/autotools-setup.yml
 
-          run ./ppkg install autotools-setup gh --link-type=static-only --install-lib=static
+          run ./ppkg install autotools-setup gh --link-type=static-full --install-lib=static
           run ./ppkg pack    autotools-setup -o .
           EOF
 
@@ -356,7 +331,7 @@ jobs:
 
           sed -i "/git-url/a git-sha: ${{ needs.check.outputs.git-sha }}" ~/.ppkg/repos.d/offical-core/formula/autotools-setup.yml
 
-          run ./ppkg install autotools-setup gh --link-type=static-only --install-lib=static
+          run ./ppkg install autotools-setup gh --link-type=static-full
           run ./ppkg pack    autotools-setup -o .
           EOF
 
@@ -386,18 +361,51 @@ jobs:
     steps:
       - uses: actions/download-artifact@v3
         with:
-          name: autotools-setup---netbsd-amd64-tar-xz
+          name: autotools-setup---netbsd-9.1-amd64-tar-xz
           path: .
 
       - uses: actions/download-artifact@v3
         with:
-          name: autotools-setup---openbsd-amd64-tar-xz
+          name: autotools-setup---netbsd-9.2-amd64-tar-xz
           path: .
 
       - uses: actions/download-artifact@v3
         with:
-          name: autotools-setup---freebsd-amd64-tar-xz
+          name: autotools-setup---netbsd-9.3-amd64-tar-xz
           path: .
+
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: autotools-setup---openbsd-7.2-amd64-tar-xz
+          path: .
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: autotools-setup---openbsd-7.3-amd64-tar-xz
+          path: .
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: autotools-setup---openbsd-7.4-amd64-tar-xz
+          path: .
+
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: autotools-setup---freebsd-13.0-amd64-tar-xz
+          path: .
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: autotools-setup---freebsd-13.1-amd64-tar-xz
+          path: .
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: autotools-setup---freebsd-13.2-amd64-tar-xz
+          path: .
+
 
       - uses: actions/download-artifact@v3
         with:

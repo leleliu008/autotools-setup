@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 #include "core/sysinfo.h"
-#include "autotools-setup.h"
+#include "main.h"
 
 int autotools_setup_sysinfo() {
     SysInfo sysinfo = {0};
