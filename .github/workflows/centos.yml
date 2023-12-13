@@ -22,7 +22,7 @@ jobs:
           dnf -y update
           dnf -y install curl xz gcc-c++
 
-      - uses: actions/checkout@main
+      - uses: actions/checkout@v3
 
       - name: install ppkg
         run: |
