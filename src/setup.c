@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <libgen.h>
 #include <dirent.h>
+#include <limits.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
 
