@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - run: zypper update  -y
-      - run: zypper install -y git cmake ninja gcc pkg-config libcurl-devel openssl-devel libarchive-devel libyaml-devel zlib-devel
+      - run: zypper install -y awk git cmake ninja gcc pkg-config libcurl-devel openssl-devel libarchive-devel libyaml-devel zlib-devel
 
       - uses: actions/checkout@main
 

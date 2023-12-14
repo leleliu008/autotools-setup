@@ -7,13 +7,13 @@ on:
     branches: [ master, dev ]
 
 jobs:
-  xcpkg:
+  x86_64:
 
     strategy:
       fail-fast: false
       matrix:
         version: [macos-13, macos-12]
-        target: [ 'MacOSX-10.15-x86_64', 'MacOSX-11.0-x86_64', 'MacOSX-12.0-x86_64', 'MacOSX-13.0-x86_64',  'MacOSX-11.0-arm64', 'MacOSX-12.0-arm64', 'MacOSX-13.0-arm64']
+        target-version: [ '13.0', '12.0', '11.0', '10.15' ]
 
     runs-on: ${{ matrix.version }}
 
@@ -26,28 +26,28 @@ jobs:
       - run: |
           ~/.uppm/installed/gsed/bin/gsed -i '/^git-url:/a git-sha: ${{ github.sha }}' ~/.xcpkg/repos.d/offical-core/formula/autotools-setup.yml
 
-      - run: ./xcpkg install    ${{ matrix.target }}/autotools-setup --link-type=static-prefered --install-lib=static
+      - run: ./xcpkg install    MacOSX-${{ matrix.target-version }}-x86_64/autotools-setup --link-type=static-prefered --install-lib=static
 
-      - run: ~/.xcpkg/installed/${{ matrix.target }}/autotools-setup/bin/autotools-setup
+      - run: ~/.xcpkg/installed/MacOSX-${{ matrix.target-version }}-x86_64/autotools-setup/bin/autotools-setup
 
-      - run: ~/.xcpkg/installed/${{ matrix.target }}/autotools-setup/bin/autotools-setup --help
-      - run: ~/.xcpkg/installed/${{ matrix.target }}/autotools-setup/bin/autotools-setup -h
+      - run: ~/.xcpkg/installed/MacOSX-${{ matrix.target-version }}-x86_64/autotools-setup/bin/autotools-setup --help
+      - run: ~/.xcpkg/installed/MacOSX-${{ matrix.target-version }}-x86_64/autotools-setup/bin/autotools-setup -h
 
-      - run: ~/.xcpkg/installed/${{ matrix.target }}/autotools-setup/bin/autotools-setup --version
-      - run: ~/.xcpkg/installed/${{ matrix.target }}/autotools-setup/bin/autotools-setup -V
+      - run: ~/.xcpkg/installed/MacOSX-${{ matrix.target-version }}-x86_64/autotools-setup/bin/autotools-setup --version
+      - run: ~/.xcpkg/installed/MacOSX-${{ matrix.target-version }}-x86_64/autotools-setup/bin/autotools-setup -V
 
-      - run: ~/.xcpkg/installed/${{ matrix.target }}/autotools-setup/bin/autotools-setup env
+      - run: ~/.xcpkg/installed/MacOSX-${{ matrix.target-version }}-x86_64/autotools-setup/bin/autotools-setup env
 
-      - run: ~/.xcpkg/installed/${{ matrix.target }}/autotools-setup/bin/autotools-setup buildinfo
+      - run: ~/.xcpkg/installed/MacOSX-${{ matrix.target-version }}-x86_64/autotools-setup/bin/autotools-setup buildinfo
 
-      - run: ~/.xcpkg/installed/${{ matrix.target }}/autotools-setup/bin/autotools-setup sysinfo
+      - run: ~/.xcpkg/installed/MacOSX-${{ matrix.target-version }}-x86_64/autotools-setup/bin/autotools-setup sysinfo
 
-      - run: ~/.xcpkg/installed/${{ matrix.target }}/autotools-setup/bin/autotools-setup config
+      - run: ~/.xcpkg/installed/MacOSX-${{ matrix.target-version }}-x86_64/autotools-setup/bin/autotools-setup config
 
-      - run: ~/.xcpkg/installed/${{ matrix.target }}/autotools-setup/bin/autotools-setup integrate zsh
-      - run: ~/.xcpkg/installed/${{ matrix.target }}/autotools-setup/bin/autotools-setup integrate zsh -v
+      - run: ~/.xcpkg/installed/MacOSX-${{ matrix.target-version }}-x86_64/autotools-setup/bin/autotools-setup integrate zsh
+      - run: ~/.xcpkg/installed/MacOSX-${{ matrix.target-version }}-x86_64/autotools-setup/bin/autotools-setup integrate zsh -v
 
-      - run: ~/.xcpkg/installed/${{ matrix.target }}/autotools-setup/bin/autotools-setup setup -v
+      - run: ~/.xcpkg/installed/MacOSX-${{ matrix.target-version }}-x86_64/autotools-setup/bin/autotools-setup setup -v
 
       - uses: actions/checkout@v3
         with:
@@ -79,4 +79,25 @@ jobs:
           run gmake
           run gmake install
 
-       #- run: ~/.xcpkg/installed/${{ matrix.target }}/autotools-setup/bin/autotools-setup upgrade-self
+       #- run: ~/.xcpkg/installed/MacOSX-${{ matrix.target-version }}-x86_64/autotools-setup/bin/autotools-setup upgrade-self
+
+  arm64:
+
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [macos-13, macos-12]
+        target-version: [ '13.0', '12.0', '11.0' ]
+
+    runs-on: ${{ matrix.version }}
+
+    steps:
+      - run: curl -LO https://raw.githubusercontent.com/leleliu008/xcpkg/master/xcpkg
+      - run: chmod a+x xcpkg
+      - run: ./xcpkg setup
+      - run: ./xcpkg update
+
+      - run: |
+          ~/.uppm/installed/gsed/bin/gsed -i '/^git-url:/a git-sha: ${{ github.sha }}' ~/.xcpkg/repos.d/offical-core/formula/autotools-setup.yml
+
+      - run: ./xcpkg install MacOSX-${{ matrix.target-version }}-arm64/autotools-setup --link-type=static-prefered --install-lib=static
