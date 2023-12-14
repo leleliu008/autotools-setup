@@ -149,13 +149,9 @@ jobs:
         target-arch: [x86_64, arm64]
 
     steps:
-      - run: brew uninstall go@1.17
-      - run: brew update
-      - run: brew install --overwrite python@3.10 python@3.11
-
       - run: curl -LO https://raw.githubusercontent.com/leleliu008/xcpkg/master/xcpkg
       - run: chmod a+x xcpkg
-      - run: ./xcpkg setup --use-brew
+      - run: ./xcpkg setup
       - run: ./xcpkg update
 
       - run: |
@@ -187,7 +183,7 @@ jobs:
       - run: |
           sed -i "/git-url/a git-sha: ${{ needs.check.outputs.git-sha }}" ~/.ppkg/repos.d/offical-core/formula/autotools-setup.yml
 
-      - run: ./ppkg install autotools-setup --link-type=static-full --install-lib=static
+      - run: ./ppkg install autotools-setup --link-type=static-full
       - run: ./ppkg pack    autotools-setup -o .
 
       - uses: actions/upload-artifact@v3
@@ -229,7 +225,7 @@ jobs:
 
           sed -i "/git-url/a git-sha: ${{ needs.check.outputs.git-sha }}" ~/.ppkg/repos.d/offical-core/formula/autotools-setup.yml
 
-          run ./ppkg install autotools-setup gh --link-type=static-full --install-lib=static
+          run ./ppkg install autotools-setup gh --link-type=static-full
           run ./ppkg pack    autotools-setup -o .
           EOF
 
@@ -280,7 +276,7 @@ jobs:
 
           sed -i "/git-url/a git-sha: ${{ needs.check.outputs.git-sha }}" ~/.ppkg/repos.d/offical-core/formula/autotools-setup.yml
 
-          run ./ppkg install autotools-setup gh --link-type=static-full --install-lib=static
+          run ./ppkg install autotools-setup gh --link-type=static-full
           run ./ppkg pack    autotools-setup -o .
           EOF
 
