@@ -1,0 +1,79 @@
+name: cross build for NetBSD
+
+on:
+  push:
+    branches: [ master, dev ]
+  pull_request:
+    branches: [ master, dev ]
+
+jobs:
+  build:
+
+  - run:s-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        # https://ftp.netbsd.org/pub/NetBSD/
+        target-version: ['9.1', '9.2', '9.3']
+
+    steps:
+      - run: curl -LO https://raw.githubusercontent.com/leleliu008/ppkg/master/ppkg
+      - run: chmod a+x ppkg
+      - run: ./ppkg setup
+      - run: ./ppkg update
+
+      - run: |
+          ~/.uppm/installed/gsed/bin/gsed -i '/git-url/a git-sha: ${{ github.sha }}' ~/.ppkg/repos.d/offical-core/formula/autotools-setup.yml
+
+      - run: ./ppkg install netbsd-${{ matrix.target-version }}-amd64/autotools-setup --link-type=static-full
+      - run: ./ppkg pack    netbsd-${{ matrix.target-version }}-amd64/autotools-setup
+
+      - run: ~/.ppkg/installed/netbsd-${{ matrix.target-version }}-amd64/autotools-setup/bin/autotools-setup
+
+      - run: ~/.ppkg/installed/netbsd-${{ matrix.target-version }}-amd64/autotools-setup/bin/autotools-setup --help
+      - run: ~/.ppkg/installed/netbsd-${{ matrix.target-version }}-amd64/autotools-setup/bin/autotools-setup -h
+
+      - run: ~/.ppkg/installed/netbsd-${{ matrix.target-version }}-amd64/autotools-setup/bin/autotools-setup --version
+      - run: ~/.ppkg/installed/netbsd-${{ matrix.target-version }}-amd64/autotools-setup/bin/autotools-setup -V
+
+      - run: ~/.ppkg/installed/netbsd-${{ matrix.target-version }}-amd64/autotools-setup/bin/autotools-setup sysinfo
+
+      - run: ~/.ppkg/installed/netbsd-${{ matrix.target-version }}-amd64/autotools-setup/bin/autotools-setup env
+
+      - run: ~/.ppkg/installed/netbsd-${{ matrix.target-version }}-amd64/autotools-setup/bin/autotools-setup config
+
+      - run: ~/.ppkg/installed/netbsd-${{ matrix.target-version }}-amd64/autotools-setup/bin/autotools-setup integrate zsh
+      - run: ~/.ppkg/installed/netbsd-${{ matrix.target-version }}-amd64/autotools-setup/bin/autotools-setup integrate zsh -v
+
+      - run: ~/.ppkg/installed/netbsd-${{ matrix.target-version }}-amd64/autotools-setup/bin/autotools-setup setup -v
+
+      - uses: actions/checkout@v3
+        with:
+          repository: universal-ctags/ctags
+          path: ctags
+
+      - run: |
+          unset IFS
+
+          COLOR_GREEN='\033[0;32m'        # Green
+          COLOR_PURPLE='\033[0;35m'       # Purple
+          COLOR_OFF='\033[0m'             # Reset
+
+          echo() {
+              printf '%b\n' "$*"
+          }
+
+          run() {
+              echo "${COLOR_PURPLE}==>${COLOR_OFF} ${COLOR_GREEN}$@${COLOR_OFF}"
+              eval "$*"
+          }
+
+          run . ~/.autotools-setup/autotools/env.sh
+
+          run cd ctags
+
+          run ./autogen.sh
+          run ./configure --prefix=$PWD/out
+          run gmake
+          run gmake install
