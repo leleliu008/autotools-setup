@@ -24,7 +24,7 @@ jobs:
       - run: ./xcpkg update
 
       - run: |
-          ~/.uppm/installed/gsed/bin/gsed -i '/^git-url:/a git-sha: ${{ github.sha }}' ~/.xcpkg/repos.d/offical-core/formula/autotools-setup.yml
+          ~/.uppm/installed/gsed/bin/gsed -i '/^git-url:/a git-sha: ${{ github.sha }}' ~/.xcpkg/repos.d/official-core/formula/autotools-setup.yml
 
       - run: ./xcpkg install    MacOSX-${{ matrix.target-version }}-x86_64/autotools-setup --link-type=static-prefered --install-lib=static
 
@@ -98,6 +98,6 @@ jobs:
       - run: ./xcpkg update
 
       - run: |
-          ~/.uppm/installed/gsed/bin/gsed -i '/^git-url:/a git-sha: ${{ github.sha }}' ~/.xcpkg/repos.d/offical-core/formula/autotools-setup.yml
+          ~/.uppm/installed/gsed/bin/gsed -i '/^git-url:/a git-sha: ${{ github.sha }}' ~/.xcpkg/repos.d/official-core/formula/autotools-setup.yml
 
       - run: ./xcpkg install MacOSX-${{ matrix.target-version }}-arm64/autotools-setup --link-type=static-prefered --install-lib=static

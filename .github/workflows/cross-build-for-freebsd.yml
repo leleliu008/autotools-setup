@@ -24,7 +24,7 @@ jobs:
       - run: ./ppkg update
 
       - run: |
-          ~/.uppm/installed/gsed/bin/gsed -i '/git-url/a git-sha: ${{ github.sha }}' ~/.ppkg/repos.d/offical-core/formula/autotools-setup.yml
+          ~/.uppm/installed/gsed/bin/gsed -i '/git-url/a git-sha: ${{ github.sha }}' ~/.ppkg/repos.d/official-core/formula/autotools-setup.yml
 
       - run: ./ppkg install freebsd-${{ matrix.target-version }}-amd64/autotools-setup --link-type=static-full
       - run: ./ppkg pack    freebsd-${{ matrix.target-version }}-amd64/autotools-setup
