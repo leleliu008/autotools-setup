@@ -157,7 +157,7 @@ jobs:
       - run: |
           ~/.uppm/installed/gsed/bin/gsed -i "/git-url/a git-sha: ${{ needs.check.outputs.git-sha }}" ~/.xcpkg/repos.d/official-core/formula/autotools-setup.yml
 
-      - run: ./xcpkg install MacOSX-${{ matrix.target-version }}-${{ matrix.target-arch }}/autotools-setup --link-type=static-prefered --install-lib=static
+      - run: ./xcpkg install MacOSX-${{ matrix.target-version }}-${{ matrix.target-arch }}/autotools-setup --link-type=static-most --install-lib=static
       - run: ./xcpkg pack    MacOSX-${{ matrix.target-version }}-${{ matrix.target-arch }}/autotools-setup -o .
 
       - uses: actions/upload-artifact@v3
