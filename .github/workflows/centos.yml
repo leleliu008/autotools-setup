@@ -34,7 +34,7 @@ jobs:
       - run:  ./ppkg install autotools-setup
 
 
-      - run:  echo "SSL_CERT_FILE=$HOME/.ppkg/core/etc/cacert.pem" >> $GITHUB_ENV
+      - run:  echo "SSL_CERT_FILE=$HOME/.ppkg/core/cacert.pem" >> $GITHUB_ENV
 
 
       - run: ~/.ppkg/installed/linux-glibc-x86_64/autotools-setup/bin/autotools-setup
@@ -110,7 +110,7 @@ jobs:
       - run:  ./ppkg install autotools-setup
 
 
-      - run:  echo "SSL_CERT_FILE=$HOME/.ppkg/core/etc/cacert.pem" >> $GITHUB_ENV
+      - run:  echo "SSL_CERT_FILE=$HOME/.ppkg/core/cacert.pem" >> $GITHUB_ENV
 
 
       - run: ~/.ppkg/installed/linux-glibc-x86_64/autotools-setup/bin/autotools-setup
@@ -192,7 +192,7 @@ jobs:
       - run:  ./ppkg install autotools-setup
 
 
-      - run:  echo "SSL_CERT_FILE=$HOME/.ppkg/core/etc/cacert.pem" >> $GITHUB_ENV
+      - run:  echo "SSL_CERT_FILE=$HOME/.ppkg/core/cacert.pem" >> $GITHUB_ENV
 
 
       - run: ~/.ppkg/installed/linux-glibc-x86_64/autotools-setup/bin/autotools-setup
